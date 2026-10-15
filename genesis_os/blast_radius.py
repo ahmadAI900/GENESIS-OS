@@ -43,7 +43,7 @@ from __future__ import annotations
 
 import os
 import threading
-from typing import Any, Callable, Dict, Mapping, Optional
+from typing import Any, Callable, Dict, Mapping, Optional, Tuple
 
 from .capabilities import BlastRadius
 
@@ -476,28 +476,47 @@ _DESTINATION_ARG_KEYS = (
 def overwrite_destination_escalation(
     arguments: Optional[Mapping[str, Any]] = None,
     context: Optional[Mapping[str, Any]] = None,
+    *,
+    operation: Optional[str] = None,
 ) -> Optional[BlastRadius]:
-    """Escalate a move/rename when it would overwrite an existing file.
+    """Escalate when a write would DESTROY data that already exists.
 
-    A move or rename to a free destination is reversible: move it back.
-    A move or rename whose destination already exists destroys whatever
-    was there, and nothing on the machine can bring it back. That is
-    the difference the static default cannot express, so it is checked
-    per call.
+    Writing to a free destination is reversible: delete it. Writing
+    onto an existing file destroys whatever was there, and nothing can
+    bring it back. That is the difference the static default cannot
+    express, so it is checked per call.
+
+    Per-operation destination resolution (2026-10-15, Item 3B-3a)
+    -----------------------------------------------------------
+    This evaluator used to read only ``_DESTINATION_ARG_KEYS``
+    (``destination``/``output``/``output_path``/``save_path``/
+    ``target_path``). Two consequences:
+
+    1. ``file.rename`` and ``folder.rename`` pass ``new_name``, which
+       was never in that tuple, so the evaluator read NO destination
+       and always returned ``None``. The rename escalations were
+       registered but unreachable on the real executor path.
+    2. ``file.copy``, ``file.create`` and ``document.create_docx`` had
+       no evaluator at all, so overwriting an existing file through
+       them was ungated.
+
+    Which argument names the destination depends on the operation, and
+    ``arguments`` alone does not say which operation this is. So this
+    function is REGISTERED PER OPERATION with its id bound in by
+    ``_overwrite_escalation_for``. ``operation`` is supplied by that
+    binding; when called directly without it, every known destination
+    key is tried so it stays correct standalone.
 
     Returns ``None`` when there is no destination, or the destination
-    does not exist.
+    does not exist (a free target stays Tier 2).
     """
     if not isinstance(arguments, Mapping):
         return None
-    destination = None
-    for key in _DESTINATION_ARG_KEYS:
-        value = arguments.get(key)
-        if isinstance(value, (str, os.PathLike)) and str(value).strip():
-            destination = os.fspath(value)
-            break
+
+    destination = _resolve_overwrite_destination(operation, arguments)
     if destination is None:
         return None
+
     try:
         return (
             BlastRadius.IRREVERSIBLE_OR_OUTWARD
@@ -507,6 +526,94 @@ def overwrite_destination_escalation(
     except OSError:
         # Cannot determine; assume the destructive case.
         return BlastRadius.IRREVERSIBLE_OR_OUTWARD
+
+
+# Per-operation destination keys, matching what ActionExecutor._dispatch
+# actually forwards to the OS manager. ``new_name`` is a BARE name, not
+# a full path, so for the rename operations it must be joined onto the
+# source's parent directory before existence can be checked.
+_OVERWRITE_DESTINATION_KEYS: Dict[str, Tuple[str, ...]] = {
+    "file.move":        ("destination",),
+    "folder.move":      ("destination",),
+    "file.rename":      ("new_name",),
+    "folder.rename":    ("new_name",),
+    "file.copy":        ("destination",),
+    "file.create":      ("path",),
+    "document.create_docx": ("path", "output_path", "destination"),
+}
+
+# Operations whose argument key names the SOURCE, so a ``new_name``
+# destination is resolved relative to the source's parent.
+_RENAME_OPERATIONS = frozenset({"file.rename", "folder.rename"})
+
+
+def _resolve_overwrite_destination(
+    operation: Optional[str],
+    arguments: Mapping[str, Any],
+) -> Optional[str]:
+    """The path this call would write onto, or None."""
+    keys = _OVERWRITE_DESTINATION_KEYS.get(operation or "")
+    if not keys:
+        # Unknown operation: fall back to the generic destination keys
+        # so an unrecognised mutator is not silently left ungated.
+        keys = _DESTINATION_ARG_KEYS
+
+    value = None
+    for key in keys:
+        candidate = arguments.get(key)
+        if isinstance(candidate, (str, os.PathLike)) and str(candidate).strip():
+            value = os.fspath(candidate)
+            break
+    if value is None:
+        return None
+
+    # `file.create` only destroys an existing file when the caller asked
+    # to overwrite. Without the flag the manager refuses, so this call is
+    # not destructive and must stay Tier 2.
+    if operation == "file.create" and not bool(arguments.get("overwrite")):
+        return None
+
+    # A rename carries a bare new_name; resolve it beside the source so
+    # `os.path.exists` sees the real target rather than a relative name
+    # resolved against the process CWD. Uses os.path (not pathlib) so
+    # this module keeps its existing small dependency surface; an
+    # exception here would be swallowed by the resolver's
+    # `except Exception` and silently downgrade the escalation.
+    if operation in _RENAME_OPERATIONS:
+        source = arguments.get("source") or arguments.get("path")
+        if isinstance(source, (str, os.PathLike)) and str(source).strip():
+            try:
+                parent = os.path.dirname(os.path.abspath(os.fspath(source)))
+                if not parent:
+                    return None
+                return os.path.join(parent, value)
+            except (OSError, ValueError, TypeError):
+                # Cannot resolve the destination. Fail closed.
+                return os.path.join(".", "__unresolvable__")
+        # No source to anchor against; fail closed.
+        return os.path.join(".", "__unresolvable__")
+
+    return value
+
+
+def _overwrite_escalation_for(operation: str) -> DynamicEvaluator:
+    """Bind an operation id into the overwrite evaluator.
+
+    ``DynamicEvaluator`` is ``Callable[..., Optional[BlastRadius]]`` and
+    the resolver invokes ``evaluator(arguments, context)``; this wrapper
+    supplies the id the arguments alone cannot express.
+    """
+
+    def _evaluate(
+        arguments: Optional[Mapping[str, Any]] = None,
+        context: Optional[Mapping[str, Any]] = None,
+    ) -> Optional[BlastRadius]:
+        return overwrite_destination_escalation(
+            arguments, context, operation=operation
+        )
+
+    _evaluate.__name__ = f"overwrite_escalation[{operation}]"
+    return _evaluate
 
 
 # ---------------------------------------------------------------------
@@ -578,9 +685,20 @@ def _register_builtin_evaluators() -> None:
     register_dynamic_evaluator(
         "application.close", application_close_escalation, replace=True
     )
-    for capability_id in ("file.move", "file.rename", "folder.move", "folder.rename"):
+    for capability_id in (
+        # Already registered (2026-10-08). file.rename/folder.rename are
+        # included here but were DEAD: the evaluator read only
+        # destination-shaped keys and those ops pass a bare new_name.
+        "file.move", "file.rename", "folder.move", "folder.rename",
+        # Added 2026-10-15 (Item 3B-3a): mutators that can destroy an
+        # existing file but had no evaluator, so overwriting through
+        # them was ungated at the authority.
+        "file.copy", "file.create", "document.create_docx",
+    ):
         register_dynamic_evaluator(
-            capability_id, overwrite_destination_escalation, replace=True
+            capability_id,
+            _overwrite_escalation_for(capability_id),
+            replace=True,
         )
 
 
