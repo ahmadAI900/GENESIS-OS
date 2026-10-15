@@ -60,16 +60,25 @@ class _CountingOSM:
 
 
 @pytest.fixture
-def tree(tmp_path):
-    existing = tmp_path / "existing.txt"
+def tree(workspace_root):
+    """A source, an existing target, a free target, and a directory.
+
+    Built INSIDE the `workspace_root` fixture rather than tmp_path: the
+    workspace boundary escalates any access OUTSIDE the configured root
+    to Tier 1, so tmp_path made these Tier-2 cases fail whenever an
+    earlier test had armed the boundary -- an order-dependent test. These
+    two "proceeds without a grant" tests are precisely the ones that must
+    hold in every environment, so they cannot depend on boundary state.
+    """
+    existing = workspace_root / "existing.txt"
     existing.write_text("irreplaceable", encoding="utf-8")
-    free = tmp_path / "free_name.txt"
-    src = tmp_path / "source.txt"
+    free = workspace_root / "free_name.txt"
+    src = workspace_root / "source.txt"
     src.write_text("src", encoding="utf-8")
-    srcdir = tmp_path / "srcdir"
+    srcdir = workspace_root / "srcdir"
     srcdir.mkdir()
     return {"existing": existing, "free": free, "src": src,
-            "srcdir": srcdir, "root": tmp_path}
+            "srcdir": srcdir, "root": workspace_root}
 
 
 def _grant(capability_id, arguments):
@@ -88,8 +97,18 @@ def test_free_target_folder_rename_proceeds_without_a_grant(tree):
     plan = ActionPlan(
         operation="folder.rename",
         target=str(tree["srcdir"]),
-        parameters={"source": str(tree["srcdir"]),
-                    "new_name": tree["free"].name},
+        parameters={
+                    "source": str(tree["srcdir"]),
+                    # Absolute destination, and NO bare `new_name`.
+                    # `arguments_escape_workspace` resolves argument
+                    # values it does not treat as paths against the
+                    # process CWD, so a bare `new_name` reads as
+                    # backend/<name>, which is outside the workspace root
+                    # and escalates this Tier-2 case for a reason that has
+                    # nothing to do with authorization -- a pre-existing
+                    # boundary quirk, not a property of the rename policy.
+                    "destination": str(tree["free"]),
+                },
         capability_id="folder.rename",
     )
     result = ActionExecutor(osm).execute(plan)
