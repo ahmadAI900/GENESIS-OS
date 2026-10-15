@@ -49,7 +49,14 @@ class FilesystemMonitor:
     def __init__(self):
         self._watchers: Dict[str, Any] = {}
         self._callbacks: Dict[str, List[Callable]] = {}
-        self._lock = threading.Lock()
+        # Item 3C: this was a plain threading.Lock. unwatch_all() holds
+        # this lock and then calls unwatch(), which acquires it again --
+        # a permanent self-deadlock whenever at least one watcher was
+        # registered (proven 2026-10-15 with a faulthandler dump, the
+        # blocked thread parked at the `with self._lock:` inside
+        # unwatch()). An RLock makes that nesting legal and is
+        # behaviour-identical everywhere the lock is taken only once.
+        self._lock = threading.RLock()
         self._watchdog_available = HAS_WATCHDOG
         # Live single-observer state for start()/stop() API.
         self._observer: Any = None
