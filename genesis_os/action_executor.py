@@ -62,6 +62,8 @@ def _operation_requires_authorization(
     operation: str,
     capability_id: Optional[str] = None,
     arguments: Optional[Dict[str, Any]] = None,
+    *,
+    context: Optional[Dict[str, Any]] = None,
 ) -> bool:
     """Does this require a human-approval grant?
 
@@ -100,10 +102,17 @@ def _operation_requires_authorization(
         # unsaved work) decide the tier from the specific call. Calling
         # this without them silently disabled every evaluator at the
         # executor layer.
+        #
+        # context MUST be passed for the same reason. `browser.click`
+        # escalation reads the target element's accessible text, and only
+        # the executor can obtain that (it may have to ask the live
+        # browser). Omitting it made that evaluator unreachable at the
+        # gate: the escalation was computed and then discarded.
         tier = resolve_operation_blast_radius(
             operation,
             dict(arguments or {}),
             capability_id=capability_id,
+            context=dict(context) if context else None,
         )
 
         if capability_id:
@@ -723,11 +732,14 @@ class ActionExecutor:
                         )
                         pass
 
-        assessment = assess_operation_risk(
-            plan.operation,
-            context=security_context if security_context else None,
-        )
-
+        # NOTE (2026-10-15): `security_context` is built above and consumed by
+        # the authorization gate below. It used to be handed to
+        # `assess_operation_risk(...)` whose result was assigned to
+        # `assessment` and never read -- the browser.click risk
+        # escalation was therefore computed and discarded. Tier is decided
+        # by blast_radius, which deliberately does NOT consult risk_level,
+        # so the dead call has been removed rather than resurrected.
+        #
         # =========================================================
         # BLAST-RADIUS GATE — BUILT, PROVEN, BUT NOT ENABLED
         # =========================================================
@@ -779,6 +791,7 @@ class ActionExecutor:
             plan.operation,
             getattr(plan, "capability_id", None),
             plan.parameters,
+            context=security_context if security_context else None,
         ):
             from .authorization_grant import (
                 grant_is_valid_for,

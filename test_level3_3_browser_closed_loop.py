@@ -418,3 +418,110 @@ class TestBrowserClosedLoopIntegration:
         assert "expected_state" in d
         assert "actual_state" in d
         assert "matches_expected" in d
+
+
+# =========================================================
+# BROWSER CLICK RISK ESCALATION AT THE AUTHORIZATION GATE
+# =========================================================
+#
+# The executor can read the target element's accessible text (or learn
+# that there is none). `blast_radius.browser_click_escalation` uses that
+# to escalate an irreversible-looking click to Tier 1. Before 2026-10-15
+# the executor built that context and then called `assess_operation_risk`
+# with it, but never forwarded the context to the gate -- so the
+# escalation was computed and discarded, and a click on "Confirm purchase"
+# dispatched as Tier 2.
+#
+# Both cases below FAIL before that fix and PASS after it. The benign
+# case pins the other direction: a readable, ordinary link must stay
+# Tier 2 and still dispatch.
+
+
+class _CountingBrowser:
+    """Records dispatches so a blocked click can be proven not to run."""
+
+    def __init__(self, element_text=None, no_text=False):
+        self.clicks = 0
+        self._element_text = element_text
+        self._no_text = no_text
+
+    def extract_text(self, selector, session_id="default"):
+        if self._no_text:
+            # An element that exposes no readable text (icon/image button).
+            return {"success": True, "text": ""}
+        return {"success": True, "text": self._element_text or ""}
+
+    def _get_page(self):
+        raise AttributeError("no page handle in this test double")
+
+    def browser_click(self, selector, session_id="default"):
+        self.clicks += 1
+        return {
+            "success": True, "operation": "browser.click",
+            "executed": True, "verified": True,
+        }
+
+
+def _click_executor(browser):
+    """An ActionExecutor whose OS layer dispatches browser.click."""
+    mgr = MagicMock()
+    mgr.browser = browser
+    mgr.browser_click.side_effect = browser.browser_click
+    from genesis_os.action_executor import ActionExecutor
+    return ActionExecutor(mgr), mgr
+
+
+def _click_plan():
+    return ActionPlan(
+        operation="browser.click",
+        target="#confirm-order",
+        parameters={"selector": "#confirm-order"},
+        capability_id="browser.click",
+    )
+
+
+class TestBrowserClickRiskEscalationAtGate:
+    def test_high_risk_signal_text_is_gated_and_never_dispatched(self):
+        browser = _CountingBrowser(element_text="Confirm purchase")
+        executor, _mgr = _click_executor(browser)
+
+        result = executor.execute(_click_plan())
+
+        assert result.status == "confirmation_required", (
+            "a click whose accessible text carries a high-risk signal must "
+            f"require a grant, got status={result.status!r} "
+            f"message={result.message!r}"
+        )
+        assert browser.clicks == 0, (
+            f"the gated click was dispatched {browser.clicks} time(s); the "
+            "gate must block before any dispatch"
+        )
+
+    def test_unassessable_no_text_element_is_gated_and_never_dispatched(self):
+        browser = _CountingBrowser(no_text=True)
+        executor, _mgr = _click_executor(browser)
+
+        result = executor.execute(_click_plan())
+
+        assert result.status == "confirmation_required", (
+            "an element Genesis cannot read is unknown risk, not assumed "
+            f"harmless; got status={result.status!r}"
+        )
+        assert browser.clicks == 0, (
+            f"the unassessable click was dispatched {browser.clicks} time(s)"
+        )
+
+    def test_benign_readable_link_stays_tier2_and_dispatches(self):
+        browser = _CountingBrowser(element_text="Read more about pricing")
+        executor, _mgr = _click_executor(browser)
+
+        result = executor.execute(_click_plan())
+
+        assert result.status != "confirmation_required", (
+            "an ordinary readable link must NOT be escalated; got "
+            f"status={result.status!r}"
+        )
+        assert browser.clicks == 1, (
+            "the benign click must still dispatch exactly once, got "
+            f"{browser.clicks}"
+        )
