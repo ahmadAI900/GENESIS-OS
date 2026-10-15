@@ -1,0 +1,793 @@
+{
+  "dev3": [
+    {
+      "category": "application",
+      "expect": "application.open",
+      "phrase": "open up the notes app for me",
+      "source": "human"
+    },
+    {
+      "category": "application",
+      "expect": "application.open",
+      "phrase": "can you fire up chrome real quick?",
+      "source": "human"
+    },
+    {
+      "category": "application",
+      "expect": "application.close",
+      "phrase": "close out of discord please",
+      "source": "human"
+    },
+    {
+      "category": "application",
+      "expect": "application.focus",
+      "phrase": "bring up the text editor",
+      "source": "human"
+    },
+    {
+      "category": "application",
+      "expect": "application.open",
+      "phrase": "launch the calculator app",
+      "source": "human"
+    },
+    {
+      "category": "application",
+      "expect": "application.window_list",
+      "phrase": "let me see what windows are open",
+      "source": "human"
+    },
+    {
+      "category": "application",
+      "expect": "application.focus",
+      "phrase": "switch over to my terminal tab",
+      "source": "human"
+    },
+    {
+      "category": "application",
+      "expect": "application.list",
+      "phrase": "show me everything that's running right now",
+      "source": "human"
+    },
+    {
+      "category": "application",
+      "expect": "application.open",
+      "phrase": "open up my computer settings panel",
+      "source": "human"
+    },
+    {
+      "category": "application",
+      "expect": "application.close",
+      "phrase": "exit out of this application completely",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.click",
+      "phrase": "click on the save button",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.double_click",
+      "phrase": "double click the recycling bin icon",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.type_text",
+      "phrase": "type john.doe@email.com into the box",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.click",
+      "phrase": "right click on the desktop background",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.scroll",
+      "phrase": "scroll down a little bit on this page",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.keyboard_action",
+      "phrase": "hit the enter key",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.drag",
+      "phrase": "drag that file over to the folder on the left",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.click",
+      "phrase": "check the box to accept terms",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.click",
+      "phrase": "hit the cancel button instead",
+      "source": "human"
+    },
+    {
+      "category": "gui",
+      "expect": "gui.scroll",
+      "phrase": "scroll all the way to the top",
+      "source": "human"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.open_tab",
+      "phrase": "start another tab in my browser",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.close_tab",
+      "phrase": "close out this current tab please",
+      "source": "human"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.get_url",
+      "phrase": "what web address am I on right now?",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.get_page_state",
+      "phrase": "check the current loading state of this page",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.get_title",
+      "phrase": "identify the name displayed for this webpage",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.open_url",
+      "phrase": "go to youtube dot com",
+      "source": "human"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.get_tabs",
+      "phrase": "list every browser tab that is open",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.switch_tab",
+      "phrase": "switch to the browser tab with my inbox",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.search",
+      "phrase": "search this website for laptop prices",
+      "source": "assistant_draft"
+    }
+  ],
+  "dev3_item_count": 29,
+  "final3": [
+    {
+      "category": "application",
+      "expect": "application.close",
+      "phrase": "close that",
+      "prior": "I have a folder called invoices open in explorer.",
+      "source": "agent"
+    },
+    {
+      "category": "application",
+      "expect": "application.close",
+      "phrase": "close that",
+      "prior": "I have a folder called invoices open in explorer.",
+      "source": "agent"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.extract",
+      "phrase": "grab the text off that page",
+      "prior": "A browser tab is open on the product page.",
+      "source": "agent"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.extract",
+      "phrase": "grab the text off that page",
+      "prior": "A browser tab is open on the product page.",
+      "source": "agent"
+    },
+    {
+      "category": "browser",
+      "expect": "browser.open_tab",
+      "phrase": "open this website in another browser tab",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.copy",
+      "phrase": "copy that text block",
+      "source": "human"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.copy",
+      "phrase": "copy this text so I can paste it elsewhere",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.copy",
+      "phrase": "put this highlighted text into the clipboard",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.copy",
+      "phrase": "put this picture onto my clipboard",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.copy",
+      "phrase": "save this paragraph for later pasting",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.paste",
+      "phrase": "paste it right here",
+      "source": "human"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.paste",
+      "phrase": "paste the copied text into this field",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.paste",
+      "phrase": "paste the text currently stored in my clipboard",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.paste",
+      "phrase": "paste this unformatted pure plain text piece snippet line",
+      "source": "human"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.paste",
+      "phrase": "put it in the search bar",
+      "prior": "The clipboard currently holds an address.",
+      "source": "agent"
+    },
+    {
+      "category": "clipboard",
+      "expect": "clipboard.paste",
+      "phrase": "put it in the search bar",
+      "prior": "The clipboard currently holds an address.",
+      "source": "agent"
+    },
+    {
+      "category": "clipboard",
+      "expect": "gui.select",
+      "phrase": "highlight all of this text",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "documents",
+      "expect": "document.create",
+      "phrase": "start a blank text document",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "documents",
+      "expect": "document.edit",
+      "phrase": "edit the document content using the change I described",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "documents",
+      "expect": "document.edit",
+      "phrase": "edit this document and change the wording in this paragraph",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "documents",
+      "expect": "document.edit",
+      "phrase": "make this change to the text in my document",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "documents",
+      "expect": "document.read",
+      "phrase": "read the main content of this document",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "documents",
+      "expect": "document.summarize",
+      "phrase": "summarize the contents of this report",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "documents",
+      "expect": "document.transform",
+      "phrase": "change it into a word file",
+      "prior": "A document called contract.pdf is open.",
+      "source": "agent"
+    },
+    {
+      "category": "documents",
+      "expect": "document.transform",
+      "phrase": "change it into a word file",
+      "prior": "A document called contract.pdf is open.",
+      "source": "agent"
+    },
+    {
+      "category": "documents",
+      "expect": "document.transform",
+      "phrase": "save this word file as a pdf",
+      "source": "human"
+    },
+    {
+      "category": "documents",
+      "expect": "document.transform",
+      "phrase": "transform this document into the requested format",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "documents",
+      "expect": "document.verify",
+      "phrase": "verify that this document is valid",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "documents",
+      "expect": "gui.select",
+      "phrase": "highlight the entire first paragraph",
+      "source": "human"
+    },
+    {
+      "category": "documents",
+      "expect": null,
+      "phrase": "do the same for the spreadsheet version",
+      "prior": "There is a file called report.docx open.",
+      "reason": "cross-format reference; likely GAP",
+      "source": "agent"
+    },
+    {
+      "category": "documents",
+      "expect": null,
+      "phrase": "do the same for the spreadsheet version",
+      "prior": "There is a file called report.docx open.",
+      "reason": "cross-format reference; likely GAP",
+      "source": "agent"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.copy",
+      "phrase": "put a copy on the desktop",
+      "prior": "You created notes.txt in Documents.",
+      "source": "agent"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.copy",
+      "phrase": "put a copy on the desktop",
+      "prior": "You created notes.txt in Documents.",
+      "source": "agent"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.delete",
+      "phrase": "delete that old text document",
+      "source": "human"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.delete",
+      "phrase": "now delete it",
+      "prior": "You just took a screenshot to Desktop\\shot.png.",
+      "source": "agent"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.delete",
+      "phrase": "now delete it",
+      "prior": "You just took a screenshot to Desktop\\shot.png.",
+      "source": "agent"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.inspect",
+      "phrase": "inspect the properties of this file link",
+      "source": "human"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.inspect",
+      "phrase": "inspect this flash drive file entry",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.move",
+      "phrase": "move this photo to my pictures folder",
+      "source": "human"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.rename",
+      "phrase": "rename this file to project_final_draft",
+      "source": "human"
+    },
+    {
+      "category": "filesystem",
+      "expect": "file.search",
+      "phrase": "find the downloaded setup file on my computer",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "filesystem",
+      "expect": "filesystem.search",
+      "phrase": "locate my tax paperwork somewhere on this computer",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "filesystem",
+      "expect": "folder.create",
+      "phrase": "make a desktop folder for these files",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "filesystem",
+      "expect": "folder.open",
+      "phrase": "bring up the main file explorer directory window",
+      "source": "human"
+    },
+    {
+      "category": "filesystem",
+      "expect": "folder.open",
+      "phrase": "open up my downloads folder",
+      "source": "human"
+    },
+    {
+      "category": "media",
+      "expect": "media.next",
+      "phrase": "move forward to the following song",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "media",
+      "expect": "media.next",
+      "phrase": "skip this current track music file item forward",
+      "source": "human"
+    },
+    {
+      "category": "media",
+      "expect": "media.play_pause",
+      "phrase": "pause it",
+      "prior": "Music is currently playing.",
+      "source": "agent"
+    },
+    {
+      "category": "media",
+      "expect": "media.play_pause",
+      "phrase": "pause it",
+      "prior": "Music is currently playing.",
+      "source": "agent"
+    },
+    {
+      "category": "media",
+      "expect": "media.play_pause",
+      "phrase": "pause the video that is playing",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "media",
+      "expect": "media.play_pause",
+      "phrase": "play my music playlist",
+      "source": "human"
+    },
+    {
+      "category": "media",
+      "expect": "media.previous",
+      "phrase": "play the song that comes before this one",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "media",
+      "expect": "media.previous",
+      "phrase": "play the track that came before this one",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "media",
+      "expect": "media.stop",
+      "phrase": "stop the media that is playing",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "media",
+      "expect": "media.stop",
+      "phrase": "stop the video cast feed window display pipeline",
+      "source": "human"
+    },
+    {
+      "category": "media",
+      "expect": "media.stop",
+      "phrase": "stop the video",
+      "source": "human"
+    },
+    {
+      "category": "media",
+      "expect": "volume.down",
+      "phrase": "turn the media volume down",
+      "source": "human"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.add_column",
+      "phrase": "add a new column to the left",
+      "source": "human"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.aggregate",
+      "phrase": "calculate the total of these sales numbers",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.calculate",
+      "phrase": "add up this column",
+      "source": "human"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.compare",
+      "phrase": "compare these two spreadsheet ranges",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.filter",
+      "phrase": "filter this grid table view by location city name",
+      "source": "human"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.read",
+      "phrase": "read the data from this spreadsheet",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.read",
+      "phrase": "read the values in row 14",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.sort",
+      "phrase": "sort this list from A to Z",
+      "source": "human"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.sort",
+      "phrase": "sort this spreadsheet list alphabetically",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "spreadsheet",
+      "expect": "spreadsheet.update_cell",
+      "phrase": "change the value in cell C6 to 450",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "system",
+      "expect": "application.open",
+      "phrase": "bring up the task manager overview page",
+      "source": "human"
+    },
+    {
+      "category": "system",
+      "expect": "cleanup.empty_recycle_bin",
+      "phrase": "empty all content garbage out of my trash bin folder",
+      "source": "human"
+    },
+    {
+      "category": "system",
+      "expect": "display.brightness_set",
+      "phrase": "drop it a bit",
+      "prior": "The screen brightness is currently at 40 percent.",
+      "source": "agent"
+    },
+    {
+      "category": "system",
+      "expect": "display.brightness_set",
+      "phrase": "drop it a bit",
+      "prior": "The screen brightness is currently at 40 percent.",
+      "source": "agent"
+    },
+    {
+      "category": "system",
+      "expect": "hardware.battery",
+      "phrase": "tell me the battery level of this laptop",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "system",
+      "expect": "hardware.stats",
+      "phrase": "display the hardware statistics for this machine",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "system",
+      "expect": "screen.capture",
+      "phrase": "save an image of what is visible on my display",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "system",
+      "expect": "system.status",
+      "phrase": "tell me the computer's current condition",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "system",
+      "expect": "system.status",
+      "phrase": "tell me the system status right now",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "system",
+      "expect": "volume.mute_toggle",
+      "phrase": "mute my computer speaker audio totally",
+      "source": "human"
+    },
+    {
+      "category": "system",
+      "expect": "volume.up",
+      "phrase": "make the computer audio louder",
+      "source": "assistant_draft"
+    },
+    {
+      "category": "system",
+      "expect": "workstation.lock",
+      "phrase": "lock my screen",
+      "source": "human"
+    },
+    {
+      "phrase": "can you do the needful",
+      "reason": "vague",
+      "source": "agent"
+    },
+    {
+      "phrase": "do the thing with the other stuff",
+      "reason": "unexecutable ambiguity",
+      "source": "agent"
+    },
+    {
+      "phrase": "do you know any good books about roman empire",
+      "reason": "recommendation",
+      "source": "agent"
+    },
+    {
+      "phrase": "explain how photosynthesis works",
+      "reason": "biology",
+      "source": "agent"
+    },
+    {
+      "phrase": "explain the theory of relativity in simple terms",
+      "reason": "physics explanation",
+      "source": "agent"
+    },
+    {
+      "phrase": "fix the grammar in my essay about climate policy",
+      "reason": "ambiguous: could be a file edit, but no file is named",
+      "source": "agent"
+    },
+    {
+      "phrase": "good morning, how are you today",
+      "reason": "greeting",
+      "source": "agent"
+    },
+    {
+      "phrase": "got any programming jokes?",
+      "reason": "small talk",
+      "source": "agent"
+    },
+    {
+      "phrase": "handle that for me like you did before",
+      "reason": "ambiguous without context",
+      "source": "agent"
+    },
+    {
+      "phrase": "how do i bake sourdough bread at home",
+      "reason": "domestic advice, not a computer action",
+      "source": "agent"
+    },
+    {
+      "phrase": "make it better somehow",
+      "reason": "unexecutable ambiguity",
+      "source": "agent"
+    },
+    {
+      "phrase": "open it",
+      "reason": "ambiguous pronoun, no antecedent",
+      "source": "agent"
+    },
+    {
+      "phrase": "pancake recipe please",
+      "reason": "recipe",
+      "source": "agent"
+    },
+    {
+      "phrase": "python question: tuple versus list",
+      "reason": "programming question",
+      "source": "agent"
+    },
+    {
+      "phrase": "summarise the main arguments of the french revolution",
+      "reason": "history question, not a local file",
+      "source": "agent"
+    },
+    {
+      "phrase": "thanks, that was really helpful of you",
+      "reason": "acknowledgement",
+      "source": "agent"
+    },
+    {
+      "phrase": "translate this paragraph into french",
+      "reason": "translation, not file manipulation",
+      "source": "agent"
+    },
+    {
+      "phrase": "what do you think about the new compiler release",
+      "reason": "opinion request",
+      "source": "agent"
+    },
+    {
+      "phrase": "what is the boiling point of water at sea level",
+      "reason": "science fact",
+      "source": "agent"
+    },
+    {
+      "phrase": "what is the population of madrid",
+      "reason": "geography fact",
+      "source": "agent"
+    },
+    {
+      "phrase": "what was the score in the world cup final",
+      "reason": "sports result",
+      "source": "agent"
+    },
+    {
+      "phrase": "who was the first person to reach the south pole",
+      "reason": "general knowledge",
+      "source": "agent"
+    },
+    {
+      "phrase": "write me a sonnet about the sea",
+      "reason": "creative writing",
+      "source": "agent"
+    }
+  ],
+  "final3_item_count": 102,
+  "final3_sha256": "785b68217389b260a9c0999519afacc1c225d728444ad5e5a2b8cde37f07fe24",
+  "sealed_at_utc": "2026-09-30T08:48:23.708896Z"
+}

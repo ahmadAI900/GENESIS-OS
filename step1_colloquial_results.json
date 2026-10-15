@@ -1,0 +1,94 @@
+{
+  "stash this somewhere else": {
+    "expected": "file.move",
+    "runs": 6,
+    "gate_passes": 6,
+    "llm_correct_when_gate_passes": 6,
+    "end_to_end_correct": 6,
+    "pass_rate": "100.0%",
+    "details": [
+      {
+        "run": 1,
+        "gate": true,
+        "op": "file.move",
+        "correct": true
+      },
+      {
+        "run": 2,
+        "gate": true,
+        "op": "file.move",
+        "correct": true
+      },
+      {
+        "run": 3,
+        "gate": true,
+        "op": "file.move",
+        "correct": true
+      },
+      {
+        "run": 4,
+        "gate": true,
+        "op": "file.move",
+        "correct": true
+      },
+      {
+        "run": 5,
+        "gate": true,
+        "op": "file.move",
+        "correct": true
+      },
+      {
+        "run": 6,
+        "gate": true,
+        "op": "file.move",
+        "correct": true
+      }
+    ]
+  },
+  "get rid of this file for me": {
+    "expected": "file.delete",
+    "runs": 6,
+    "gate_passes": 6,
+    "llm_correct_when_gate_passes": 6,
+    "end_to_end_correct": 6,
+    "pass_rate": "100.0%",
+    "details": [
+      {
+        "run": 1,
+        "gate": true,
+        "op": "file.delete",
+        "correct": true
+      },
+      {
+        "run": 2,
+        "gate": true,
+        "op": "file.delete",
+        "correct": true
+      },
+      {
+        "run": 3,
+        "gate": true,
+        "op": "file.delete",
+        "correct": true
+      },
+      {
+        "run": 4,
+        "gate": true,
+        "op": "file.delete",
+        "correct": true
+      },
+      {
+        "run": 5,
+        "gate": true,
+        "op": "file.delete",
+        "correct": true
+      },
+      {
+        "run": 6,
+        "gate": true,
+        "op": "file.delete",
+        "correct": true
+      }
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "composition": {
+    "count": 23,
+    "minimum_required": 20,
+    "meets_minimum": true,
+    "families": {
+      "advice_not_request": 2,
+      "ambiguous_even_with_context": 4,
+      "knowledge_action_adjacent": 7,
+      "narration_not_request": 3,
+      "smalltalk": 4,
+      "unexecutable_ambiguity": 3
+    },
+    "carrying_prior": 4,
+    "without_prior": 19
+  },
+  "banned_frame": {
+    "hits": []
+  },
+  "overlap_vs_production_surfaces": {
+    "items_with_significant_overlap": 0,
+    "significant": [],
+    "incidental_fragment_hits": 0
+  },
+  "overlap_vs_sealed_corpora": {
+    "sealed_phrases_checked": 542,
+    "hits": []
+  },
+  "internal_duplicates": [],
+  "missing_reason": [],
+  "audit_passed": true
+}

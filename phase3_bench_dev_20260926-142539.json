@@ -1,0 +1,371 @@
+{
+  "split": "dev",
+  "item_count": 27,
+  "iterations": [
+    {
+      "label": "dev:llm_local",
+      "total": 27,
+      "strict_correct": 10,
+      "acceptable_correct": 10,
+      "strict_pct": 37.0,
+      "acceptable_pct": 37.0,
+      "routed_level3": 13,
+      "mean_elapsed_s": 2.77,
+      "results": [
+        {
+          "phrase": "open notepad",
+          "expect": "application.open",
+          "accept": [
+            "application.open"
+          ],
+          "got": "application.open",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "delete this file",
+          "expect": "file.delete",
+          "accept": [
+            "file.delete"
+          ],
+          "got": "file.delete",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "lock my computer",
+          "expect": "workstation.lock",
+          "accept": [
+            "workstation.lock"
+          ],
+          "got": "workstation.lock",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.03,
+          "error": null
+        },
+        {
+          "phrase": "what's eating up my disk space",
+          "expect": "hardware.storage",
+          "accept": [
+            "hardware.storage"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "how bright is my screen right now",
+          "expect": "display.brightness_get",
+          "accept": [
+            "display.brightness_get"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 24.73,
+          "error": null
+        },
+        {
+          "phrase": "turn the sound down a bit",
+          "expect": "volume.down",
+          "accept": [
+            "volume.down"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 24.91,
+          "error": null
+        },
+        {
+          "phrase": "what is playing right now",
+          "expect": "media.play_pause",
+          "accept": [
+            "media.play_pause"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "stash this somewhere else",
+          "expect": "file.move",
+          "accept": [
+            "file.move"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 24.95,
+          "error": null
+        },
+        {
+          "phrase": "get rid of this file for me",
+          "expect": "file.delete",
+          "accept": [
+            "file.delete"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "snap a picture of what is on screen",
+          "expect": "screen.capture",
+          "accept": [
+            "screen.capture"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "close the thing I was just working on",
+          "expect": "application.close",
+          "accept": [
+            "application.close"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.02,
+          "error": null
+        },
+        {
+          "phrase": "put these files in order for me",
+          "expect": "folder.organize",
+          "accept": [
+            "folder.organize"
+          ],
+          "got": "file.move",
+          "level": 3,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "clean out the recycle bin",
+          "expect": "cleanup.empty_recycle_bin",
+          "accept": [
+            "cleanup.empty_recycle_bin"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "grab the text from that webpage",
+          "expect": "browser.extract",
+          "accept": [
+            "browser.extract"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "extract the text from this PDF",
+          "expect": "document.read_intel",
+          "accept": [
+            "document.read_intel"
+          ],
+          "got": "document.read",
+          "level": 3,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "make this document into a PDF",
+          "expect": "document.transform",
+          "accept": [
+            "document.transform"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.02,
+          "error": null
+        },
+        {
+          "phrase": "turn the screen dimmer",
+          "expect": "display.brightness_set",
+          "accept": [
+            "display.brightness_set"
+          ],
+          "got": "display.brightness_set",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "make it louder",
+          "expect": "volume.up",
+          "accept": [
+            "volume.up"
+          ],
+          "got": "volume.up",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "search the web for recent news about AI",
+          "expect": "browser.search",
+          "accept": [
+            "browser.search"
+          ],
+          "got": "web.research",
+          "level": 3,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "go to example.com",
+          "expect": "browser.open_url",
+          "accept": [
+            "browser.open_url"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "rename this folder to something sensible",
+          "expect": "folder.rename",
+          "accept": [
+            "folder.rename"
+          ],
+          "got": "folder.rename",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.01,
+          "error": null
+        },
+        {
+          "phrase": "move this file to the desktop",
+          "expect": "file.move",
+          "accept": [
+            "file.move"
+          ],
+          "got": "file.move",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "what time is it in Tokyo",
+          "expect": "time.world_clock",
+          "accept": [
+            "time.world_clock"
+          ],
+          "got": "time.world_clock",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "calculate 15 percent of 3200",
+          "expect": "math.evaluate",
+          "accept": [
+            "math.evaluate"
+          ],
+          "got": "math.evaluate",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "copy this file to my downloads",
+          "expect": "file.copy",
+          "accept": [
+            "file.copy"
+          ],
+          "got": "file.copy",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "compare the two versions of this contract",
+          "expect": "document.compare",
+          "accept": [
+            "document.compare",
+            "document.compare_intel"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "summarize this Word document",
+          "expect": "document.summarize",
+          "accept": [
+            "document.summarize",
+            "document.summarize_intel"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.02,
+          "error": null
+        }
+      ]
+    }
+  ]
+}

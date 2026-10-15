@@ -1,0 +1,69 @@
+# ==========================================================================
+# Genesis OS / UCCL - backend repository
+#
+# This file is written BEFORE the first commit so that nothing secret or
+# machine-specific can be committed by accident. The two entries that
+# matter most are `.env` and `genesis_os/approval_audit.jsonl`: the first
+# holds live API keys, the second is a runtime log that grows on every
+# approval-gated action and would otherwise make the tree permanently
+# dirty.
+# ==========================================================================
+
+# --------------------------------------------------------------------------
+# Secrets - NEVER commit
+# --------------------------------------------------------------------------
+# Holds live provider keys (GROQ_API_KEY, OLLAMA_API_KEY, ...).
+# Copy to .env and fill in locally; .env.example documents the names.
+.env
+
+# --------------------------------------------------------------------------
+# Runtime audit log
+# --------------------------------------------------------------------------
+# The approval channel's append-only log. Its location is configurable
+# (GENESIS_APPROVAL_AUDIT_LOG) and defaults OUTSIDE the source tree, but
+# the historical in-tree path is ignored too, so a machine that still
+# writes there cannot dirty the repository.
+genesis_os/approval_audit.jsonl
+approval_audit.jsonl
+
+# --------------------------------------------------------------------------
+# Python
+# --------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# --------------------------------------------------------------------------
+# Caches and test residue
+# --------------------------------------------------------------------------
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.coverage
+.coverage.*
+htmlcov/
+node_modules/
+
+# --------------------------------------------------------------------------
+# Editors and OS
+# --------------------------------------------------------------------------
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini

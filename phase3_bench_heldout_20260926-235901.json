@@ -1,0 +1,550 @@
+{
+  "split": "heldout",
+  "item_count": 40,
+  "iterations": [
+    {
+      "label": "heldout:llm_cloud",
+      "total": 40,
+      "strict_correct": 8,
+      "acceptable_correct": 9,
+      "strict_pct": 20.0,
+      "acceptable_pct": 22.5,
+      "routed_level3": 9,
+      "quota_errors": 0,
+      "mean_elapsed_s": 6.33,
+      "results": [
+        {
+          "phrase": "execute the gui.double_click capability through the authoritative provider boundary.",
+          "expect": "gui.double_click",
+          "accept": [
+            "gui.double_click"
+          ],
+          "got": "gui.double_click",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 3.14,
+          "error": null
+        },
+        {
+          "phrase": "could you close a running desktop application. for me",
+          "expect": "application.close",
+          "accept": [
+            "application.close"
+          ],
+          "got": "application.close",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 1.14,
+          "error": null
+        },
+        {
+          "phrase": "i need you to report which browser capabilities are available with the current provider.",
+          "expect": "browser.capabilities",
+          "accept": [
+            "browser.capabilities"
+          ],
+          "got": "browser.capabilities",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 5.09,
+          "error": null
+        },
+        {
+          "phrase": "inspect structured data. pls",
+          "expect": "data.inspect",
+          "accept": [
+            "data.inspect"
+          ],
+          "got": "data.inspect",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 18.95,
+          "error": null
+        },
+        {
+          "phrase": "can you compare two documents for differences.? thanks",
+          "expect": "document.compare",
+          "accept": [
+            "document.compare",
+            "document.compare_intel"
+          ],
+          "got": "document.compare_intel",
+          "level": 3,
+          "strict_pass": false,
+          "acceptable_pass": true,
+          "elapsed_s": 1.74,
+          "error": null
+        },
+        {
+          "phrase": "s'il vous plait, permanently empty the Recycle Bin after explicit user confirmation.",
+          "expect": "cleanup.empty_recycle_bin",
+          "accept": [
+            "cleanup.empty_recycle_bin"
+          ],
+          "got": "cleanup.empty_recycle_bin",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 20.26,
+          "error": null
+        },
+        {
+          "phrase": "when you get a chance, copy text to the system clipboard with readback verification.",
+          "expect": "clipboard.copy",
+          "accept": [
+            "clipboard.copy"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 22.31,
+          "error": null
+        },
+        {
+          "phrase": "please reda current screen brightness. asap",
+          "expect": "display.brightness_get",
+          "accept": [
+            "display.brightness_get"
+          ],
+          "got": "display.brightness_get",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 19.2,
+          "error": null
+        },
+        {
+          "phrase": "could you execute the gui.drag capability through the authoritative provider boundary. for me",
+          "expect": "gui.drag",
+          "accept": [
+            "gui.drag"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.34,
+          "error": null
+        },
+        {
+          "phrase": "i need you to bring a resolved desktop application window to the foreground.",
+          "expect": "application.focus",
+          "accept": [
+            "application.focus"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.25,
+          "error": null
+        },
+        {
+          "phrase": "hey, click an element on the current page by CSS selector. real quick",
+          "expect": "browser.click",
+          "accept": [
+            "browser.click"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.36,
+          "error": null
+        },
+        {
+          "phrase": "can you transform structured data.? thanks",
+          "expect": "data.transform",
+          "accept": [
+            "data.transform"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "right now, compare two documents for differences.",
+          "expect": "document.compare_intel",
+          "accept": [
+            "document.compare_intel"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "yo report Recycle Bin item count and size. Read-only.",
+          "expect": "cleanup.recycle_bin_query",
+          "accept": [
+            "cleanup.recycle_bin_query"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 4.08,
+          "error": null
+        },
+        {
+          "phrase": "read the current clipboard text.",
+          "expect": "clipboard.paste",
+          "accept": [
+            "clipboard.paste"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "s'il vous plait, set screen brightness to a percentage or step it up/down.",
+          "expect": "display.brightness_set",
+          "accept": [
+            "display.brightness_set"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "i need you to execute the gui.hotkey capability through the authoritative provider boundary.",
+          "expect": "gui.hotkey",
+          "accept": [
+            "gui.hotkey"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.88,
+          "error": null
+        },
+        {
+          "phrase": "please insepct a desktop application's identity and runtime state. asap",
+          "expect": "application.inspect",
+          "accept": [
+            "application.inspect"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "can you close a browser tab by index or the current tab.? thanks",
+          "expect": "browser.close_tab",
+          "accept": [
+            "browser.close_tab"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "right now, evaluate a pure arithmetic expression safely.",
+          "expect": "math.evaluate",
+          "accept": [
+            "math.evaluate"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 68.77,
+          "error": null
+        },
+        {
+          "phrase": "when you get a chance, execute the document.create capability through the authoritative provider boundary.",
+          "expect": "document.create",
+          "accept": [
+            "document.create"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "copy a file through the controlled filesystem safety path.",
+          "expect": "file.copy",
+          "accept": [
+            "file.copy"
+          ],
+          "got": "file.copy",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "could you skip to the next media track. for me",
+          "expect": "media.next",
+          "accept": [
+            "media.next"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.45,
+          "error": null
+        },
+        {
+          "phrase": "report battery level and charging state. thx",
+          "expect": "hardware.battery",
+          "accept": [
+            "hardware.battery"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "hey, execute the gui.inspect_ui_tree capability through the authoritative provider boundary. real quick",
+          "expect": "gui.inspect_ui_tree",
+          "accept": [
+            "gui.inspect_ui_tree"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "s'il vous plait, compatibility capability for application.inspect.",
+          "expect": "application.inspect_window_content",
+          "accept": [
+            "application.inspect_window_content"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 84.98,
+          "error": null
+        },
+        {
+          "phrase": "right now, download a file from a URL to a local path.",
+          "expect": "browser.download",
+          "accept": [
+            "browser.download"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.02,
+          "error": null
+        },
+        {
+          "phrase": "please exeucte the spreadsheet.add_column capability through the authoritative provider boundary. asap",
+          "expect": "spreadsheet.add_column",
+          "accept": [
+            "spreadsheet.add_column"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "create a CSV spreadsheet.",
+          "expect": "document.create_csv",
+          "accept": [
+            "document.create_csv"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.28,
+          "error": null
+        },
+        {
+          "phrase": "could you create a new file through the controlled filesystem safety path. for me",
+          "expect": "file.create",
+          "accept": [
+            "file.create"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "i need you to toggle play/pause on the active media application through virtual media keys.",
+          "expect": "media.play_pause",
+          "accept": [
+            "media.play_pause"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "hey, report CPU, memory, and uptime snapshot. real quick",
+          "expect": "hardware.stats",
+          "accept": [
+            "hardware.stats"
+          ],
+          "got": "hardware.stats",
+          "level": 3,
+          "strict_pass": true,
+          "acceptable_pass": true,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "can you execute the gui.wait capability through the authoritative provider boundary.? thanks",
+          "expect": "gui.wait",
+          "accept": [
+            "gui.wait"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.3,
+          "error": null
+        },
+        {
+          "phrase": "list discoverable desktop applications. pls",
+          "expect": "application.list",
+          "accept": [
+            "application.list"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "when you get a chance, extract text from the current page or a specific element.",
+          "expect": "browser.extract",
+          "accept": [
+            "browser.extract"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.01,
+          "error": null
+        },
+        {
+          "phrase": "s'il vous plait, aggregate spreadsheet columns.",
+          "expect": "spreadsheet.aggregate",
+          "accept": [
+            "spreadsheet.aggregate"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.28,
+          "error": null
+        },
+        {
+          "phrase": "could you create a DOCX document through the controlled document surface. for me",
+          "expect": "document.create_docx",
+          "accept": [
+            "document.create_docx"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "please deltee a file through the controlled filesystem safety path. asap",
+          "expect": "file.delete",
+          "accept": [
+            "file.delete"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        },
+        {
+          "phrase": "hey, go to the previous media track. real quick",
+          "expect": "media.previous",
+          "accept": [
+            "media.previous"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.42,
+          "error": null
+        },
+        {
+          "phrase": "can you report disk space per drive.? thanks",
+          "expect": "hardware.storage",
+          "accept": [
+            "hardware.storage"
+          ],
+          "got": null,
+          "level": 1,
+          "strict_pass": false,
+          "acceptable_pass": false,
+          "elapsed_s": 0.0,
+          "error": null
+        }
+      ],
+      "provenance": {
+        "backends": [
+          "Groq"
+        ],
+        "model_ids": [
+          "openai/gpt-oss-120b"
+        ],
+        "pinned": true
+      },
+      "pause_between_items_s": 20.0
+    }
+  ]
+}

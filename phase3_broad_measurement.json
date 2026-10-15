@@ -1,0 +1,533 @@
+[
+  {
+    "phrase": "fire up the web browser",
+    "expected": "application.open",
+    "got": null,
+    "family": "application",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "shut down word",
+    "expected": "application.close",
+    "got": null,
+    "family": "application",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "what apps are running right now",
+    "expected": "application.list",
+    "got": "process.list",
+    "family": "application",
+    "label": "question",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "swap over to excel",
+    "expected": "application.open",
+    "got": null,
+    "family": "application",
+    "label": "colloquial",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "click the save button",
+    "expected": "gui.click",
+    "got": null,
+    "family": "gui",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "type my email into the box",
+    "expected": "gui.type_text",
+    "got": null,
+    "family": "gui",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "scroll down to see more",
+    "expected": "gui.scroll",
+    "got": null,
+    "family": "gui",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "select everything in the list",
+    "expected": "gui.select",
+    "got": null,
+    "family": "gui",
+    "label": "indirect",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "duplicate this document",
+    "expected": "file.copy",
+    "got": null,
+    "family": "filesystem",
+    "label": "colloquial",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "reorganize my downloads folder",
+    "expected": "folder.organize",
+    "got": null,
+    "family": "filesystem",
+    "label": "indirect",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "make a new folder on the desktop",
+    "expected": "folder.create",
+    "got": "folder.create",
+    "family": "filesystem",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "where did that file go",
+    "expected": "file.search",
+    "got": null,
+    "family": "filesystem",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "rename this to something shorter",
+    "expected": "file.rename",
+    "got": "folder.rename",
+    "family": "filesystem",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "can you move this to the archives",
+    "expected": "file.move",
+    "got": "folder.move",
+    "family": "filesystem",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "clean up my recycle bin",
+    "expected": "cleanup.empty_recycle_bin",
+    "got": "file.move",
+    "family": "filesystem",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "what does this file say",
+    "expected": "document.read",
+    "got": null,
+    "family": "document",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "fix the typo in section 3",
+    "expected": "document.edit",
+    "got": null,
+    "family": "document",
+    "label": "indirect",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "give me a summary of this report",
+    "expected": "document.summarize",
+    "got": null,
+    "family": "document",
+    "label": "indirect",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "how does this doc compare to the other one",
+    "expected": "document.compare",
+    "got": null,
+    "family": "document",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "compare these two spreadsheets",
+    "expected": "spreadsheet.compare",
+    "got": null,
+    "family": "spreadsheet",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "arrange the data by date",
+    "expected": "spreadsheet.sort",
+    "got": null,
+    "family": "spreadsheet",
+    "label": "indirect",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "what's the total of column C",
+    "expected": "spreadsheet.aggregate",
+    "got": null,
+    "family": "spreadsheet",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "filter the rows where status is complete",
+    "expected": "spreadsheet.filter",
+    "got": null,
+    "family": "spreadsheet",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "go to github.com",
+    "expected": "browser.open_url",
+    "got": null,
+    "family": "browser",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "find the search box on this page",
+    "expected": "browser.find",
+    "got": "gui.inspect_window",
+    "family": "browser",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "grab that image from the site",
+    "expected": "browser.download",
+    "got": "screen.capture",
+    "family": "browser",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "what's the url of this page",
+    "expected": "browser.get_url",
+    "got": null,
+    "family": "browser",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "turn the volume down",
+    "expected": "volume.down",
+    "got": "volume.set",
+    "family": "system",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "how much disk space do I have left",
+    "expected": "hardware.storage",
+    "got": null,
+    "family": "system",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "what's my battery level",
+    "expected": "hardware.battery",
+    "got": null,
+    "family": "system",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "capture my screen",
+    "expected": "screen.capture",
+    "got": "screen.capture",
+    "family": "system",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "secure my workstation",
+    "expected": "workstation.lock",
+    "got": null,
+    "family": "system",
+    "label": "colloquial",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "make the display brighter",
+    "expected": "display.brightness_set",
+    "got": "display.brightness_set",
+    "family": "system",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "check my system stats",
+    "expected": "hardware.stats",
+    "got": "hardware.stats",
+    "family": "system",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "resume the music",
+    "expected": "media.play_pause",
+    "got": null,
+    "family": "media",
+    "label": "indirect",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "skip to the next track",
+    "expected": "media.next",
+    "got": null,
+    "family": "media",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "stop the playback",
+    "expected": "media.stop",
+    "got": "media.stop",
+    "family": "media",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "what song is playing",
+    "expected": "media.play_pause",
+    "got": "media.play_pause",
+    "family": "media",
+    "label": "question",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "connect to wifi",
+    "expected": "network.connect_wifi",
+    "got": "network.connect_wifi",
+    "family": "network",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "what networks are available",
+    "expected": "network.list_wifi",
+    "got": null,
+    "family": "network",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "what's running on my computer",
+    "expected": "process.list",
+    "got": "process.inspect",
+    "family": "process",
+    "label": "question",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "tell me about that process",
+    "expected": "process.inspect",
+    "got": null,
+    "family": "process",
+    "label": "indirect",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "copy that to my clipboard",
+    "expected": "clipboard.copy",
+    "got": "gui.type_text",
+    "family": "clipboard",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "paste what I copied earlier",
+    "expected": "clipboard.paste",
+    "got": null,
+    "family": "clipboard",
+    "label": "direct",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "create a note for later",
+    "expected": "notes.create",
+    "got": "notes.create",
+    "family": "notes",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "pull up my notes",
+    "expected": "notes.list",
+    "got": null,
+    "family": "notes",
+    "label": "colloquial",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "make a new directory here",
+    "expected": "folder.create",
+    "got": "folder.create",
+    "family": "filesystem",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "remove that empty folder",
+    "expected": "folder.delete",
+    "got": "folder.delete",
+    "family": "filesystem",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "where is my documents folder",
+    "expected": "folder.open",
+    "got": null,
+    "family": "filesystem",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "this is a beautiful day outside",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "statement",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "I love how this turned out",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "opinion",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "can you believe it's already friday",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "exclamation",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "what do you think about artificial intelligence",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "opinion_question",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "my cat is sleeping on the keyboard right now",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "observation",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "set the table for dinner tonight",
+    "expected": null,
+    "got": "workstation.lock",
+    "family": "conversational",
+    "label": "non_computer",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "open the window it's really hot in here",
+    "expected": null,
+    "got": "window.show_desktop",
+    "family": "conversational",
+    "label": "physical_action",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "move to a new city next spring",
+    "expected": null,
+    "got": "file.move",
+    "family": "conversational",
+    "label": "life_event",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "I think we should reconsider the whole approach",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "opinion",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "the weather has been terrible this week",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "statement",
+    "gate": "REJECT",
+    "correct": true
+  }
+]

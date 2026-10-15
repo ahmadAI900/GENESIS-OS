@@ -1,0 +1,6011 @@
+{
+ "__meta__": {
+  "argv": [
+   "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Lib\\site-packages\\pytest\\__main__.py",
+   "-m",
+   "live",
+   "-p",
+   "record_probe",
+   "--record",
+   "--record-tag",
+   "live",
+   "-q"
+  ],
+  "install": {
+   "audit": true,
+   "ctypes": true,
+   "meta_path": true,
+   "stale_bindings": [],
+   "wrapped_modules": [
+    "selenium.webdriver: 6 wrapped",
+    "selenium.webdriver: lazy __getattr__ wrapped for 6 names",
+    "win32api: 6 wrapped",
+    "pyautogui: 23 wrapped",
+    "playwright.sync_api: 1 wrapped"
+   ]
+  },
+  "max_distinct_events_per_test": 150,
+  "tag": "live",
+  "tests": 444,
+  "truncated_tests": []
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestCompoundScenarios::test_compound_scenarios_have_expected_postconditions": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestEvidenceRecord::test_creation": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestEvidenceRecord::test_default_values": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestReportGeneration::test_json_report_writes_valid_json": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0272
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestReportGeneration::test_markdown_report_writes_file": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0218
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestReportGeneration::test_write_reports_returns_both_paths": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0082
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunSummary::test_build_from_results": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_dispatch_carries_the_steps_parameters_to_the_executor": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.079
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_dispatch_reports_a_real_provider_status": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.2417
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_every_step_dispatches_through_the_action_executor": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.3102
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_runner_build_decision": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0455
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_runner_cleanup_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0911
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_runner_cleanup_with_callable_action": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0107
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_runner_has_no_direct_osmanager_fallback": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0097
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_runner_initializes": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"ver\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"ver\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 8,
+    "dll": "ole32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274d21c2720>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "StringFromCLSID"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'ole32', handle 7fff518d0000 at 0x274d21c26c0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoTaskMemFree"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274d21c2720>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "ProgIDFromCLSID"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274d21c2720>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CLSIDFromString"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274d21c2720>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CLSIDFromProgID"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274d21c2720>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoCreateGuid"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274d21c1df0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoInitializeEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'ole32', handle 7fff518d0000 at 0x274d21c2ab0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoUninitialize"
+   },
+   {
+    "api": "ole32.CoInitializeEx",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<PyDLL 'python dll', handle 7ffeeab20000 at 0x274c5035f10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "PyInstanceMethod_New"
+   },
+   {
+    "api": "python dll.PyInstanceMethod_New",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ole32.CLSIDFromString",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ole32.StringFromCLSID",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ole32.CoTaskMemFree",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 8,
+    "dll": "oleaut32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0a5820>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SysFreeString"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayAccessData"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayCreateVectorEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayCreateEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayCreate"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayUnaccessData"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetVartype"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetElement"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayDestroy"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayCreateVector"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayDestroyData"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetDim"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetLBound"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetUBound"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayLock"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayPtrOfIndex"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayUnlock"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetIID"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d0b30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayDestroyDescriptor"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d2030>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SysAllocStringLen"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d2120>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VariantChangeType"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d2120>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VariantClear"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d2120>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VariantCopy"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d2120>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VariantCopyInd"
+   },
+   {
+    "api": "oleaut32.VariantClear",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274cd0d3320>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoGetClassObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274cd0d3320>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoCreateInstance"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274cd0d3320>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoCreateInstanceEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274cd0d3320>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoGetObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d3aa0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "RegisterActiveObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d3aa0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "RevokeActiveObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd0d3aa0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetActiveObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd10a9f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CreateErrorInfo"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd10a9f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetErrorInfo"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274cd10a9f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetErrorInfo"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274d21c2900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetRecordInfoFromTypeInfo"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274d21c2900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetRecordInfoFromGuids"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274d21c2900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "LoadRegTypeLib"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274d21c2900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "LoadTypeLibEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274d21c2900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "LoadTypeLib"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274d21c2900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "UnRegisterTypeLib"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274d21c2900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "RegisterTypeLib"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274d21c2900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CreateTypeLib2"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x274d21c2900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "QueryPathOfRegTypeLib"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 3,
+    "dll": "kernel32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x274cd132240>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetModuleFileNameW"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x274cd1088f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "InterlockedIncrement"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd108920>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "DispGetIDsOfNames"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x274cd108920>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "DispInvoke"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'ole32', handle 7fff518d0000 at 0x274cd10b080>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoInitialize"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274cd10b170>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoAddRefServerProcess"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274cd10b170>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoReleaseServerProcess"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 2,
+    "dll": "user32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274cd10b620>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "PostQuitMessage"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 1,
+    "dll": "shell32.dll",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'shell32.dll', handle 7fff50210000 at 0x274d290b500>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SHGetSpecialFolderPathW"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x274cd1987d0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoWaitForMultipleHandles"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x274d2920500>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CreateEventA"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x274d2920500>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetEvent"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x274d2920500>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetConsoleCtrlHandler"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x274d2920500>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CloseHandle"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "MessageBoxW"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetProcessDPIAware"
+   },
+   {
+    "api": "user32.SetProcessDPIAware",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "EnumWindows"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowTextW"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowTextLengthW"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsWindowVisible"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetDC"
+   },
+   {
+    "api": "user32.GetDC",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VkKeyScanA"
+   },
+   {
+    "api": "user32.VkKeyScanA",
+    "count": 96,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetSystemMetrics"
+   },
+   {
+    "api": "user32.GetSystemMetrics",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 9.5417
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_unregistered_intent_fails_closed_instead_of_falling_back": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0188
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioContract::test_all_scenarios_have_at_least_one_step": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioContract::test_all_scenarios_have_category": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioContract::test_all_scenarios_have_pass_policy": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioContract::test_all_scenarios_have_unique_ids": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0101
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioContract::test_cleanup_steps_are_valid": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioContract::test_compound_scenarios_have_multiple_steps": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioContract::test_preconditions_are_valid": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioInventory::test_all_scenarios_have_unique_natural_language_requests": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioInventory::test_categories_covered": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioInventory::test_each_category_has_at_least_one_scenario": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0033
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioInventory::test_list_scenarios_includes_all": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0024
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioInventory::test_minimum_compound_scenarios": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioInventory::test_minimum_single_step_scenarios": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestScenarioResult::test_creation": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestStepContract::test_steps_have_intent": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0024
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestStepEvidence::test_creation": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestVerifiers::test_file_contains_negative": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0086
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestVerifiers::test_file_contains_positive": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0076
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestVerifiers::test_file_exists_negative": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0047
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestVerifiers::test_file_exists_positive": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0182
+ },
+ "benchmark_real_os/test_benchmark_real_os.py::TestVerifiers::test_process_running_returns_tuple": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0432
+ },
+ "test_compound_task_router.py::TestCompoundStepsDispatchThroughActionExecutor::test_compound_path_dispatches_multiple_operations": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 50.2993
+ },
+ "test_compound_task_router.py::TestCompoundStepsDispatchThroughActionExecutor::test_compound_plan_carries_all_steps_through_router": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.8877
+ },
+ "test_compound_task_router.py::TestCompoundStepsDispatchThroughActionExecutor::test_two_step_plan_executes_both_steps": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "tasklist /FI \"IMAGENAME eq chrome.exe\""
+    ],
+    "count": 1,
+    "exe": "tasklist /FI \"IMAGENAME eq chrome.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "57239",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Lib\\site-packages\\playwright\\driver\\node.exe C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Lib\\site-packages\\playwright\\driver\\package\\cli.js run-driver"
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Lib\\site-packages\\playwright\\driver\\node.exe C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Lib\\site-packages\\playwright\\driver\\package\\cli.js run-driver",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 56.3487
+ },
+ "test_compound_task_router.py::TestCompoundTaskSignal::test_empty_input_is_not_compound": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_compound_task_router.py::TestCompoundTaskSignal::test_mixed_level_is_not_compound_os": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0041
+ },
+ "test_compound_task_router.py::TestCompoundTaskSignal::test_single_step_is_not_compound": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.005
+ },
+ "test_compound_task_router.py::TestCompoundTaskSignal::test_two_step_l3_compound": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0057
+ },
+ "test_compound_task_router.py::TestConversationalRequestsNotAffected::test_conversation_routing_preserved[hello, how are you?]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0059
+ },
+ "test_compound_task_router.py::TestConversationalRequestsNotAffected::test_conversation_routing_preserved[remind me what we talked about yesterday about my python project]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0069
+ },
+ "test_compound_task_router.py::TestConversationalRequestsNotAffected::test_conversation_routing_preserved[tell me a joke]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0054
+ },
+ "test_compound_task_router.py::TestConversationalRequestsNotAffected::test_conversation_routing_preserved[what is the meaning of life?]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0034
+ },
+ "test_compound_task_router.py::TestDirectiveCompoundPipelineExecutesBoth::test_compound_pipeline_returns_workflowresult_with_both_steps": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "tasklist /FI \"IMAGENAME eq chrome.exe\""
+    ],
+    "count": 1,
+    "exe": "tasklist /FI \"IMAGENAME eq chrome.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 23.9118
+ },
+ "test_compound_task_router.py::TestDirectiveCompoundPipelineExecutesBoth::test_open_chrome_and_search_python_tutorials_both_execute": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "tasklist /FI \"IMAGENAME eq chrome.exe\""
+    ],
+    "count": 1,
+    "exe": "tasklist /FI \"IMAGENAME eq chrome.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 47.4366
+ },
+ "test_compound_task_router.py::TestLevel3_16AnaphoricCompat::test_anaphoric_single_op_stays_single[delete the file we were looking at]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0044
+ },
+ "test_compound_task_router.py::TestLevel3_16AnaphoricCompat::test_anaphoric_single_op_stays_single[move the open document to the desktop]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0034
+ },
+ "test_compound_task_router.py::TestLevel3_16AnaphoricCompat::test_anaphoric_single_op_stays_single[put the file I just edited into the Reports folder]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0042
+ },
+ "test_compound_task_router.py::TestLevel3_16AnaphoricCompat::test_anaphoric_single_op_stays_single[save a copy of the open document onto my desktop]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_compound_task_router.py::TestSingleStepTasksStaySingle::test_single_step_fallback[close spotify]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0051
+ },
+ "test_compound_task_router.py::TestSingleStepTasksStaySingle::test_single_step_fallback[minimize all windows]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0037
+ },
+ "test_compound_task_router.py::TestSingleStepTasksStaySingle::test_single_step_fallback[open chrome]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_compound_task_router.py::TestSingleStepTasksStaySingle::test_single_step_fallback[open my downloads]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0043
+ },
+ "test_compound_task_router.py::TestSingleStepTasksStaySingle::test_single_step_fallback[play despacito on youtube]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0035
+ },
+ "test_compound_task_router.py::TestSingleStepTasksStaySingle::test_single_step_fallback[put the file I just edited into the Reports folder]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_compound_task_router.py::TestSingleStepTasksStaySingle::test_single_step_fallback[shut everything down and give me a clean desktop]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_compound_task_router.py::TestSingleStepTasksStaySingle::test_single_step_fallback[what is 17% of 2450 and add it to 800]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_compound_task_router.py::TestTwoStepCompoundParaphrases::test_routes_to_compound_workflow[find the meeting notes and open them in word-file.search-application.open]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0067
+ },
+ "test_compound_task_router.py::TestTwoStepCompoundParaphrases::test_routes_to_compound_workflow[launch spotify and play my focus playlist-application.open-media.play_pause]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0117
+ },
+ "test_compound_task_router.py::TestTwoStepCompoundParaphrases::test_routes_to_compound_workflow[minimize all windows and then open the task manager-window.minimize_all-application.open]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0087
+ },
+ "test_compound_task_router.py::TestTwoStepCompoundParaphrases::test_routes_to_compound_workflow[open chrome and navigate to github-application.open-browser.open_url]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0364
+ },
+ "test_compound_task_router.py::TestTwoStepCompoundParaphrases::test_routes_to_compound_workflow[open chrome, go to github, and search for repos about langchain-application.open-file.search]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 2.0089
+ },
+ "test_compound_task_router.py::TestTwoStepCompoundParaphrases::test_routes_to_compound_workflow[open my downloads, then move the latest PDF to my desktop-folder.open-file.move]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0111
+ },
+ "test_compound_task_router.py::TestTwoStepCompoundParaphrases::test_routes_to_compound_workflow[open settings and turn on bluetooth-application.open-system.open_settings]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0155
+ },
+ "test_compound_task_router.py::TestWorkflowPlanBuilding::test_plan_has_one_step_per_intent": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.007
+ },
+ "test_compound_task_router.py::TestWorkflowPlanBuilding::test_plan_steps_are_sequential": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0071
+ },
+ "test_compound_task_router.py::TestWorkflowPlanBuilding::test_plan_supports_non_application_ops": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0075
+ },
+ "test_compound_task_router.py::TestWorkflowPlanBuilding::test_plan_supports_window_ops": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.008
+ },
+ "test_compound_task_router.py::TestWorkflowPlanBuilding::test_plan_validates": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0079
+ },
+ "test_compound_task_router.py::TestWorkflowPlannerAcceptsNonApplicationOps::test_workflow_planner_validates_media_play_pause": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_compound_task_router.py::TestWorkflowPlannerAcceptsNonApplicationOps::test_workflow_planner_validates_window_minimize_all": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "test_context_hint_resolver.py::TestBrowserContext::test_browser_context_routes_to_browser_intent[open chrome-navigate to stack overflow]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0088
+ },
+ "test_context_hint_resolver.py::TestBrowserContext::test_browser_context_routes_to_browser_intent[open chrome-search for python tutorials]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0056
+ },
+ "test_context_hint_resolver.py::TestBrowserContext::test_browser_context_routes_to_browser_intent[open chrome-search for the latest news]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0052
+ },
+ "test_context_hint_resolver.py::TestBrowserContext::test_browser_context_routes_to_browser_intent[open chrome-visit github]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0056
+ },
+ "test_context_hint_resolver.py::TestBrowserContext::test_browser_context_routes_to_browser_intent[open edge-go to wikipedia]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0042
+ },
+ "test_context_hint_resolver.py::TestBrowserContext::test_browser_context_routes_to_browser_intent[open firefox-go to my bank]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0065
+ },
+ "test_context_hint_resolver.py::TestBrowserContext::test_browser_context_routes_to_browser_intent[open the browser-search for the latest news]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0057
+ },
+ "test_context_hint_resolver.py::TestBuildContextHint::test_browser_app": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_context_hint_resolver.py::TestBuildContextHint::test_non_dict_returns_none": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "test_context_hint_resolver.py::TestBuildContextHint::test_non_l3_returns_none": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "test_context_hint_resolver.py::TestBuildContextHint::test_settings_app_via_application_open": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0021
+ },
+ "test_context_hint_resolver.py::TestBuildContextHint::test_settings_app_via_system_open_settings": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "test_context_hint_resolver.py::TestContextHintResolverUnit::test_empty_fragment_returns_unresolved": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0021
+ },
+ "test_context_hint_resolver.py::TestContextHintResolverUnit::test_no_prior_decision_uses_direct_resolution": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_context_hint_resolver.py::TestContextHintResolverUnit::test_prior_decision_browser_enables_browser_resolution": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0034
+ },
+ "test_context_hint_resolver.py::TestContextHintResolverUnit::test_prior_decision_non_os_ignored": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_context_hint_resolver.py::TestContextHintResolverUnit::test_prior_decision_settings_enables_sub_page_resolution": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0061
+ },
+ "test_context_hint_resolver.py::TestContextHintResolverUnit::test_stats_recorded": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "test_context_hint_resolver.py::TestContextResolvedPlanExecutes::test_browser_compound_plan_is_valid": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "tasklist /FI \"IMAGENAME eq chrome.exe\""
+    ],
+    "count": 1,
+    "exe": "tasklist /FI \"IMAGENAME eq chrome.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 23.7004
+ },
+ "test_context_hint_resolver.py::TestContextResolvedPlanExecutes::test_settings_compound_plan_is_valid": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "explorer.exe ms-settings:"
+    ],
+    "count": 1,
+    "exe": "explorer.exe ms-settings:",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 25.4601
+ },
+ "test_context_hint_resolver.py::TestConversationalRequestsUnaffected::test_conversation_unchanged[hello, how are you?]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.006
+ },
+ "test_context_hint_resolver.py::TestConversationalRequestsUnaffected::test_conversation_unchanged[tell me a joke]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0064
+ },
+ "test_context_hint_resolver.py::TestConversationalRequestsUnaffected::test_conversation_unchanged[what is the meaning of life?]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_context_hint_resolver.py::TestDirectSettingsSubPage::test_direct_settings_sub_page[open accessibility settings-easeofaccess]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_context_hint_resolver.py::TestDirectSettingsSubPage::test_direct_settings_sub_page[open bluetooth settings-bluetooth]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0034
+ },
+ "test_context_hint_resolver.py::TestDirectSettingsSubPage::test_direct_settings_sub_page[open display settings-display]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0031
+ },
+ "test_context_hint_resolver.py::TestDirectSettingsSubPage::test_direct_settings_sub_page[open notification settings-notifications]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_context_hint_resolver.py::TestDirectSettingsSubPage::test_direct_settings_sub_page[open sound settings-sound]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "test_context_hint_resolver.py::TestDirectSettingsSubPage::test_direct_settings_sub_page[open wifi settings-network-wifi]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.004
+ },
+ "test_context_hint_resolver.py::TestSettingsSubPageContext::test_routes_to_system_open_settings_sub_page[open accessibility-enable high contrast-easeofaccess]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0135
+ },
+ "test_context_hint_resolver.py::TestSettingsSubPageContext::test_routes_to_system_open_settings_sub_page[open settings-enable high contrast-easeofaccess]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0071
+ },
+ "test_context_hint_resolver.py::TestSettingsSubPageContext::test_routes_to_system_open_settings_sub_page[open settings-turn off notifications-notifications]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0085
+ },
+ "test_context_hint_resolver.py::TestSettingsSubPageContext::test_routes_to_system_open_settings_sub_page[open settings-turn on bluetooth-bluetooth]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.01
+ },
+ "test_context_hint_resolver.py::TestSettingsSubPageContext::test_routes_to_system_open_settings_sub_page[open the display settings-disable night light-display]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0073
+ },
+ "test_context_hint_resolver.py::TestSettingsSubPageContext::test_routes_to_system_open_settings_sub_page[open the display settings-turn on dark mode-personalization]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0243
+ },
+ "test_context_hint_resolver.py::TestSettingsSubPageContext::test_routes_to_system_open_settings_sub_page[open the sound settings-switch the output to headphones-sound]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.022
+ },
+ "test_context_hint_resolver.py::TestSettingsSubPageContext::test_routes_to_system_open_settings_sub_page[open wifi-connect to my home network-network-wifi]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0115
+ },
+ "test_context_hint_resolver.py::TestSingleStepRequestsUnaffected::test_single_step_unchanged[minimize all windows]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0046
+ },
+ "test_context_hint_resolver.py::TestSingleStepRequestsUnaffected::test_single_step_unchanged[open chrome]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0033
+ },
+ "test_context_hint_resolver.py::TestSingleStepRequestsUnaffected::test_single_step_unchanged[open my downloads]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0033
+ },
+ "test_context_hint_resolver.py::TestSingleStepRequestsUnaffected::test_single_step_unchanged[put the file I just edited into the Reports folder]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "test_context_hint_resolver.py::TestSingleStepRequestsUnaffected::test_single_step_unchanged[what is 17% of 2450]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0032
+ },
+ "test_gate_paths.py::test_path3_workflow_engine_gate": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.008
+ },
+ "test_gate_paths.py::test_path8_unified_executor_gate": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0125
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[can you open chrome]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[hey can you open chrome]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0034
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[hey, can you open notepad]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[hey, open notepad]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[hi, please open notepad]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[i want to mute the volume]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0021
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[let me capture the screen]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0021
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[lock my computer]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[make my screen dimmer]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.002
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[ok, can you lock my computer]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.002
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[open notepad]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[please open notepad]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[set volume to 40]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0038
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_actionable_inputs_still_pass_intent_gate[take a screenshot]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0024
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_already_in_desired_state_does_not_print_not_verified_line": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.0535
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_confirmation_text_for_unknown_operation_does_not_leak_id": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0031
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_confirmation_text_never_contains_raw_capability_id[cleanup.empty_recycle_bin-recycle_bin-parameters1]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0034
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_confirmation_text_never_contains_raw_capability_id[cleanup.recycle_bin_query-recycle_bin-parameters0]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0024
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_confirmation_text_never_contains_raw_capability_id[screen.capture-screen-parameters2]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0037
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_confirmation_text_never_contains_raw_capability_id[workstation.lock-workstation-parameters3]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_confirmation_text_uses_descriptor_for_recycle_bin_query": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0024
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_conversational_inputs_do_not_pass_intent_gate[can you do something for me]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0049
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_conversational_inputs_do_not_pass_intent_gate[hello there friend]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0069
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_conversational_inputs_do_not_pass_intent_gate[hi how are you doing today]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_conversational_inputs_do_not_pass_intent_gate[hii now i make you able to control my computer]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0052
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_conversational_inputs_do_not_pass_intent_gate[i think we should set up a meeting]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0036
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_conversational_inputs_do_not_pass_intent_gate[she set the table before we arrived]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_conversational_inputs_do_not_pass_intent_gate[what can you do for me]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0034
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_conversational_inputs_do_not_pass_intent_gate[you make me happy]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0024
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_intent_gate_does_not_invoke_resolver_for_conversational_text": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.0461
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_unverified_result_still_prints_negative_line": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.0553
+ },
+ "test_intent_gate_and_confirmation_prompt.py::test_verified_result_does_not_print_not_verified_line": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.9961
+ },
+ "test_level3_11_unified_intelligence.py::test_fuzzy_application_resolution[close vscod-vscode]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0031
+ },
+ "test_level3_11_unified_intelligence.py::test_fuzzy_application_resolution[launch firefix-firefox]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_level3_11_unified_intelligence.py::test_fuzzy_application_resolution[open chrom-chrome]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0047
+ },
+ "test_level3_11_unified_intelligence.py::test_fuzzy_application_resolution[open notpad-notepad]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_level3_11_unified_intelligence.py::test_fuzzy_application_resolution[please open exce-None]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.005
+ },
+ "test_level3_11_unified_intelligence.py::test_fuzzy_folder_resolution[go to documnts-documents]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "test_level3_11_unified_intelligence.py::test_fuzzy_folder_resolution[open desktap-desktop]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_level3_11_unified_intelligence.py::test_fuzzy_folder_resolution[open my downloadss-downloads]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0061
+ },
+ "test_level3_11_unified_intelligence.py::test_fuzzy_matching_does_not_create_false_positives": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0062
+ },
+ "test_level3_11_unified_intelligence.py::test_mixed_objective_runs_level3_and_level2_together": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.9729
+ },
+ "test_level3_11_unified_intelligence.py::test_non_latin_script_requires_translation": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.6158
+ },
+ "test_level3_11_unified_intelligence.py::test_normalizer_declines_when_ai_unavailable": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0019
+ },
+ "test_level3_11_unified_intelligence.py::test_pure_level3_objectives_do_not_invoke_agents": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "tasklist /FI \"IMAGENAME eq chrome.exe\""
+    ],
+    "count": 1,
+    "exe": "tasklist /FI \"IMAGENAME eq chrome.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 22.3911
+ },
+ "test_level3_11_unified_intelligence.py::test_translation_prompt_contract": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_level3_11_unified_intelligence.py::test_web_research_contract_with_fake_provider": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_level3_11_unified_intelligence.py::test_web_research_dispatch_through_executor": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0038
+ },
+ "test_level3_11_unified_intelligence.py::test_web_research_is_registered_and_allowed": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "test_level3_11_unified_intelligence.py::test_web_research_rejects_empty_query": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.002
+ },
+ "test_level3_11_unified_intelligence.py::test_web_research_reports_provider_failure_honestly": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_level3_11_unified_intelligence.py::test_web_research_routing": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0034
+ },
+ "test_level3_2_applications.py::test_application_inspection": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "tasklist /FI \"IMAGENAME eq notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "tasklist /FI \"IMAGENAME eq notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 22.0063
+ },
+ "test_level3_2_applications.py::test_application_resolution": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 22.3599
+ },
+ "test_level3_2_applications.py::test_manager_initialization": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_level3_2_applications.py::test_os_status": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_level3_2_applications.py::test_unknown_application": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 22.6188
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserClosed::test_all_operations_after_browser_closed": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0091
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserClosed::test_click_after_browser_closed": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserClosed::test_download_after_browser_closed": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserClosed::test_navigate_after_browser_closed": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0056
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserClosed::test_screenshot_after_browser_closed": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.006
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserClosed::test_select_after_browser_closed": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0038
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserClosed::test_type_after_browser_closed": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0042
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserClosed::test_upload_after_browser_closed": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0042
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserNotInstalled::test_provider_unavailable_fallback": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0044
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserNotInstalled::test_report_capabilities_honestly": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.004
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserNotInstalled::test_selenium_import_failure_graceful": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialBrowserNotInstalled::test_webbrowser_provider_always_available": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialChangedPageStructure::test_click_on_relocated_element": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialChangedPageStructure::test_extract_after_structure_change": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0043
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialChangedPageStructure::test_find_text_returns_zero_matches": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialMissingElements::test_click_missing_element_returns_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0034
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialMissingElements::test_extract_missing_element_returns_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0083
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialMissingElements::test_select_missing_element_returns_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0038
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialMissingElements::test_type_missing_element_returns_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0055
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialMultipleMatchingElements::test_click_ambiguous_selector": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0042
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialMultipleMatchingElements::test_extract_multiple_elements": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialMultipleMatchingElements::test_find_text_multiple_matches": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0042
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialMultipleMatchingElements::test_select_multiple_matches": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0043
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialNetworkFailure::test_download_network_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0047
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialNetworkFailure::test_open_url_network_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialNetworkFailure::test_search_network_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0044
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialSlowPages::test_slow_click_does_not_crash_manager": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0653
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialSlowPages::test_slow_click_returns_within_timeout": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0584
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialSlowPages::test_wait_for_element_with_timeout": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0037
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialStalePage::test_get_url_after_navigation": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.004
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialStalePage::test_stale_element_reference": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0096
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialStalePage::test_stale_page_title_mismatch": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 63.3901
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialStalePage::test_stale_page_url_mismatch": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 63.0858
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialUnexpectedPopup::test_click_with_popup_returns_success_or_error": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0038
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialUnexpectedPopup::test_type_with_popup": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0035
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialUnexpectedPopup::test_verify_with_popup_changes_url": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 63.2177
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialWrongResult::test_verify_both_correct": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 63.5192
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialWrongResult::test_verify_both_wrong": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 62.9708
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialWrongResult::test_verify_wrong_title": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 62.8339
+ },
+ "test_level3_3_browser_adversarial.py::TestAdversarialWrongResult::test_verify_wrong_url": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 63.1542
+ },
+ "test_level3_3_browser_adversarial.py::TestProviderFallback::test_fallback_to_webbrowser": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0043
+ },
+ "test_level3_3_browser_adversarial.py::TestProviderFallback::test_provider_unavailable_honest_report": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0042
+ },
+ "test_level3_3_browser_adversarial.py::TestProviderFallback::test_unavailable_provider_not_preferred": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0091
+ },
+ "test_level3_3_browser_adversarial.py::TestRecoveryFromFailures::test_recover_from_missing_element_by_retry": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0072
+ },
+ "test_level3_3_browser_adversarial.py::TestRecoveryFromFailures::test_recover_from_stale_reference": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0061
+ },
+ "test_level3_3_browser_adversarial.py::TestRecoveryFromFailures::test_session_independence": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0049
+ },
+ "test_level3_3_browser_select_download_upload.py::TestActionExecutorBrowserDownload::test_browser_download_dispatched": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0073
+ },
+ "test_level3_3_browser_select_download_upload.py::TestActionExecutorBrowserDownload::test_browser_download_outside_the_workspace_requires_a_grant": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0093
+ },
+ "test_level3_3_browser_select_download_upload.py::TestActionExecutorBrowserSelect::test_browser_select_by_index_dispatched": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0056
+ },
+ "test_level3_3_browser_select_download_upload.py::TestActionExecutorBrowserSelect::test_browser_select_by_label_dispatched": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0059
+ },
+ "test_level3_3_browser_select_download_upload.py::TestActionExecutorBrowserSelect::test_browser_select_dispatched": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0053
+ },
+ "test_level3_3_browser_select_download_upload.py::TestActionExecutorBrowserUpload::test_browser_upload_dispatched": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0059
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserDownloadAdversarial::test_download_invalid_url": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0032
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserDownloadAdversarial::test_download_network_failure": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0044
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserManagerDownload::test_download_delegates_to_provider": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0046
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserManagerDownload::test_download_with_save_path": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0042
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserManagerSelect::test_select_custom_session": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0055
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserManagerSelect::test_select_delegates_to_provider": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0032
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserManagerSelect::test_select_with_index": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0036
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserManagerSelect::test_select_with_label": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0048
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserManagerUpload::test_upload_delegates_to_provider": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0037
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserProviderBaseDefaults::test_download_returns_unsupported": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserProviderBaseDefaults::test_select_returns_unsupported": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0021
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserProviderBaseDefaults::test_upload_returns_unsupported": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserSelectAdversarial::test_select_all_methods_none": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserSelectAdversarial::test_select_with_empty_selector": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0039
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserSelectAdversarial::test_select_with_no_method": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserUploadAdversarial::test_upload_missing_file": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0052
+ },
+ "test_level3_3_browser_select_download_upload.py::TestBrowserUploadAdversarial::test_upload_no_selector": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0031
+ },
+ "test_level3_3_browser_select_download_upload.py::TestCapabilityRegistryBrowserOperations::test_browser_download_registered": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0021
+ },
+ "test_level3_3_browser_select_download_upload.py::TestCapabilityRegistryBrowserOperations::test_browser_select_registered": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "test_level3_3_browser_select_download_upload.py::TestCapabilityRegistryBrowserOperations::test_browser_upload_registered": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_level3_3_browser_select_download_upload.py::TestMockProviderDownload::test_download_delegates": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0019
+ },
+ "test_level3_3_browser_select_download_upload.py::TestMockProviderDownload::test_download_no_save_path": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0019
+ },
+ "test_level3_3_browser_select_download_upload.py::TestMockProviderSelect::test_select_by_index": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0019
+ },
+ "test_level3_3_browser_select_download_upload.py::TestMockProviderSelect::test_select_by_label": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.002
+ },
+ "test_level3_3_browser_select_download_upload.py::TestMockProviderSelect::test_select_by_value": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0021
+ },
+ "test_level3_3_browser_select_download_upload.py::TestMockProviderSelect::test_select_no_method_returns_error": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0019
+ },
+ "test_level3_3_browser_select_download_upload.py::TestMockProviderUpload::test_upload_delegates": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_level3_3_browser_select_download_upload.py::TestOSManagerBrowserSelect::test_browser_download_reaches_os_manager": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0078
+ },
+ "test_level3_3_browser_select_download_upload.py::TestOSManagerBrowserSelect::test_browser_select_reaches_os_manager": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0073
+ },
+ "test_level3_3_browser_select_download_upload.py::TestOSManagerBrowserSelect::test_browser_upload_reaches_os_manager": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0054
+ },
+ "test_level3_6_golden_workflow.py::TestBrowserGoldenWorkflow::test_search_youtube_open_second_result": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 62.9495
+ },
+ "test_level3_6_golden_workflow.py::TestGoldenWorkflow::test_calculate_percentages": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0867
+ },
+ "test_level3_6_golden_workflow.py::TestGoldenWorkflow::test_discover_newest_workbook": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0621
+ },
+ "test_level3_6_golden_workflow.py::TestGoldenWorkflow::test_full_golden_workflow": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0704
+ },
+ "test_level3_6_golden_workflow.py::TestGoldenWorkflow::test_inspect_workbook_structure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0823
+ },
+ "test_level3_6_golden_workflow.py::TestGoldenWorkflow::test_original_preserved": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0632
+ },
+ "test_level3_6_golden_workflow.py::TestGoldenWorkflow::test_rank_students": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0799
+ },
+ "test_level3_9_multi_step_workflows.py::test_browser_objective_decomposes_into_two_steps": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0053
+ },
+ "test_level3_9_multi_step_workflows.py::test_confirmation_required_stops_entire_workflow": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0111
+ },
+ "test_level3_9_multi_step_workflows.py::test_dependency_chain_is_sequential": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0054
+ },
+ "test_level3_9_multi_step_workflows.py::test_mixed_objective_requires_clarification": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0068
+ },
+ "test_level3_9_multi_step_workflows.py::test_multi_step_workflow_executes_and_verifies": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0102
+ },
+ "test_level3_9_multi_step_workflows.py::test_multi_step_workflow_stops_on_failed_first_step": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0084
+ },
+ "test_level3_9_multi_step_workflows.py::test_resolver_leaves_application_and_browser_steps_untouched": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0046
+ },
+ "test_level3_9_multi_step_workflows.py::test_resolver_resolves_semantic_folder_step": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0517
+ },
+ "test_level3_9_multi_step_workflows.py::test_search_engines_build_safe_urls[bing-https://www.bing.com/search?q=]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_level3_9_multi_step_workflows.py::test_search_engines_build_safe_urls[duckduckgo-https://duckduckgo.com/?q=]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0049
+ },
+ "test_level3_9_multi_step_workflows.py::test_search_engines_build_safe_urls[google-https://www.google.com/search?q=]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0052
+ },
+ "test_level3_9_multi_step_workflows.py::test_search_engines_build_safe_urls[youtube-https://www.youtube.com/results?search_query=]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "test_level3_9_multi_step_workflows.py::test_search_rejects_empty_query": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0058
+ },
+ "test_level3_9_multi_step_workflows.py::test_sequenced_objective_decomposes_in_order": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0062
+ },
+ "test_level3_9_natural_language_execution.py::test_conversational_ielts_question_never_becomes_os_action": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0021
+ },
+ "test_level3_9_natural_language_execution.py::test_create_folder_called_genesis_test_executes_and_verifies": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0105
+ },
+ "test_level3_9_natural_language_execution.py::test_create_folder_outside_the_workspace_is_gated": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0063
+ },
+ "test_level3_9_natural_language_execution.py::test_creating_an_existing_folder_does_not_fake_success": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0091
+ },
+ "test_level3_9_natural_language_execution.py::test_destructive_file_operations_are_confirmation_gated": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0057
+ },
+ "test_level3_9_natural_language_execution.py::test_downloads_resolves_to_real_windows_folder": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0455
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[browser.open_url]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[file.copy]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0019
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[file.create]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[file.hash]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[file.open]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[file.search]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0019
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[folder.create]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[folder.delete]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[folder.move]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0041
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[folder.rename]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[system.open_settings]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_level3_9_natural_language_execution.py::test_executor_surface_is_registered_with_safety[system.status]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0021
+ },
+ "test_level3_9_natural_language_execution.py::test_explicit_denials_survive_surface_completion[filesystem.delete]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "test_level3_9_natural_language_execution.py::test_explicit_denials_survive_surface_completion[process.kill]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "test_level3_9_natural_language_execution.py::test_explicit_denials_survive_surface_completion[shell.execute]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0024
+ },
+ "test_level3_9_natural_language_execution.py::test_explicit_denials_survive_surface_completion[system.restart]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "test_level3_9_natural_language_execution.py::test_explicit_denials_survive_surface_completion[system.shutdown]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_level3_9_natural_language_execution.py::test_explicit_denials_survive_surface_completion[system.sleep]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.002
+ },
+ "test_level3_9_natural_language_execution.py::test_explicit_search_root_stays_single_root": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0153
+ },
+ "test_level3_9_natural_language_execution.py::test_file_move_outside_the_workspace_requires_a_grant": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0087
+ },
+ "test_level3_9_natural_language_execution.py::test_file_move_to_a_free_destination_is_not_gated": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.007
+ },
+ "test_level3_9_natural_language_execution.py::test_find_my_ielts_essay_passes_safety_and_executes": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.019
+ },
+ "test_level3_9_natural_language_execution.py::test_folder_name_case_preserved_for_various_phrasings": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0044
+ },
+ "test_level3_9_natural_language_execution.py::test_grant_does_not_authorise_an_uncovered_second_path": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0073
+ },
+ "test_level3_9_natural_language_execution.py::test_open_my_downloads_folder_end_to_end": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0543
+ },
+ "test_level3_9_natural_language_execution.py::test_routing_contract[can you open google chrome?-application.open]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_level3_9_natural_language_execution.py::test_routing_contract[find my IELTS essay-file.search]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0033
+ },
+ "test_level3_9_natural_language_execution.py::test_routing_contract[go to my downloads-folder.open]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0036
+ },
+ "test_level3_9_natural_language_execution.py::test_routing_contract[launch chrome-application.open]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_level3_9_natural_language_execution.py::test_routing_contract[open my downloads folder-folder.open]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0036
+ },
+ "test_level3_9_natural_language_execution.py::test_routing_contract[show me the downloads folder-folder.open]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_level3_9_natural_language_execution.py::test_routing_contract[take me to downloads-folder.open]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_level3_9_natural_language_execution.py::test_semantic_multi_root_search_finds_matching_file": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0177
+ },
+ "test_level3_9_natural_language_execution.py::test_unknown_operation_remains_blocked": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "test_level3_9_natural_language_execution.py::test_unresolvable_application_targets_do_not_become_fake_os_actions[open my browser]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0043
+ },
+ "test_level3_9_natural_language_execution.py::test_unresolvable_application_targets_do_not_become_fake_os_actions[please launch my browser]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_level3_9_natural_language_execution.py::test_unresolvable_folder_target_is_not_invented": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0465
+ },
+ "test_modal_dialog_recovery.py::TestFocusResolverModalDetection::test_confirm_save_as_is_unsafe": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_modal_dialog_recovery.py::TestFocusResolverModalDetection::test_do_you_want_to_save_is_unsafe": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0032
+ },
+ "test_modal_dialog_recovery.py::TestFocusResolverModalDetection::test_normal_notepad_is_safe": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0037
+ },
+ "test_modal_dialog_recovery.py::TestFocusResolverModalDetection::test_notepad_with_content_is_safe": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_modal_dialog_recovery.py::TestFocusResolverModalDetection::test_save_as_dialog_is_unsafe": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0094
+ },
+ "test_modal_dialog_recovery.py::TestFullWorkflowModalRecovery::test_workflow_recovers_after_modal": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 5,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 1291,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 148,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 113,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 31,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 23,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.hotkey",
+    "args": [
+     "ctrl",
+     "a"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 65,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 50,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "delete"
+    ],
+    "count": 21,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "Hello"
+    ],
+    "count": 2,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.PostMessageW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 4.7338
+ },
+ "test_modal_dialog_recovery.py::TestReadFocusedTextModalRecovery::test_read_focused_text_returns_within_timeout_with_modal": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 516,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 55,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 41,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowRect"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowThreadProcessId"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetClassNameW"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetForegroundWindow"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsIconic"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsZoomed"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.hotkey",
+    "args": [
+     "ctrl",
+     "a"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetCursorPos"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 16,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "keybd_event"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 14,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "delete"
+    ],
+    "count": 5,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "test"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "PostMessageW"
+   },
+   {
+    "api": "user32.PostMessageW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 3.6507
+ },
+ "test_modal_dialog_recovery.py::TestReadFocusedTextModalRecovery::test_uia_read_focused_text_returns_within_timeout_with_modal": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 516,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 55,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 41,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.hotkey",
+    "args": [
+     "ctrl",
+     "a"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 16,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 14,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "delete"
+    ],
+    "count": 5,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "test"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.PostMessageW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 3.6076
+ },
+ "test_modal_dialog_recovery.py::TestTypeTextModalRecovery::test_type_text_recovers_with_modal_present": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 775,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 86,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 65,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 24,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.hotkey",
+    "args": [
+     "ctrl",
+     "a"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 62,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 44,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "delete"
+    ],
+    "count": 20,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "test"
+    ],
+    "count": 2,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.PostMessageW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetForegroundWindow"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 4.5613
+ },
+ "test_multi_agent_response_format_regression.py::test_run_multi_agent_call_site_passes_inner_list_to_synthesis": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.0065
+ },
+ "test_multi_agent_response_format_regression.py::test_synthesize_fallback_also_returns_string_for_list_input": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.0048
+ },
+ "test_multi_agent_response_format_regression.py::test_synthesize_returns_natural_language_for_list_input": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.0637
+ },
+ "test_phase0_mixed_data_flow.py::test_production_mixed_objective_bridges_coding_output_to_os_action": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.9716
+ },
+ "test_phase1_gui_focus_verification.py::test_a_probe_text_write_hello_world_does_not_pyautogui_typewrite": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "socket.getaddrinfo",
+    "count": 2,
+    "host": "localhost",
+    "kind": "network",
+    "loopback": true,
+    "port": "11434",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 2,
+    "host": "::1",
+    "kind": "network",
+    "loopback": true,
+    "port": "11434",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 2,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "11434",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 2,
+    "host": "api.groq.com",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 2,
+    "host": "172.64.149.20",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 27.7422
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterDoesNotBypassSafety::test_no_confirmed_flag_injected_into_any_plan": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterResultContract::test_action_result_to_text_includes_verified_and_reason": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterResultContract::test_action_result_to_text_when_not_verified_carries_reason": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterResultContract::test_build_plan_for_browser_open_url_carries_url_target": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterResultContract::test_build_plan_for_gui_type_text_uses_targetless_shape": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterResultContract::test_build_plan_uses_pydantic_validated_action_plan": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterResultContract::test_tool_description_includes_descriptor_fields": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_application_open_reaches_real_executor_dispatch": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "57282",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.1123
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_browser_open_url_routes_through_real_executor": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "57280",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.1516
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_builds_five_tools": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.4474
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_document_read_reaches_real_executor_with_honest_verified": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "57284",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.1776
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_gui_type_text_reaches_real_executor_runtime_resolver": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "57286",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.0943
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_tool_descriptions_are_descriptor_derived_not_generic": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0046
+ },
+ "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_tool_schemas_match_supported_inputs": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0043
+ },
+ "test_phase2_agent_framework_adapter.py::TestRegistryParity::test_all_five_capabilities_present_in_registry": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase2_agent_framework_adapter.py::TestRegistryParity::test_describe_capability_for_alias_resolves_to_underlying": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase2_agent_framework_adapter.py::test_newly_wired_capabilities_and_aliases_build_canonical_plans": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0303
+ },
+ "test_phase2_agent_framework_adapter.py::test_production_genesis_wires_adapter_to_canonical_executor": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.9818
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_browser_manager_has_real_abc": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0026
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_browser_manager_has_three_concrete_providers": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0076
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_browser_manager_no_per_operation_fallback": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0371
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_browser_manager_selection_is_first_available": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0036
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_browser_playwright_has_real_health_check": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0046
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_browser_selenium_has_real_health_check": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0056
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_gui_controller_single_provider_honest": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_false_on_bad_path": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0036
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_false_on_exception": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_false_on_no_selenium": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_returns_bool": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_true_on_real_machine": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "test_phase5_provider_registry.py::TestPart2PlaywrightAvailabilityFix::test_playwright_checks_real_binary": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0048
+ },
+ "test_phase5_provider_registry.py::TestPart2PlaywrightAvailabilityFix::test_playwright_fallback_on_launch_failure": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0023
+ },
+ "test_phase5_provider_registry.py::TestPart2PlaywrightAvailabilityFix::test_playwright_returns_false_on_import_only": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0028
+ },
+ "test_phase5_provider_registry.py::TestPart3PlatformSupport::test_browser_providers_have_no_windows_only_imports": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0042
+ },
+ "test_phase5_provider_registry.py::TestPart3PlatformSupport::test_dispatch_chain_cross_platform": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0392
+ },
+ "test_phase5_provider_registry.py::TestPart3PlatformSupport::test_registry_has_no_windows_only_imports": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0294
+ },
+ "test_phase5_provider_registry.py::TestPart3ProviderRegistry::test_browser_click_has_multiple_providers": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "test_phase5_provider_registry.py::TestPart3ProviderRegistry::test_browser_download_has_two_providers": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0024
+ },
+ "test_phase5_provider_registry.py::TestPart3ProviderRegistry::test_browser_search_has_multiple_providers": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0024
+ },
+ "test_phase5_provider_registry.py::TestPart3ProviderRegistry::test_no_fake_providers": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_phase5_provider_registry.py::TestPart3ProviderRegistry::test_registry_has_browser_capabilities": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_phase5_provider_registry.py::TestPart3ProviderRegistry::test_registry_respects_provider_order": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0023
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment1HealthChecks::test_health_check_exception_returns_false": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0031
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment1HealthChecks::test_health_check_force_rerun": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.004
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment1HealthChecks::test_health_check_freshness_caching": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0033
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment1HealthChecks::test_playwright_health_check_attempts_real_operation": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0025
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment1HealthChecks::test_registry_health_check_returns_dict": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 2,
+    "host": "localhost",
+    "kind": "network",
+    "loopback": true,
+    "port": "11434",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 2,
+    "host": "::1",
+    "kind": "network",
+    "loopback": true,
+    "port": "11434",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 2,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "11434",
+    "source": "audit"
+   }
+  ],
+  "seconds": 69.6199
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment1HealthChecks::test_selenium_health_check_attempts_real_operation": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.110.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 2,
+    "host": "localhost",
+    "kind": "network",
+    "loopback": true,
+    "port": "11434",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 2,
+    "host": "::1",
+    "kind": "network",
+    "loopback": true,
+    "port": "11434",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 2,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "11434",
+    "source": "audit"
+   }
+  ],
+  "seconds": 70.5571
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment2RiskPreservation::test_all_providers_share_same_risk_tier_for_download": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0032
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment2RiskPreservation::test_always_destructive_is_capability_set": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0035
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment2RiskPreservation::test_confirmation_gate_is_structurally_provider_independent": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.012
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment2RiskPreservation::test_download_destructive_gate_fires_regardless_of_provider": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0107
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment2RiskPreservation::test_file_delete_gate_fires_identically": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0058
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment2RiskPreservation::test_non_idempotent_download_must_check_state_before_fallback": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment2RiskPreservation::test_registry_risk_tier_matches_security_model": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0031
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_browser_click_is_non_idempotent": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_browser_download_is_non_idempotent": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0033
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_browser_mutation_operations_are_non_idempotent": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_browser_search_is_idempotent": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0031
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_idempotent_allows_blind_retry": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_idempotent_skips_state_check": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_non_idempotent_click_refuses_blind_fallback": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0383
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_non_idempotent_entry_flag": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0036
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_simulated_timeout_triggers_state_check": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0039
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_state_check_required_for_non_idempotent_fallback": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0045
+ },
+ "test_phase5_provider_registry.py::TestPart4Amendment3Idempotency::test_unknown_capability_is_not_assumed_idempotent": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase5_provider_registry.py::TestPart4IntegrationWithBrowserManager::test_all_capabilities_have_consistent_risk_tiers": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ },
+ "test_phase5_provider_registry.py::TestPart4IntegrationWithBrowserManager::test_get_healthy_provider_returns_real_provider": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.108.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 70.4449
+ },
+ "test_phase5_provider_registry.py::TestPart4IntegrationWithBrowserManager::test_registry_provider_names_match_browser_manager": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0382
+ },
+ "test_phase5_provider_registry.py::TestPart4VerificationHonesty::test_fallback_result_gets_same_verification": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0319
+ },
+ "test_phase5_provider_registry.py::TestPart4VerificationHonesty::test_os_manager_verification_helpers_bind_to_result": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0769
+ },
+ "test_phase5_provider_registry.py::TestPart4VerificationHonesty::test_verification_helpers_import_path": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0032
+ },
+ "test_phase5_provider_registry.py::TestPart4VerificationHonesty::test_verification_helpers_work_on_mock_result": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0025
+ },
+ "test_phase5_provider_registry.py::TestPart5LiveProof::test_dispatch_timeout_proves_real_timeout": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.1103
+ },
+ "test_phase5_provider_registry.py::TestPart5LiveProof::test_is_connection_death_detects_greenlet_error": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_phase5_provider_registry.py::TestPart5LiveProof::test_is_connection_death_rejects_normal_error": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase5_provider_registry.py::TestPart5LiveProof::test_live_click_without_browser_returns_structured_error": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.045
+ },
+ "test_phase5_provider_registry.py::TestPart5LiveProof::test_live_download_structured_result": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0778
+ },
+ "test_phase5_provider_registry.py::TestPart5LiveProof::test_playwright_re_raises_on_connection_death": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_dispatch_with_fallback_injects_provider_field": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.05
+ },
+ "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_dispatch_with_fallback_on_timeout_marks_unhealthy": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0058
+ },
+ "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_dispatch_with_fallback_returns_error_when_all_fail": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0456
+ },
+ "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_dispatch_with_timeout_raises_on_timeout": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 10.0749
+ },
+ "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_dispatch_with_timeout_returns_success": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0695
+ },
+ "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_operation_capability_map_covers_all_browser_ops": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0382
+ },
+ "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_operation_capability_map_values_are_registry_ids": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0561
+ },
+ "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_resolve_provider_for_operation_uses_registry": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\""
+    ],
+    "count": 10,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"(dir 2>&1 *`|echo CMD);&<# rem #>echo powershell\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ"
+    ],
+    "count": 2,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"powershell -NoProfile -EncodedCommand JABFAHIAcgBvAHIAQQBjAHQAaQBvAG4AUAByAGUAZgBlAHIAZQBuAGMAZQA9ACcAcwBpAGwAZQBuAHQAbAB5AGMAbwBuAHQAaQBuAHUAZQAnADsAIAAkAHQAbQBwACAAPQ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "googlechromelabs.github.io",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   },
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "185.199.108.153",
+    "kind": "network",
+    "loopback": false,
+    "port": "443",
+    "source": "audit"
+   }
+  ],
+  "seconds": 69.1955
+ },
+ "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_resolve_provider_for_unknown_op_falls_back": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0525
+ },
+ "test_phase6_real_windows.py::TestWindowResolverReal::test_enumerate_real_windows": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 255,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 26,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.0074
+ },
+ "test_phase6_real_windows.py::TestWindowResolverReal::test_find_by_pattern": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 258,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 27,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 1.5912
+ },
+ "test_phase6_real_windows.py::TestWindowResolverReal::test_get_foreground_real": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 255,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 26,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 19,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.0078
+ },
+ "test_phase6_real_windows.py::TestWindowResolverReal::test_is_safe_target_real": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0035
+ },
+ "test_phase6_real_windows.py::TestWorkflowA_OpenNotepad::test_open_notepad_creates_window": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 258,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 27,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 1.6013
+ },
+ "test_phase6_real_windows.py::TestWorkflowB_FocusNotepad::test_focus_notepad": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 516,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 56,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 42,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 23,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 1.8634
+ },
+ "test_phase6_real_windows.py::TestWorkflowC_TypeIntoNotepad::test_type_text_into_notepad": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 4,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 1032,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 114,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 86,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 48,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 42,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "Hello from Genesis Phase 6"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 79,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "H"
+    ],
+    "count": 26,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 64,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 40,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 40,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 40,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 40,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 4.2112
+ },
+ "test_phase6_real_windows.py::TestWorkflowD_KeyboardActions::test_press_enter": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 258,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 29,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 22,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "enter"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsWindow"
+   },
+   {
+    "api": "user32.IsWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 2.0368
+ },
+ "test_phase6_real_windows.py::TestWorkflowE_Hotkey::test_ctrl_a_select_all": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 516,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 60,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 46,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 7,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "test text for hotkey"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 62,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "t"
+    ],
+    "count": 20,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 44,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.hotkey",
+    "args": [
+     "ctrl",
+     "a"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.IsWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 3.9293
+ },
+ "test_phase6_real_windows.py::TestWorkflowG_Ambiguity::test_ambiguous_target_returns_honest_result": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "test_phase6_real_windows.py::TestWorkflowH_Unsupported::test_unsupported_target_honest_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0041
+ },
+ "test_phase6_text_verification.py::TestNotepadContentVerification::test_paste_text_content_verification": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 516,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 59,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 45,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 25,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.hotkey",
+    "args": [
+     "ctrl",
+     "a"
+    ],
+    "count": 2,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 4,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 10,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "delete"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 1,
+    "dll": "msvcrt",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CreateWindowExA"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "DestroyWindow"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "OpenClipboard"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CloseClipboard"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "EmptyClipboard"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetClipboardData"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x274d29b1640>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetClipboardData"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x274c5036570>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GlobalAlloc"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x274c5036570>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GlobalLock"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x274c5036570>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GlobalUnlock"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<CDLL 'msvcrt', handle 7fff51800000 at 0x274d937d5b0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "wcslen"
+   },
+   {
+    "api": "user32.CreateWindowExA",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.OpenClipboard",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.EmptyClipboard",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "msvcrt.wcslen",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "kernel32.GlobalAlloc",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "kernel32.GlobalLock",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "kernel32.GlobalUnlock",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetClipboardData",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.CloseClipboard",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.DestroyWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClipboardData",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 3.572
+ },
+ "test_phase6_text_verification.py::TestNotepadContentVerification::test_read_focused_text_returns_honest_when_unreadable": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 258,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 28,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 1.5758
+ },
+ "test_phase6_text_verification.py::TestNotepadContentVerification::test_type_text_exact_content_append": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 774,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 89,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 68,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 27,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 22,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.hotkey",
+    "args": [
+     "ctrl",
+     "a"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 35,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 34,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "delete"
+    ],
+    "count": 11,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "Hello"
+    ],
+    "count": 2,
+    "kind": "gui",
+    "source": "module"
+   }
+  ],
+  "seconds": 4.2302
+ },
+ "test_phase6_text_verification.py::TestNotepadContentVerification::test_type_text_exact_content_empty_editor": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 774,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 89,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 68,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 27,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 22,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.hotkey",
+    "args": [
+     "ctrl",
+     "a"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 43,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 40,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "delete"
+    ],
+    "count": 14,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "Hello Genesis"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   }
+  ],
+  "seconds": 4.1123
+ },
+ "test_phase6_text_verification.py::TestNotepadContentVerification::test_type_text_focus_retained": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "C:\\WINDOWS\\system32\\cmd.exe /c \"notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 774,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 87,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 66,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 25,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 22,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "test"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 13,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "t"
+    ],
+    "count": 4,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 8,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 2.1821
+ },
+ "test_phase6_text_verification.py::TestReadFocusedTextHonestBehavior::test_read_focused_text_returns_structured_result": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.0535
+ },
+ "test_phase6_text_verification.py::TestReadFocusedTextHonestBehavior::test_read_focused_text_when_no_uia": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.0036
+ },
+ "test_unseen_task_semantic.py::TestEndToEndPipelineStillExecutes::test_anaphoric_move_plan_is_valid": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 2.2242
+ }
+}

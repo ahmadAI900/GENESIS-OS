@@ -1,0 +1,44 @@
+﻿
+== FIX 1: resolve_operation never raises ==
+   'file.read'                -> resolved     cap=file.read conf=1.0
+   'application.open'         -> resolved     cap=application.open conf=1.0
+   'os.open_app'              -> unsupported  cap=None conf=0.0
+   'totally.made_up_op'       -> unsupported  cap=None conf=0.0
+   ''                         -> unsupported  cap=None conf=0.0
+   None                       -> unsupported  cap=None conf=0.0
+   '   '                      -> unsupported  cap=None conf=0.0
+   'gui.type_text'            -> resolved     cap=gui.type_text conf=1.0
+
+== FIX 2: full metadata propagated ==
+   alternatives             = <list len=0>
+   alternatives_count       = 0
+   capability               = <dict len=20>
+   capability_id            = file.delete
+   category                 = filesystem
+   confidence               = 1.0
+   dangerous                = True
+   evidence                 = <list len=1>
+   explanation              = Exact capability 'file.delete' was resolved.
+   operation                = file.delete
+   provider                 = genesis.filesystem
+   requires_confirmation    = True
+   risk_level               = critical
+   status                   = resolved
+
+== FIX 3: default resolver present on bare engine ==
+   bare WorkflowDecisionEngine().capability_resolver = CapabilityResolver
+
+== FIX 4: live provider health is observable ==
+   get_shared() is a true singleton: True
+   browser.open_url health seen by resolver: {'chain_length': 3, 'results': [False, False, False]}
+   injected registry health seen: {'chain_length': 3, 'results': [False, False, False]}
+   after reset, all-None health reported as: {'chain_length': 3, 'results': [None, None, None]}
+
+== routing still works with default resolver ==
+   'open notepad'                       -> L3 application.open cap=application.open
+   'play some music'                    -> L3 media.play_pause cap=media.play_pause
+   'what is the weather in paris'       -> L1 None cap=None
+   'delete this file'                   -> L3 file.delete cap=file.delete
+   'empty the recycle bin'              -> L3 cleanup.empty_recycle_bin cap=cleanup.empty_recycle_bin
+
+

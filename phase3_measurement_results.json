@@ -1,0 +1,116 @@
+{
+  "session": "Phase 3 Measurement & Audit",
+  "date": "2026-09-10",
+  "test_phrases_count": 24,
+  "deterministic_pipeline": {
+    "correct": 5,
+    "total": 24,
+    "accuracy_pct": 20.8,
+    "results": [
+      {"phrase": "fire up the notepad", "expected": "application.open", "got": "application.open", "level": 3, "pass": true},
+      {"phrase": "stash this somewhere else", "expected": "file.move", "got": null, "level": 1, "pass": false},
+      {"phrase": "get rid of this file for me", "expected": "file.delete", "got": null, "level": 1, "pass": false},
+      {"phrase": "what's eating up my disk space", "expected": "hardware.storage", "got": null, "level": 1, "pass": false},
+      {"phrase": "how bright is my screen right now", "expected": "display.brightness_get", "got": null, "level": 1, "pass": false},
+      {"phrase": "turn the sound down a bit", "expected": "volume.down", "got": null, "level": 1, "pass": false},
+      {"phrase": "snap a picture of what is on screen", "expected": "screen.capture", "got": null, "level": 1, "pass": false},
+      {"phrase": "close the thing I was just working on", "expected": "application.close", "got": null, "level": 1, "pass": false},
+      {"phrase": "put these files in order for me", "expected": "folder.organize", "got": "file.move", "level": 3, "pass": false},
+      {"phrase": "make this document into a PDF", "expected": "document.transform", "got": null, "level": 1, "pass": false},
+      {"phrase": "grab the text from that webpage", "expected": "browser.extract", "got": null, "level": 1, "pass": false},
+      {"phrase": "how do these two sheets stack up against each other", "expected": "spreadsheet.compare", "got": null, "level": 1, "pass": false},
+      {"phrase": "what is playing right now", "expected": "media.play_pause", "got": null, "level": 1, "pass": false},
+      {"phrase": "organize this folder for me", "expected": "folder.organize", "got": null, "level": 1, "pass": false},
+      {"phrase": "search the web for recent news about AI", "expected": "browser.search", "got": "web.research", "level": 3, "pass": false},
+      {"phrase": "create a quick text file with my notes", "expected": "document.create_txt", "got": null, "level": 1, "pass": false},
+      {"phrase": "rename this folder to something sensible", "expected": "folder.rename", "got": "folder.rename", "level": 3, "pass": true},
+      {"phrase": "lock my computer real quick", "expected": "workstation.lock", "got": null, "level": 1, "pass": false},
+      {"phrase": "what time is it in Tokyo", "expected": "time.world_clock", "got": "time.world_clock", "level": 3, "pass": true},
+      {"phrase": "calculate 15 percent of 3200", "expected": "math.evaluate", "got": "math.evaluate", "level": 3, "pass": true},
+      {"phrase": "copy this file to my downloads", "expected": "file.copy", "got": "file.copy", "level": 3, "pass": true},
+      {"phrase": "clean out the recycle bin", "expected": "cleanup.empty_recycle_bin", "got": null, "level": 1, "pass": false},
+      {"phrase": "take a screenshot and save it", "expected": "screen.capture", "got": null, "level": 1, "pass": false},
+      {"phrase": "sort this spreadsheet by the third column", "expected": "spreadsheet.sort", "got": null, "level": 1, "pass": false}
+    ]
+  },
+  "llm_fallback": {
+    "correct": 11,
+    "total_reached_llm": 12,
+    "accuracy_pct": 91.7,
+    "gate_blocked": 7,
+    "total_tested": 19,
+    "results": [
+      {"phrase": "stash this somewhere else", "expected": "file.move", "gate_blocked": true, "reason": "stash not in ACTION_HINT_RE"},
+      {"phrase": "get rid of this file for me", "expected": "file.delete", "gate_blocked": true, "reason": "get not in ACTION_HINT_RE"},
+      {"phrase": "what's eating up my disk space", "expected": "hardware.storage", "gate_blocked": true, "reason": "question format"},
+      {"phrase": "how bright is my screen right now", "expected": "display.brightness_get", "gate_blocked": true, "reason": "question format"},
+      {"phrase": "turn the sound down a bit", "expected": "volume.down", "got": "volume.down", "pass": true},
+      {"phrase": "snap a picture of what is on screen", "expected": "screen.capture", "got": "screen.capture", "pass": true},
+      {"phrase": "close the thing I was just working on", "expected": "application.close", "got": "application.close", "pass": true},
+      {"phrase": "make this document into a PDF", "expected": "document.transform", "got": "document.transform", "pass": true},
+      {"phrase": "grab the text from that webpage", "expected": "browser.extract", "got": "browser.extract", "pass": true},
+      {"phrase": "how do these two sheets stack up against each other", "expected": "spreadsheet.compare", "gate_blocked": true, "reason": "question format"},
+      {"phrase": "what is playing right now", "expected": "media.play_pause", "gate_blocked": true, "reason": "question format"},
+      {"phrase": "organize this folder for me", "expected": "folder.organize", "got": "folder.organize", "pass": true},
+      {"phrase": "search the web for recent news about AI", "expected": "browser.search", "got": "browser.search", "pass": true},
+      {"phrase": "create a quick text file with my notes", "expected": "document.create_txt", "got": "document.create_txt", "pass": true},
+      {"phrase": "lock my computer real quick", "expected": "workstation.lock", "got": "workstation.lock", "pass": true},
+      {"phrase": "clean out the recycle bin", "expected": "cleanup.empty_recycle_bin", "got": "cleanup.recycle_bin_query", "pass": false},
+      {"phrase": "take a screenshot and save it", "expected": "screen.capture", "got": "screen.capture", "pass": true},
+      {"phrase": "sort this spreadsheet by the third column", "expected": "spreadsheet.sort", "got": "spreadsheet.sort", "pass": true},
+      {"phrase": "put these files in order for me", "expected": "folder.organize", "gate_blocked": true, "reason": "put not in ACTION_HINT_RE"}
+    ]
+  },
+  "superseded_by": "phase3_results_authoritative.json",
+  "supersession_note": "This file is the ORIGINAL 2026-09-10 measurement and is retained for provenance. Two of its claims were re-measured on 2026-09-26 and did not reproduce, and one of its conclusions has since been falsified. See the corrections block below and phase3_results_authoritative.json. The 'llm_fallback' section is retained verbatim as a historical record and must NOT be cited as a current capability claim.",
+  "corrections_2026_09_26": {
+    "looks_actionable gate block rate": {
+      "originally_claimed": "36.8% of novel phrases blocked (7 of 19)",
+      "re_measured": "2 of 24 = 8.3%",
+      "cause": "The gate was subsequently improved, so the original figure no longer describes the current code. The original number is stale, not wrong for its date."
+    },
+    "LLM accuracy when it sees the phrase: 91.7%": {
+      "re_measured": "Not reproducible. 2/10 on the hard subset with the 0.5B local model; 6/40 = 15.0% strict on the held-out set.",
+      "cause": "The 91.7% figure came from 12 items that the gate happened to admit, which is a small and non-representative sample. The held-out set is larger and is not gate-filtered."
+    },
+    "Phase 3's core mechanism is largely in place — remaining work is narrow": {
+      "status": "FALSIFIED",
+      "reason": "The mechanism exists but does not function. The LLM answer was being produced and then discarded downstream: _detect_os_intent returns at line 1599 without ever consulting the semantic path, and workflow_decision.py:1609 rejects question-format capability requests first. Held-out accuracy with the selector enabled is 15.0%."
+    }
+  },
+  "confirmation_gate_audit": {
+    "gate_location": "action_executor.py:532-571",
+    "all_paths_funnel_through": true,
+    "gap_found": false,
+    "paths_verified": [
+      "genesis.py:1290 (CLI single-step)",
+      "workflow_engine.py:379 (compound workflow)",
+      "agent_framework_adapter.py:2218 (Agent Framework)",
+      "desktop_workflow.py:32 (Desktop workflow)",
+      "security_model.py:740 (Security wrapper)"
+    ]
+  },
+  "capability_counts": {
+    "supported_operations": 112,
+    "agent_framework_wired": 40,
+    "keyword_only_no_semantic": 72
+  },
+  "key_findings": [
+    "CLI path is regex-primary, NOT semantic-primary",
+    "LLM resolver is not wired into WorkflowDecisionEngine (ai_engine=None)",
+    "Confirmation gate is complete — no gap found",
+    "Deterministic pipeline accuracy on novel phrasings: 20.8%",
+    "LLM accuracy when it sees the phrase: 91.7%",
+    "looks_actionable gate blocks 36.8% of novel phrases",
+    "Phase 3's core mechanism is largely in place — remaining work is narrow"
+  ],
+  "key_findings_status_2026_09_26": [
+    {"claim": "CLI path is regex-primary, NOT semantic-primary", "status": "CONFIRMED and now fixed: WorkflowDecisionEngine defaults to a live CapabilityResolver and a live AIEngine, so the LLM path is consulted."},
+    {"claim": "LLM resolver is not wired into WorkflowDecisionEngine (ai_engine=None)", "status": "CONFIRMED and now fixed in genesis.py (ai_engine=self.brain.ai_engine); the bare-constructor default resolver gap was closed separately."},
+    {"claim": "Confirmation gate is complete — no gap found", "status": "CONFIRMED, unaffected by this phase."},
+    {"claim": "Deterministic pipeline accuracy on novel phrasings: 20.8%", "status": "CONFIRMED on the legacy 24-item set; the held-out set scores 5.0% for the deterministic-only configuration."},
+    {"claim": "LLM accuracy when it sees the phrase: 91.7%", "status": "NOT REPRODUCIBLE — see corrections_2026_09_26. Do not cite."},
+    {"claim": "looks_actionable gate blocks 36.8% of novel phrases", "status": "STALE — re-measured at 8.3%."},
+    {"claim": "Phase 3's core mechanism is largely in place — remaining work is narrow", "status": "FALSIFIED — the mechanism does not function end to end and the remaining work is not narrow."}
+  ]
+}

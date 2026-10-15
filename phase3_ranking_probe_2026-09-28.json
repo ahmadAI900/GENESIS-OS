@@ -1,0 +1,132 @@
+{
+  "probe_1_precondition_blocks": {
+    "capability": "document.transform",
+    "preconditions": [
+      "output_path",
+      "output_format"
+    ],
+    "without_declared_inputs": {
+      "status": "unavailable",
+      "resolved": false,
+      "explanation": "Exact capability 'document.transform' was matched, but its declared preconditions are unmet: output_path, output_format. Supply the missing input(s) before this capability can be used."
+    },
+    "with_declared_inputs": {
+      "status": "resolved",
+      "resolved": true
+    },
+    "verdict": "PASS",
+    "note": "exact-id resolution refuses a requirement whose required inputs are not all supported, so the action cannot be planned; it is not merely ranked lower."
+  },
+  "probe_2_health_changes_ranking": {
+    "capability": "browser.open_url",
+    "score_unhealthy": 0.7675,
+    "score_healthy": 0.9675,
+    "delta": 0.2,
+    "evidence_unhealthy": [
+      {
+        "match_type": "provider_health",
+        "score": -0.15,
+        "reason": "All registered providers last checked unhealthy."
+      }
+    ],
+    "evidence_healthy": [
+      {
+        "match_type": "provider_health",
+        "score": 0.05,
+        "reason": "A registered provider last checked healthy."
+      }
+    ],
+    "verdict": "PASS"
+  },
+  "probe_3_risk_triggers_approval": {
+    "approval_required_capabilities": [
+      "application.close",
+      "browser.upload",
+      "cleanup.empty_recycle_bin",
+      "file.delete",
+      "folder.delete",
+      "package.install",
+      "package.uninstall"
+    ],
+    "samples": [
+      {
+        "capability": "file.delete",
+        "risk_level": "critical",
+        "dangerous": true,
+        "requires_approval_token": true,
+        "correct_token_accepted": true,
+        "wrong_scope_token_rejected": false
+      },
+      {
+        "capability": "folder.delete",
+        "risk_level": "critical",
+        "dangerous": true,
+        "requires_approval_token": true,
+        "correct_token_accepted": true,
+        "wrong_scope_token_rejected": true
+      },
+      {
+        "capability": "cleanup.empty_recycle_bin",
+        "risk_level": "critical",
+        "dangerous": true,
+        "requires_approval_token": true,
+        "correct_token_accepted": true,
+        "wrong_scope_token_rejected": true
+      },
+      {
+        "capability": "package.uninstall",
+        "risk_level": "critical",
+        "dangerous": true,
+        "requires_approval_token": true,
+        "correct_token_accepted": true,
+        "wrong_scope_token_rejected": true
+      },
+      {
+        "capability": "browser.upload",
+        "risk_level": "high",
+        "dangerous": true,
+        "requires_approval_token": true,
+        "correct_token_accepted": true,
+        "wrong_scope_token_rejected": true
+      },
+      {
+        "capability": "document.transform",
+        "risk_level": "high",
+        "dangerous": true,
+        "requires_approval_token": false,
+        "correct_token_accepted": null,
+        "wrong_scope_token_rejected": null
+      },
+      {
+        "capability": "media.play_pause",
+        "risk_level": "low",
+        "dangerous": false,
+        "requires_approval_token": false,
+        "correct_token_accepted": null,
+        "wrong_scope_token_rejected": null
+      },
+      {
+        "capability": "screen.capture",
+        "risk_level": "medium",
+        "dangerous": false,
+        "requires_approval_token": false,
+        "correct_token_accepted": null,
+        "wrong_scope_token_rejected": null
+      },
+      {
+        "capability": "file.read",
+        "risk_level": "low",
+        "dangerous": false,
+        "requires_approval_token": false,
+        "correct_token_accepted": null,
+        "wrong_scope_token_rejected": null
+      }
+    ],
+    "gated_under_test": "application.close",
+    "missing_token_accepted": false,
+    "wrong_scope_token_accepted": false,
+    "low_risk_gated": [],
+    "verdict": "PASS",
+    "note": "reuses the Phase 2 approval-token mechanism (APPROVAL_TOKEN_PREFIX = 'HUMAN-APPROVE:'); nothing was rebuilt."
+  }
+}

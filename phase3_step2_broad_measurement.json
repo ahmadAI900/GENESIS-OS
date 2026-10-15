@@ -1,0 +1,551 @@
+[
+  {
+    "phrase": "boot up the spreadsheet program",
+    "expected": "application.open",
+    "got": null,
+    "family": "application",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "shut that program down",
+    "expected": "application.close",
+    "got": null,
+    "family": "application",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "tell me what programs I have open",
+    "expected": "application.list",
+    "got": null,
+    "family": "application",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "switch to the browser",
+    "expected": "application.open",
+    "got": null,
+    "family": "application",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "press that button on the screen",
+    "expected": "gui.click",
+    "got": "gui.click",
+    "family": "gui",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "enter my username in the text field",
+    "expected": "gui.type_text",
+    "got": null,
+    "family": "gui",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "scroll up a bit",
+    "expected": "gui.scroll",
+    "got": null,
+    "family": "gui",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "highlight all the text here",
+    "expected": "gui.select",
+    "got": null,
+    "family": "gui",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "clone that file for me",
+    "expected": "file.copy",
+    "got": null,
+    "family": "filesystem",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "make a fresh directory here",
+    "expected": "folder.create",
+    "got": "folder.create",
+    "family": "filesystem",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "I need to find a document",
+    "expected": "file.search",
+    "got": "notes.create",
+    "family": "filesystem",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "give this file a new name",
+    "expected": "file.rename",
+    "got": "file.rename",
+    "family": "filesystem",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "can you relocate this to the backup drive",
+    "expected": "file.move",
+    "got": "file.move",
+    "family": "filesystem",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "wipe that old temp folder",
+    "expected": "folder.delete",
+    "got": "folder.delete",
+    "family": "filesystem",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "sort out the mess in my downloads",
+    "expected": "folder.organize",
+    "got": null,
+    "family": "filesystem",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "show me what's in the recycle bin",
+    "expected": "cleanup.recycle_bin_query",
+    "got": null,
+    "family": "filesystem",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "read the contents of that file",
+    "expected": "document.read",
+    "got": "file.read",
+    "family": "document",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "fix the formatting in the report",
+    "expected": "document.edit",
+    "got": "gui.type_text",
+    "family": "document",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "condense this into a brief overview",
+    "expected": "document.summarize",
+    "got": "network.list_wifi",
+    "family": "document",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "how do these two versions differ",
+    "expected": "document.compare",
+    "got": null,
+    "family": "document",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "tell me what this document is about",
+    "expected": "document.read_intel",
+    "got": "document.read",
+    "family": "document",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "sort this spreadsheet by the last column",
+    "expected": "spreadsheet.sort",
+    "got": "spreadsheet.sort",
+    "family": "spreadsheet",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "show me only the rows where amount exceeds 100",
+    "expected": "spreadsheet.filter",
+    "got": "spreadsheet.filter",
+    "family": "spreadsheet",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "add up all the values in column B",
+    "expected": "spreadsheet.aggregate",
+    "got": "math.evaluate",
+    "family": "spreadsheet",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "these two sheets don't match, compare them",
+    "expected": "spreadsheet.compare",
+    "got": null,
+    "family": "spreadsheet",
+    "label": "colloquial",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "what does this workbook contain",
+    "expected": "spreadsheet.inspect",
+    "got": null,
+    "family": "spreadsheet",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "navigate to example.com",
+    "expected": "browser.open_url",
+    "got": "browser.open_url",
+    "family": "browser",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "locate the input box on this page",
+    "expected": "browser.find",
+    "got": "gui.select",
+    "family": "browser",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "pull that picture down from the website",
+    "expected": "browser.download",
+    "got": "web.research",
+    "family": "browser",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "where am I right now on the web",
+    "expected": "browser.get_url",
+    "got": null,
+    "family": "browser",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "take a snapshot of this webpage",
+    "expected": "browser.screenshot",
+    "got": "web.research",
+    "family": "browser",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "lower the sound level",
+    "expected": "volume.down",
+    "got": "volume.set",
+    "family": "system",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "how much room is left on my drive",
+    "expected": "hardware.storage",
+    "got": null,
+    "family": "system",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "am I running low on battery",
+    "expected": "hardware.battery",
+    "got": "hardware.battery",
+    "family": "system",
+    "label": "question",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "grab what's on the display",
+    "expected": "screen.capture",
+    "got": "display.brightness_get",
+    "family": "system",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "lock this machine",
+    "expected": "workstation.lock",
+    "got": "workstation.lock",
+    "family": "system",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "dim the screen a little",
+    "expected": "display.brightness_set",
+    "got": "display.brightness_set",
+    "family": "system",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "what are my system resources doing",
+    "expected": "hardware.stats",
+    "got": null,
+    "family": "system",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "connect to a wireless network",
+    "expected": "network.connect_wifi",
+    "got": "network.connect_wifi",
+    "family": "system",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "play the next song",
+    "expected": "media.next",
+    "got": "media.play_pause",
+    "family": "media",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "pause what's currently playing",
+    "expected": "media.play_pause",
+    "got": null,
+    "family": "media",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "end the audio playback",
+    "expected": "media.stop",
+    "got": null,
+    "family": "media",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "go back to the previous track",
+    "expected": "media.previous",
+    "got": null,
+    "family": "media",
+    "label": "direct",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "scan for nearby wifi signals",
+    "expected": "network.list_wifi",
+    "got": "network.list_wifi",
+    "family": "network",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "which wifi networks can I join",
+    "expected": "network.list_wifi",
+    "got": "network.list_wifi",
+    "family": "network",
+    "label": "question",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "what processes are active",
+    "expected": "process.list",
+    "got": null,
+    "family": "process",
+    "label": "question",
+    "gate": "REJECT",
+    "correct": false
+  },
+  {
+    "phrase": "give me details on that running task",
+    "expected": "process.inspect",
+    "got": "process.inspect",
+    "family": "process",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "put that text on the clipboard",
+    "expected": "clipboard.copy",
+    "got": null,
+    "family": "clipboard",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "retrieve what I copied last",
+    "expected": "clipboard.paste",
+    "got": "file.read",
+    "family": "clipboard",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "jot something down for later",
+    "expected": "notes.create",
+    "got": null,
+    "family": "notes",
+    "label": "colloquial",
+    "gate": "PASS",
+    "correct": false
+  },
+  {
+    "phrase": "show me my saved notes",
+    "expected": "notes.list",
+    "got": "notes.list",
+    "family": "notes",
+    "label": "indirect",
+    "gate": "PASS",
+    "correct": true
+  },
+  {
+    "phrase": "the sunset looks incredible tonight",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "statement",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "I just adopted a new puppy",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "life_event",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "do you enjoy reading books",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "opinion_question",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "my neighbor's dog won't stop barking",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "complaint",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "let's discuss the quarterly budget next week",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "suggestion",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "coffee is much better than tea",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "opinion",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "the traffic was awful this morning",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "statement",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "I need to call my dentist tomorrow",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "reminder",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "what's your favorite movie of all time",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "opinion_question",
+    "gate": "REJECT",
+    "correct": true
+  },
+  {
+    "phrase": "the kids had a great time at the park",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "label": "observation",
+    "gate": "REJECT",
+    "correct": true
+  }
+]

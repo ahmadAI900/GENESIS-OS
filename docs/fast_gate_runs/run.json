@@ -1,0 +1,658 @@
+{
+ "__meta__": {
+  "argv": [
+   "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Lib\\site-packages\\pytest\\__main__.py",
+   "tools/test_record_probe_canaries.py",
+   "-p",
+   "no:cacheprovider",
+   "-rA",
+   "--no-header",
+   "-q",
+   "--record",
+   "-p",
+   "record_probe"
+  ],
+  "install": {
+   "audit": true,
+   "ctypes": true,
+   "meta_path": true,
+   "stale_bindings": [],
+   "wrapped_modules": [
+    "win32gui: 347 wrapped",
+    "win32gui: 0 wrapped",
+    "pyautogui: 23 wrapped",
+    "win32gui: 0 wrapped",
+    "pyautogui: 0 wrapped",
+    "win32gui: 0 wrapped",
+    "pyautogui: 0 wrapped",
+    "win32api: 6 wrapped",
+    "selenium.webdriver: 6 wrapped",
+    "selenium.webdriver: lazy __getattr__ wrapped for 6 names",
+    "playwright.sync_api: 1 wrapped",
+    "win32gui: 0 wrapped",
+    "win32api: 0 wrapped",
+    "pyautogui: 0 wrapped",
+    "selenium.webdriver: 0 wrapped",
+    "playwright.sync_api: 0 wrapped",
+    "win32gui: 0 wrapped",
+    "win32api: 0 wrapped",
+    "pyautogui: 0 wrapped",
+    "selenium.webdriver: 0 wrapped",
+    "playwright.sync_api: 0 wrapped",
+    "win32gui: 0 wrapped",
+    "win32api: 0 wrapped",
+    "pyautogui: 0 wrapped",
+    "selenium.webdriver: 0 wrapped",
+    "playwright.sync_api: 0 wrapped",
+    "win32gui: 0 wrapped",
+    "win32api: 0 wrapped",
+    "pyautogui: 0 wrapped",
+    "selenium.webdriver: 0 wrapped",
+    "playwright.sync_api: 0 wrapped"
+   ]
+  },
+  "max_distinct_events_per_test": 150,
+  "tag": "run",
+  "tests": 28,
+  "truncated_tests": []
+ },
+ "tools/test_record_probe_canaries.py::test_canary_ctypes_call_uses_the_real_product_path": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "EnumWindows"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsWindowVisible"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 247,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowTextLengthW"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 24,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowTextW"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 17,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowRect"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 17,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowThreadProcessId"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 17,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetClassNameW"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 17,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetForegroundWindow"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 17,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsIconic"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 17,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsZoomed"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 17,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.0134
+ },
+ "tools/test_record_probe_canaries.py::test_canary_ctypes_dll_attribute_passthrough": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.001
+ },
+ "tools/test_record_probe_canaries.py::test_canary_ctypes_exception_propagates": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.GetSystemMetrics",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.001
+ },
+ "tools/test_record_probe_canaries.py::test_canary_ctypes_function_protocol_survives_wrapping": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.GetSystemMetrics",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.0011
+ },
+ "tools/test_record_probe_canaries.py::test_canary_ctypes_user32_call": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "ctypes.dlopen",
+    "count": 1,
+    "dll": "user32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetSystemMetrics"
+   },
+   {
+    "api": "user32.GetSystemMetrics",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.0011
+ },
+ "tools/test_record_probe_canaries.py::test_canary_network_connect": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "socket.connect",
+    "count": 1,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "9",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.3995
+ },
+ "tools/test_record_probe_canaries.py::test_canary_network_getaddrinfo": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "example.com",
+    "kind": "network",
+    "loopback": false,
+    "port": "80",
+    "source": "audit"
+   }
+  ],
+  "seconds": 12.4027
+ },
+ "tools/test_record_probe_canaries.py::test_canary_network_loopback_flagged_not_suppressed": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "socket.getaddrinfo",
+    "count": 1,
+    "host": "127.0.0.1",
+    "kind": "network",
+    "loopback": true,
+    "port": "80",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.0011
+ },
+ "tools/test_record_probe_canaries.py::test_canary_os_startfile": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "os.startfile",
+    "count": 1,
+    "kind": "os_launch",
+    "path": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.0877
+ },
+ "tools/test_record_probe_canaries.py::test_canary_os_system": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "os.system",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -c \"pass\""
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.2586
+ },
+ "tools/test_record_probe_canaries.py::test_canary_playwright_product_module_first_use": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 1.4561
+ },
+ "tools/test_record_probe_canaries.py::test_canary_playwright_start_is_recorded": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "playwright.sync_api.sync_playwright",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.2027
+ },
+ "tools/test_record_probe_canaries.py::test_canary_pyautogui_action_through_product_is_recorded": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.GetCursorPos",
+    "count": 5,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.moveTo",
+    "args": [
+     "1023",
+     "391"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetSystemMetrics",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetCursorPos",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.1061
+ },
+ "tools/test_record_probe_canaries.py::test_canary_pyautogui_import_time_gui_work_is_recorded": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -c \"\nimport sys, json\nsys.path.insert(0, 'C:\\\\Users\\\\Muhammad\\\\Desktop\\\\gemini_cli\\\\backend\\\\tools')\nimport record_probe as rp\nrp._reset_c"
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -c \"\nimport sys, json\nsys.path.insert(0, 'C:\\\\Users\\\\Muhammad\\\\Desktop\\\\gemini_cli\\\\backend\\\\tools')\nimport record_probe as rp\nrp._reset_c",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.5767
+ },
+ "tools/test_record_probe_canaries.py::test_canary_pyautogui_imported_lazily_inside_function": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "MessageBoxW"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetProcessDPIAware"
+   },
+   {
+    "api": "user32.SetProcessDPIAware",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetDC"
+   },
+   {
+    "api": "user32.GetDC",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VkKeyScanA"
+   },
+   {
+    "api": "user32.VkKeyScanA",
+    "count": 96,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetSystemMetrics",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetCursorPos"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.2065
+ },
+ "tools/test_record_probe_canaries.py::test_canary_pyautogui_product_module_first_use": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0105
+ },
+ "tools/test_record_probe_canaries.py::test_canary_pyautogui_write_call_is_recorded": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.GetCursorPos",
+    "count": 5,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.moveTo",
+    "args": [
+     "1023",
+     "391"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetSystemMetrics",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x220f7793d10>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetCursorPos"
+   },
+   {
+    "api": "user32.SetCursorPos",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.1025
+ },
+ "tools/test_record_probe_canaries.py::test_canary_selenium_product_module_first_use": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 5.0271
+ },
+ "tools/test_record_probe_canaries.py::test_canary_selenium_start_is_recorded": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "selenium.webdriver.Chrome",
+    "args": [],
+    "count": 1,
+    "kind": "browser",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.6246
+ },
+ "tools/test_record_probe_canaries.py::test_canary_subprocess_popen": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -c pass"
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -c pass",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.087
+ },
+ "tools/test_record_probe_canaries.py::test_canary_subprocess_popen_direct": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -c pass"
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -c pass",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 0.0808
+ },
+ "tools/test_record_probe_canaries.py::test_canary_win32api_input_call_is_recorded": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "win32api.GetCursorPos",
+    "args": [],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.011
+ },
+ "tools/test_record_probe_canaries.py::test_canary_win32gui_from_import_after_install": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "win32gui.GetForegroundWindow",
+    "args": [],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.0009
+ },
+ "tools/test_record_probe_canaries.py::test_canary_win32gui_imported_before_install": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "win32gui.GetForegroundWindow",
+    "args": [],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.02
+ },
+ "tools/test_record_probe_canaries.py::test_canary_win32gui_imported_lazily_inside_function": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "win32gui.GetForegroundWindow",
+    "args": [],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.001
+ },
+ "tools/test_record_probe_canaries.py::test_canary_win32gui_return_value_unchanged": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "win32gui.GetForegroundWindow",
+    "args": [],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   }
+  ],
+  "seconds": 0.001
+ },
+ "tools/test_record_probe_canaries.py::test_known_blind_spot_stale_from_import_binding_is_real": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0012
+ },
+ "tools/test_record_probe_canaries.py::test_recorder_module_exposes_no_secrets_or_side_effects": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0014
+ }
+}

@@ -1,0 +1,42 @@
+{
+  "legacy_corpus_reuse": {
+    "count": 0,
+    "items": [],
+    "verdict": "PASS"
+  },
+  "banned_frames": {
+    "count": 0,
+    "items": [],
+    "verdict": "PASS"
+  },
+  "overlap_scan": {
+    "items_scanned": 122,
+    "surfaces": [
+      "deterministic_regex_literals",
+      "gate_vocabulary",
+      "prompt_few_shot_examples",
+      "prompt_full_template",
+      "prompt_shortlist",
+      "selection_boundaries"
+    ],
+    "significant_flagged": 0,
+    "incidental_generic_3grams": 7,
+    "rows": [],
+    "verdict": "PASS",
+    "note": "3-word fragments made only of function words are counted as incidental, not leakage; 4+ words or any 3-gram containing a non-function word is significant."
+  },
+  "expectation_ids": {
+    "count": 0,
+    "items": [],
+    "verdict": "PASS"
+  },
+  "composition": {
+    "positives": 99,
+    "hand_written": 46,
+    "negatives": 23,
+    "context": 9,
+    "problems": [],
+    "verdict": "PASS"
+  },
+  "seal_ready": true
+}

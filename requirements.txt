@@ -1,0 +1,56 @@
+# Genesis OS — backend third-party dependencies.
+# Pinned loosely (>=) unless a specific floor is needed for compatibility.
+
+# --- Core / LLM ----------------------------------------------------------
+pydantic>=2.7,<3
+agent-framework>=1.16,<2
+openai>=1.40,<3
+# Declared 2026-10-14 (audit D-04). `anthropic` 0.116.0 is installed and
+# imported by genesis_os/agent_framework_adapter.py, but was absent here,
+# so a clean install would have silently lost the Anthropic path.
+anthropic>=0.116,<1
+python-dotenv>=1.0,<2
+
+# --- Document parsing / generation ---------------------------------------
+python-docx>=1.1,<2
+openpyxl>=3.1,<4
+python-pptx>=1.0,<2
+pypdf>=4.0,<6
+reportlab>=4.0,<5  # PDF page creation (document.create_pdf); honest fail without it
+
+# --- Image / media -------------------------------------------------------
+Pillow>=10.0,<14
+
+# --- OS / process / system ----------------------------------------------
+psutil>=5.9,<8
+requests>=2.31,<3
+
+# --- Language detection --------------------------------------------------
+langdetect>=1.0.9,<2
+
+# --- Search --------------------------------------------------------------
+ddgs>=6.0,<10
+
+# --- Clipboard -----------------------------------------------------------
+pyperclip>=1.8,<2
+
+# --- Browser automation --------------------------------------------------
+playwright>=1.40,<2
+selenium>=4.10,<5
+webdriver-manager>=4.0,<6
+
+# --- GUI automation ------------------------------------------------------
+pyautogui>=0.9,<2
+
+# --- Filesystem monitoring (Phase 7, optional) -----------------------------
+watchdog>=4.0,<7  # live FilesystemMonitor; honest fallback when absent
+
+# --- Testing -------------------------------------------------------------
+pytest>=8.0,<9
+pytest-timeout>=2.3,<3
+
+# --- Windows-only desktop integration ------------------------------------
+pywin32>=306 ; sys_platform == "win32"
+comtypes>=1.2 ; sys_platform == "win32"
+pycaw>=20240203 ; sys_platform == "win32"
+screen-brightness-control>=0.27 ; sys_platform == "win32"

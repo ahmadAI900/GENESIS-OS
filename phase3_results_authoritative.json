@@ -1,0 +1,99 @@
+{
+  "phase": 3,
+  "title": "Capability Control Plane — semantic routing of unseen wording",
+  "date": "2026-09-26",
+  "verdict": "NOT CLOSED",
+  "verdict_reason": "Held-out accuracy is 15.0% strict / 17.5% acceptable with the LLM selector enabled, against a justified bar of 75%. The binding constraint is model capacity, not prompt design: the only locally installed model is qwen2.5:0.5b (397,821,319 parameters), which reaches 34.4% on the same corpus, while the 120B cloud model reaches 78.7%. The cloud model returned HTTP 429 (rate limit) throughout this session, so the capable path could not be exercised.",
+
+  "field_semantics": {
+    "note": "An earlier evidence file was misread because these two fields were conflated. They are now defined explicitly and used consistently.",
+    "gate": "REACH — whether the request passed the looks_actionable cost gate and was therefore submitted to the LLM at all. PASS here does NOT mean the answer was correct.",
+    "correct": "CORRECT — whether the returned capability id matched the expected id. This is the only field that measures routing quality.",
+    "lesson": "'gate: PASS, correct: false' is a coherent state meaning 'the LLM was consulted and got it wrong'. It is not a contradiction, but the filename 'phase3_e2e_nemotron_verified.json' invited the opposite reading, so this file records the distinction explicitly."
+  },
+
+  "pass_bar": {
+    "value_pct": 75.0,
+    "justification": "The deterministic layer already handles every phrasing it was written for, so the LLM selector is only useful on wording no pattern anticipated. A bar below roughly 60% would be indistinguishable from the keyword layer's own coverage and would not justify keeping an LLM in the interactive path. 75% is set above the 78.7% the 120B model actually achieved on a prior 61-item corpus, leaving no margin for a 0.5B model, and is stated in advance so the result cannot be rationalised after the fact.",
+    "stated_before_measurement": true
+  },
+
+  "measurement_configs": {
+    "deterministic_only": "WorkflowDecisionEngine with ai_engine=None and a live CapabilityResolver. Proves any gain is not merely 'something was turned on'.",
+    "llm_local": "Provider list pinned to Ollama (qwen2.5:0.5b) so the measurement cannot silently drift to another backend.",
+    "llm_cloud": "Provider list pinned to Groq (openai/gpt-oss-120b). Returned HTTP 429 throughout this session."
+  },
+
+  "benchmarks": {
+    "legacy_24": {
+      "source": "phase3_measurement_results.json (2026-09-10)",
+      "deterministic_pct": 20.8,
+      "note": "The 5/24 baseline cited in the Phase 3 directive."
+    },
+    "dev": {
+      "purpose": "Inspected and iterated against. Every tuning decision in this phase was made while looking at these 27 items.",
+      "deterministic_only": {"strict": "10/27 = 37.0%", "acceptable": "10/27 = 37.0%", "mean_elapsed_s": 0.01},
+      "llm_local": {"strict": "10/27 = 37.0%", "acceptable": "10/27 = 37.0%", "mean_elapsed_s": 2.77}
+    },
+    "heldout": {
+      "purpose": "Generated from the capability registry by surface transformation (paraphrase frame, politeness padding, register shift, typo injection, mixed-language frame). Scored ONCE, never used to choose a prompt, threshold or configuration.",
+      "item_count": 40,
+      "seed": 20260926,
+      "deterministic_only": {"strict": "2/40 = 5.0%", "acceptable": "2/40 = 5.0%"},
+      "llm_local": {"strict": "6/40 = 15.0%", "acceptable": "7/40 = 17.5%", "mean_elapsed_s": 3.71}
+    }
+  },
+
+  "iteration_history": [
+    {"n": 0, "change": "stale baseline, deterministic only, flat catalog, no LLM wired", "result": "5/24 = 20.8%", "note": "historical, 2026-09-10"},
+    {"n": 1, "change": "live AIEngine wired into WorkflowDecisionEngine, no code change", "result": "12/24 = 50.0%", "note": "isolated the real cause: the gate/consultation gap, not model capability"},
+    {"n": 2, "change": "enriched category-grouped catalog + SELECTION_BOUNDARIES + exact-id rule + prefer-valid-operation JSON extraction", "result": "7/10 = 70% on the 10 hardest phrases (was 2/10)", "note": "fixed invented ids (screen.take, file.save_as) and domain confusion (volume vs display, browser vs document)"},
+    {"n": 3, "change": "non-blocking shutdown(wait=False) to enforce the per-call timeout", "result": "2/10 = 20% (REGRESSION)", "note": "abandoned workers piled up, saturated the local model, and cascaded into timeouts; reverted"},
+    {"n": 4, "change": "backend order local->cloud->auto chosen on measured id-validity; 22s total resolve budget; 8s per call", "result": "6/10 = 60%", "note": "the 22s budget was still exceeded (51.9s observed), proving the context-managed executor defeats its own timeout"},
+    {"n": 5, "change": "bounded in-flight cap so abandoned workers cannot pile up unbounded", "result": "1/10 = 10% (REGRESSION)", "note": "cap of 4 was exhausted by orphans; every later call refused at 0.0s"},
+    {"n": 6, "change": "prompt compacted 24.7k->21.9k chars, per-call timeout 12s, cap 6", "result": "1/10 = 10%", "note": "the local model still cannot answer the enriched prompt inside budget"},
+    {"n": 7, "change": "final configuration, scored on held-out", "result": "6/40 = 15.0% strict / 17.5% acceptable", "note": "FAILS the 75% bar"}
+  ],
+
+  "model_capacity_evidence": {
+    "note": "The decisive comparison. Same corpus, same selector, different model.",
+    "qwen2.5:0.5b_local": {"params": 397821319, "corpus": "61 items", "correct": "21/61 = 34.4%", "source": "phase3_e2e_nemotron_verified.json"},
+    "openai/gpt-oss-120b_cloud": {"corpus": "61 items", "correct": "48/61 = 78.7%", "source": "phase3_groq_e2e_results.json", "backend_mix": {"cloud": 44, "ALL_FAILED": 5, "local": 2, "gate_reject": 10}},
+    "gap_pct_points": 44.3,
+    "conclusion": "A 397M-parameter model cannot do semantic capability selection at a production bar. The prompt and routing work in this phase is necessary but not sufficient; the capable path exists and previously measured 78.7%, but it was unreachable this session because Groq returned HTTP 429."
+  },
+
+  "code_delivered": [
+    "capability_resolver.resolve_operation() returns a typed UNSUPPORTED result for unknown/empty/None operations instead of raising ValueError('capability_id cannot be empty.'). Both call sites (workflow_decision.py:3042, genesis.py:1237) were unguarded, so any unregistered intent aborted the request.",
+    "WorkflowDecisionEngine() now defaults to a real CapabilityResolver. Previously capability_resolver defaulted to None, which is precisely why 'resolver on' and 'resolver off' produced identical results.",
+    "Full resolution metadata is propagated through one shared helper (capability_resolution_metadata): status, capability_id, capability, confidence, dangerous, requires_confirmation, risk_level, provider, category, operation, explanation, evidence, alternatives. The two call sites previously hand-rolled a 4-field subset and could drift.",
+    "Provider-health ranking reads a live shared CapabilityProviderRegistry (get_shared/reset_shared, injectable) instead of constructing a throwaway registry whose health is all-None, which made health scoring silently inert. Unobserved health is now reported as neutral evidence rather than silently scoring nothing.",
+    "LLM selector: enriched category-grouped catalog carrying risk, inputs and SELECTION_BOUNDARIES notes; exact-id rule with explicit non-existent-id examples; _extract_json_preferring_valid_operation() which prefers a JSON object naming a real capability over one naming an invented id, while preserving an explicit null answer.",
+    "One-shot semantic repair: when the model names an id that does not exist, the id is fed back with genuinely similar real ids (token overlap + difflib) for a single correction, instead of discarding a correct understanding over a spelling slip.",
+    "Bounded provider concurrency: the per-call timeout is now genuinely enforced and abandoned workers are capped (_MAX_INFLIGHT_CALLS), and resolution is bounded end-to-end (_RESOLVE_TOTAL_BUDGET). Both naive variants were measured and both were wrong — joining defeats the timeout (51.9s against an 8s budget), unbounded abandonment collapses accuracy (7/10 -> 2/10)."
+  ],
+
+  "regression": {
+    "command": "python -m pytest -q -p no:cacheprovider",
+    "result": "2113 passed, 60 warnings in 1179.15s",
+    "baseline_before_phase3": 2090,
+    "new_tests": 23,
+    "regressions": 0
+  },
+
+  "pre_existing_issue_not_caused_by_this_phase": {
+    "test": "test_level3_6_capability_registry.py::test_application_capabilities_are_discoverable",
+    "symptom": "Fails only when test_level3_8_6_capability_resolution.py runs earlier in the same process.",
+    "cause": "CapabilityRegistry methods are classmethods, so register_default_capabilities(registry) called on an INSTANCE mutates class-level state, rewriting application.close's operation from 'application.close' to 'close'.",
+    "proof": "Reproduced with no code under test involved: calling register_default_capabilities(CapabilityRegistry()) flips the descriptor.",
+    "status": "left unmodified — it is a test-isolation defect outside Phase 3 scope, and the full-suite collection order happens to hide it."
+  },
+
+  "what_would_close_phase_3": [
+    "Install a model with real semantic capability (>=7B) and re-run phase3_benchmark.py heldout llm_local. This is the single highest-value unblock and requires no further code work.",
+    "Obtain non-rate-limited cloud access so the 120B path that previously measured 78.7% can be exercised against the current enriched catalog.",
+    "Reconcile deterministic/lexical precedence with the LLM. Observed live: 'turn the sound down a bit' is detected deterministically as volume.set while the LLM correctly says volume.down, and the deterministic answer wins. Until precedence is explicit, a better model cannot help.",
+    "Fix the conversational guard at workflow_decision.py:1609, which rejects question-format capability requests such as 'what is playing right now' and 'how do these two sheets stack up' before the semantic path is ever reached.",
+    "Reconsider the held-out generator: it wraps registry descriptions verbatim, producing items like 'execute the gui.double_click capability through the authoritative control plane'. No real user phrases a request that way, so this set is a harder and somewhat artificial target. It is reported as generated rather than tuned, but it should not be treated as a proxy for user-facing accuracy."
+  ]
+}

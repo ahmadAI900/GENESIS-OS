@@ -1,0 +1,769 @@
+[
+  {
+    "phrase": "boot up the spreadsheet program",
+    "expected": "application.open",
+    "got": "application.open",
+    "family": "application",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 6.0,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "shut that program down",
+    "expected": "application.close",
+    "got": "application.close",
+    "family": "application",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 2.1,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "tell me what programs I have open",
+    "expected": "application.list",
+    "got": "application.list",
+    "family": "application",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 2.1,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "switch to the browser",
+    "expected": "application.open",
+    "got": "gui.focus_window",
+    "family": "application",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "cloud",
+    "time": 7.9,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "press that button on the screen",
+    "expected": "gui.click",
+    "got": null,
+    "family": "gui",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "ALL_FAILED",
+    "time": 142.7,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "enter my username in the text field",
+    "expected": "gui.type_text",
+    "got": "gui.type_text",
+    "family": "gui",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 5.4,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "scroll up a bit",
+    "expected": "gui.scroll",
+    "got": "gui.scroll",
+    "family": "gui",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 7.8,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "highlight all the text here",
+    "expected": "gui.select",
+    "got": "gui.keyboard_action",
+    "family": "gui",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "cloud",
+    "time": 1.9,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "clone that file for me",
+    "expected": "file.copy",
+    "got": "file.copy",
+    "family": "filesystem",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 1.2,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "make a fresh directory here",
+    "expected": "folder.create",
+    "got": "folder.create",
+    "family": "filesystem",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "local",
+    "time": 48.5,
+    "modes_tried": [
+      "local"
+    ]
+  },
+  {
+    "phrase": "I need to find a document",
+    "expected": "file.search",
+    "got": "file.search",
+    "family": "filesystem",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "local",
+    "time": 37.7,
+    "modes_tried": [
+      "local"
+    ]
+  },
+  {
+    "phrase": "give this file a new name",
+    "expected": "file.rename",
+    "got": "file.rename",
+    "family": "filesystem",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 32.1,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "can you relocate this to the backup drive",
+    "expected": "file.move",
+    "got": "file.move",
+    "family": "filesystem",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 5.4,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "wipe that old temp folder",
+    "expected": "folder.delete",
+    "got": "folder.delete",
+    "family": "filesystem",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 3.3,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "sort out the mess in my downloads",
+    "expected": "folder.organize",
+    "got": "folder.organize",
+    "family": "filesystem",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 1.9,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "show me what's in the recycle bin",
+    "expected": "cleanup.recycle_bin_query",
+    "got": "cleanup.recycle_bin_query",
+    "family": "filesystem",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 9.6,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "read the contents of that file",
+    "expected": "document.read",
+    "got": "file.read",
+    "family": "document",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "cloud",
+    "time": 3.0,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "fix the formatting in the report",
+    "expected": "document.edit",
+    "got": null,
+    "family": "document",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "ALL_FAILED",
+    "time": 24.7,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "condense this into a brief overview",
+    "expected": "document.summarize",
+    "got": "media.next",
+    "family": "document",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "cloud",
+    "time": 17.6,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "how do these two versions differ",
+    "expected": "document.compare",
+    "got": null,
+    "family": "document",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "ALL_FAILED",
+    "time": 21.1,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "tell me what this document is about",
+    "expected": "document.read_intel",
+    "got": null,
+    "family": "document",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "ALL_FAILED",
+    "time": 15.5,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "sort this spreadsheet by the last column",
+    "expected": "spreadsheet.sort",
+    "got": "spreadsheet.sort",
+    "family": "spreadsheet",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 2.5,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "show me only the rows where amount exceeds 100",
+    "expected": "spreadsheet.filter",
+    "got": "spreadsheet.filter",
+    "family": "spreadsheet",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 4.0,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "add up all the values in column B",
+    "expected": "spreadsheet.aggregate",
+    "got": "spreadsheet.aggregate",
+    "family": "spreadsheet",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 1.9,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "these two sheets don't match, compare them",
+    "expected": "spreadsheet.compare",
+    "got": "spreadsheet.compare",
+    "family": "spreadsheet",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 7.8,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "what does this workbook contain",
+    "expected": "spreadsheet.inspect",
+    "got": "spreadsheet.inspect",
+    "family": "spreadsheet",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 1.3,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "navigate to example.com",
+    "expected": "browser.open_url",
+    "got": "browser.open_url",
+    "family": "browser",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 3.4,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "locate the input box on this page",
+    "expected": "browser.find",
+    "got": "browser.wait",
+    "family": "browser",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "cloud",
+    "time": 12.3,
+    "modes_tried": [
+      "cloud",
+      "local",
+      null
+    ]
+  },
+  {
+    "phrase": "pull that picture down from the website",
+    "expected": "browser.download",
+    "got": "screen.capture",
+    "family": "browser",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "cloud",
+    "time": 26.0,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "where am I right now on the web",
+    "expected": "browser.get_url",
+    "got": "browser.get_url",
+    "family": "browser",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 11.5,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "take a snapshot of this webpage",
+    "expected": "browser.screenshot",
+    "got": "browser.screenshot",
+    "family": "browser",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 4.6,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "lower the sound level",
+    "expected": "volume.down",
+    "got": "volume.down",
+    "family": "system",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 4.1,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "how much room is left on my drive",
+    "expected": "hardware.storage",
+    "got": "hardware.storage",
+    "family": "system",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 2.8,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "am I running low on battery",
+    "expected": "hardware.battery",
+    "got": "hardware.battery",
+    "family": "system",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 5.5,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "grab what's on the display",
+    "expected": "screen.capture",
+    "got": "screen.capture",
+    "family": "system",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 1.6,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "lock this machine",
+    "expected": "workstation.lock",
+    "got": "workstation.lock",
+    "family": "system",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 1.4,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "dim the screen a little",
+    "expected": "display.brightness_set",
+    "got": "display.brightness_set",
+    "family": "system",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 11.7,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "what are my system resources doing",
+    "expected": "hardware.stats",
+    "got": "hardware.stats",
+    "family": "system",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 1.2,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "connect to a wireless network",
+    "expected": "network.connect_wifi",
+    "got": "network.connect_wifi",
+    "family": "system",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 32.9,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "play the next song",
+    "expected": "media.next",
+    "got": "media.next",
+    "family": "media",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 2.9,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "pause what's currently playing",
+    "expected": "media.play_pause",
+    "got": "media.play_pause",
+    "family": "media",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 2.3,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "end the audio playback",
+    "expected": "media.stop",
+    "got": "media.stop",
+    "family": "media",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 7.9,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "go back to the previous track",
+    "expected": "media.previous",
+    "got": "media.previous",
+    "family": "media",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 4.4,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "scan for nearby wifi signals",
+    "expected": "network.list_wifi",
+    "got": "network.list_wifi",
+    "family": "network",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 3.6,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "which wifi networks can I join",
+    "expected": "network.list_wifi",
+    "got": "network.list_wifi",
+    "family": "network",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 1.9,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "what processes are active",
+    "expected": "process.list",
+    "got": "process.list",
+    "family": "process",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 2.7,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "give me details on that running task",
+    "expected": "process.inspect",
+    "got": null,
+    "family": "process",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "ALL_FAILED",
+    "time": 101.0,
+    "modes_tried": [
+      "cloud",
+      "local",
+      null
+    ]
+  },
+  {
+    "phrase": "put that text on the clipboard",
+    "expected": "clipboard.copy",
+    "got": "gui.type_text",
+    "family": "clipboard",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "cloud",
+    "time": 45.5,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "retrieve what I copied last",
+    "expected": "clipboard.paste",
+    "got": "file.copy",
+    "family": "clipboard",
+    "gate": "PASS",
+    "correct": false,
+    "actual_backend": "cloud",
+    "time": 29.0,
+    "modes_tried": [
+      "cloud",
+      "local"
+    ]
+  },
+  {
+    "phrase": "jot something down for later",
+    "expected": "notes.create",
+    "got": "notes.create",
+    "family": "notes",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 2.7,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "show me my saved notes",
+    "expected": "notes.list",
+    "got": "notes.list",
+    "family": "notes",
+    "gate": "PASS",
+    "correct": true,
+    "actual_backend": "cloud",
+    "time": 0.9,
+    "modes_tried": [
+      "cloud"
+    ]
+  },
+  {
+    "phrase": "the sunset looks incredible tonight",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  },
+  {
+    "phrase": "I just adopted a new puppy",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  },
+  {
+    "phrase": "do you enjoy reading books",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  },
+  {
+    "phrase": "my neighbor's dog won't stop barking",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  },
+  {
+    "phrase": "let's discuss the quarterly budget next week",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  },
+  {
+    "phrase": "coffee is much better than tea",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  },
+  {
+    "phrase": "the traffic was awful this morning",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  },
+  {
+    "phrase": "I need to call my dentist tomorrow",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  },
+  {
+    "phrase": "what's your favorite movie of all time",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  },
+  {
+    "phrase": "the kids had a great time at the park",
+    "expected": null,
+    "got": null,
+    "family": "conversational",
+    "gate": "REJECT",
+    "correct": true,
+    "actual_backend": "gate"
+  }
+]

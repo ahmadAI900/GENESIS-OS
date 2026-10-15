@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "url": "https://example.com",
+  "title": "Example Domain",
+  "elapsed_seconds": 4.375,
+  "provider": "playwright",
+  "note": "real navigation + real title readback; no mocks"
+}

@@ -1,0 +1,85 @@
+<!-- -------------------------------------------------
+  Simple Web Page – Save this file as index.html
+  ------------------------------------------------- -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Simple Website</title>
+
+    <!-- Inline CSS for quick styling -->
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        header, footer {
+            background-color: #004080;
+            color: white;
+            text-align: center;
+            padding: 1rem 0;
+        }
+        nav {
+            background-color: #0066cc;
+            padding: 0.5rem;
+        }
+        nav a {
+            color: white;
+            margin: 0 1rem;
+            text-decoration: none;
+        }
+        main {
+            padding: 1.5rem;
+        }
+        .container {
+            max-width: 960px;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Welcome to My Website</h1>
+    </header>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <main class="container">
+        <section id="home">
+            <h2>Home</h2>
+            <p>This is a simple static page created as a starting point for a website.</p>
+        </section>
+
+        <section id="about">
+            <h2>About</h2>
+            <p>Write a short description about yourself or the purpose of the site here.</p>
+        </section>
+
+        <section id="contact">
+            <h2>Contact</h2>
+            <p>Provide contact details or a simple form.</p>
+
+            <!-- Tiny demo script: show an alert when a button is clicked -->
+            <button id="msgBtn">Click me</button>
+            <script>
+                document.getElementById('msgBtn').addEventListener('click', function () {
+                    alert('Thanks for visiting!');
+                });
+            </script>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 My Simple Website</p>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "banned_frames": {
+    "count": 0,
+    "items": [],
+    "verdict": "PASS"
+  },
+  "composition": {
+    "context": 8,
+    "hand_written": 59,
+    "negatives": 20,
+    "positives": 80,
+    "problems": [],
+    "verdict": "PASS"
+  },
+  "corpus": "v4",
+  "expectation_ids": {
+    "count": 0,
+    "items": [],
+    "verdict": "PASS"
+  },
+  "legacy_corpus_reuse": {
+    "count": 0,
+    "items": [],
+    "verdict": "PASS"
+  },
+  "overlap_scan": {
+    "incidental_generic_3grams": 3,
+    "items_scanned": 100,
+    "note": "3-word fragments made only of function words are counted as incidental, not leakage; 4+ words or any 3-gram containing a non-function word is significant.",
+    "rows": [],
+    "significant_flagged": 0,
+    "surfaces": [
+      "deterministic_regex_literals",
+      "gate_vocabulary",
+      "prompt_few_shot_examples",
+      "prompt_full_template",
+      "prompt_shortlist",
+      "selection_boundaries"
+    ],
+    "verdict": "PASS"
+  },
+  "provenance": {
+    "accept_sets_declared": 2,
+    "context_agent_drafted": 8,
+    "dev3_carryover": 29,
+    "dev3_carryover_caveat": "6 dev3 phrases were read during the Step 1b routing investigation. Never scored; no fix encodes a dev3 phrase (the gate fix dev3 analysis suggested was tried and reverted). Diagnosis-exposed, not untouched.",
+    "negatives_agent_drafted": 20,
+    "new_assistant_drafted": 6,
+    "new_hand_written": 37,
+    "new_human_positives": 43,
+    "scored_final3_items_reused": 0
+  },
+  "seal_ready": true
+}

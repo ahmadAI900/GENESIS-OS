@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phase 8 Browser Intelligence Test Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .status { padding: 10px; margin: 10px 0; border: 1px solid #ccc; }
+        #status-box { background: #f00505; }
+        #typed-output { background: #e8f5e9; min-height: 20px; }
+        .risk-btn { padding: 5px 10px; margin: 5px; cursor: pointer; }
+        #download-link { display: inline-block; padding: 8px 16px; background: #2196F3; color: white; text-decoration: none; border-radius: 4px; }
+        form { margin: 15px 0; padding: 15px; border: 1px solid #ddd; }
+        input[type="text"] { padding: 5px; margin: 5px 0; width: 300px; }
+        select { padding: 5px; margin: 5px 0; }
+        img.icon { width: 24px; height: 24px; }
+    </style>
+</head>
+<body>
+    <h1>Phase 8 Browser Intelligence Test</h1>
+    <p id="intro-text">This page tests the full browser capability surface.</p>
+
+    <h2>Links &amp; Navigation</h2>
+    <a href="#section-form" id="nav-to-form">Navigate to Form</a>
+    <a href="#section-click" id="nav-to-click">Navigate to Click Tests</a>
+
+    <h2 id="section-click">Click Tests</h2>
+    <button id="safe-button" class="risk-btn">Safe Button</button>
+    <button id="delete-button" class="risk-btn" style="background: red; color: white;">Delete Everything</button>
+    <button id="image-button" class="risk-btn">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ccircle cx='12' cy='12' r='10' fill='red'/%3E%3C/svg%3E"
+             alt="delete permanently" class="icon" id="risk-icon">
+        Icon Button
+    </button>
+    <button id="dynamic-button" class="risk-btn">Dynamic Button</button>
+    <div id="click-result" class="status">No button clicked yet</div>
+
+    <h2 id="section-form">Form Tests</h2>
+    <form id="test-form">
+        <label for="text-input">Text Input:</label><br>
+        <input type="text" id="text-input" name="text-input" placeholder="Type here..."><br>
+        <div id="typed-output">Typed value will appear here</div>
+
+        <label for="test-select">Select:</label><br>
+        <select id="test-select" name="test-select">
+            <option value="">-- Choose --</option>
+            <option value="opt1">Option 1</option>
+            <option value="opt2">Option 2</option>
+            <option value="opt3">Option 3</option>
+        </select><br>
+
+        <label for="file-input">File Upload:</label><br>
+        <input type="file" id="file-input" name="file-input"><br>
+        <div id="upload-status">No file selected</div>
+
+        <button type="button" id="submit-form">Submit Form</button>
+    </form>
+
+    <h2>Download Test</h2>
+    <a href="data:text/plain,Hello+from+Phase+8+Browser+Intelligence" download="phase8-test.txt" id="download-link">Download Test File</a>
+
+    <h2>Wait Test</h2>
+    <button id="show-delayed" class="risk-btn">Show Delayed Element</button>
+    <div id="delayed-element" style="display: none; padding: 10px; background: #fff3e0;">
+        Delayed element appeared!
+    </div>
+
+    <h2>Extract Test</h2>
+    <p id="extract-target">This paragraph contains specific text for extraction testing.</p>
+
+    <script>
+        // Safe button click handler
+        document.getElementById('safe-button').addEventListener('click', function() {
+            document.getElementById('click-result').textContent = 'Safe button clicked!';
+            document.getElementById('click-result').style.background = '#c8e6c9';
+        });
+
+        // Delete button click handler (high-risk signal)
+        document.getElementById('delete-button').addEventListener('click', function() {
+            document.getElementById('click-result').textContent = 'DELETE button clicked!';
+            document.getElementById('click-result').style.background = '#ffcdd2';
+        });
+
+        // Image button click handler (alt-text risk signal)
+        document.getElementById('image-button').addEventListener('click', function() {
+            document.getElementById('click-result').textContent = 'Image/icon button clicked!';
+            document.getElementById('click-result').style.background = '#ffe0b2';
+        });
+
+        // Dynamic button (no accessible text initially)
+        document.getElementById('dynamic-button').addEventListener('click', function() {
+            document.getElementById('click-result').textContent = 'Dynamic button clicked!';
+            document.getElementById('click-result').style.background = '#e1bee7';
+        });
+
+        // Text input echo
+        document.getElementById('text-input').addEventListener('input', function() {
+            document.getElementById('typed-output').textContent = 'Typed: ' + this.value;
+        });
+
+        // File input status
+        document.getElementById('file-input').addEventListener('change', function() {
+            var name = this.files[0] ? this.files[0].name : 'No file selected';
+            document.getElementById('upload-status').textContent = 'Selected: ' + name;
+        });
+
+        // Submit form handler
+        document.getElementById('submit-form').addEventListener('click', function() {
+            var val = document.getElementById('text-input').value;
+            var sel = document.getElementById('test-select').value;
+            document.getElementById('click-result').textContent =
+                'Form submitted: text="' + val + '", select="' + sel + '"';
+            document.getElementById('click-result').style.background = '#b3e5fc';
+        });
+
+        // Show delayed element
+        document.getElementById('show-delayed').addEventListener('click', function() {
+            setTimeout(function() {
+                document.getElementById('delayed-element').style.display = 'block';
+            }, 500);
+        });
+    </script>
+</body>
+</html>

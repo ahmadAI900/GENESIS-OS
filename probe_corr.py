@@ -1,0 +1,6 @@
+import sys
+sys.path.insert(0, '.')
+from agents.workflow_decision import WorkflowDecisionEngine
+e = WorkflowDecisionEngine()
+d = e.decide("What's the difference between correlation and causation?")
+print('agents:', d.get('agents'), 'agent:', d.get('agent'))

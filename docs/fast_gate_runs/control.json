@@ -1,0 +1,1593 @@
+{
+ "__meta__": {
+  "argv": [
+   "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Lib\\site-packages\\pytest\\__main__.py",
+   "test_phase6_real_windows.py",
+   "test_level3_2_applications.py",
+   "-p",
+   "record_probe",
+   "--record",
+   "--record-tag",
+   "control",
+   "-q"
+  ],
+  "install": {
+   "audit": true,
+   "ctypes": true,
+   "meta_path": true,
+   "stale_bindings": [],
+   "wrapped_modules": [
+    "pyautogui: 23 wrapped",
+    "selenium.webdriver: 6 wrapped",
+    "selenium.webdriver: lazy __getattr__ wrapped for 6 names",
+    "win32api: 6 wrapped"
+   ]
+  },
+  "max_distinct_events_per_test": 150,
+  "tag": "control",
+  "tests": 16,
+  "truncated_tests": []
+ },
+ "test_level3_2_applications.py::test_application_inspection": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "tasklist /FI \"IMAGENAME eq notepad.exe\""
+    ],
+    "count": 1,
+    "exe": "tasklist /FI \"IMAGENAME eq notepad.exe\"",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 27.9874
+ },
+ "test_level3_2_applications.py::test_application_resolution": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 22.1104
+ },
+ "test_level3_2_applications.py::test_manager_initialization": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0041
+ },
+ "test_level3_2_applications.py::test_os_status": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0054
+ },
+ "test_level3_2_applications.py::test_unknown_application": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n "
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-AppxPackage |\n    Select-Object `\n        Name,\n        PackageFullName,\n ",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "Popen",
+    "argv": [
+     "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT"
+    ],
+    "count": 1,
+    "exe": "powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -Command \"\n$ErrorActionPreference = 'SilentlyContinue'\n\nGet-StartApps |\n    Select-Object `\n        Name,\n        AppID |\n    ConvertT",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 22.5511
+ },
+ "test_phase6_real_windows.py::TestWindowResolverReal::test_enumerate_real_windows": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 253,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 27,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.0097
+ },
+ "test_phase6_real_windows.py::TestWindowResolverReal::test_find_by_pattern": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 256,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 28,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 1.5413
+ },
+ "test_phase6_real_windows.py::TestWindowResolverReal::test_get_foreground_real": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 253,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 27,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 20,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 0.0084
+ },
+ "test_phase6_real_windows.py::TestWindowResolverReal::test_is_safe_target_real": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0041
+ },
+ "test_phase6_real_windows.py::TestWorkflowA_OpenNotepad::test_open_notepad_creates_window": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 1,
+    "dll": "user32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "EnumWindows"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsWindowVisible"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 256,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowTextLengthW"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 28,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowTextW"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowRect"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetWindowThreadProcessId"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetClassNameW"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetForegroundWindow"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsIconic"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsZoomed"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 1.5431
+ },
+ "test_phase6_real_windows.py::TestWorkflowB_FocusNotepad::test_focus_notepad": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 8,
+    "dll": "ole32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x209374ea840>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "StringFromCLSID"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'ole32', handle 7fff518d0000 at 0x209374ea7e0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoTaskMemFree"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x209374ea840>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "ProgIDFromCLSID"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x209374ea840>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CLSIDFromString"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x209374ea840>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CLSIDFromProgID"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x209374ea840>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoCreateGuid"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x209374e9df0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoInitializeEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'ole32', handle 7fff518d0000 at 0x209374eaba0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoUninitialize"
+   },
+   {
+    "api": "ole32.CoInitializeEx",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<PyDLL 'python dll', handle 7ffeeab20000 at 0x20936ce27b0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "PyInstanceMethod_New"
+   },
+   {
+    "api": "python dll.PyInstanceMethod_New",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ole32.CLSIDFromString",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ole32.StringFromCLSID",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ole32.CoTaskMemFree",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 8,
+    "dll": "oleaut32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937521b20>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SysFreeString"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayAccessData"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayCreateVectorEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayCreateEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayCreate"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayUnaccessData"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetVartype"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetElement"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayDestroy"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayCreateVector"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayDestroyData"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetDim"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetLBound"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetUBound"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayLock"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayPtrOfIndex"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayUnlock"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayGetIID"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937541370>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SafeArrayDestroyDescriptor"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x20937542900>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SysAllocStringLen"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375429f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VariantChangeType"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375429f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VariantClear"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375429f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VariantCopy"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375429f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VariantCopyInd"
+   },
+   {
+    "api": "oleaut32.VariantClear",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x20937543bc0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoGetClassObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x20937543bc0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoCreateInstance"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x20937543bc0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoCreateInstanceEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x20937543bc0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoGetObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375783e0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "RegisterActiveObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375783e0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "RevokeActiveObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375783e0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetActiveObject"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x2093757b350>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CreateErrorInfo"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x2093757b350>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetErrorInfo"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x2093757b350>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetErrorInfo"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375aa150>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetRecordInfoFromTypeInfo"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375aa150>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetRecordInfoFromGuids"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375aa150>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "LoadRegTypeLib"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375aa150>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "LoadTypeLibEx"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375aa150>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "LoadTypeLib"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375aa150>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "UnRegisterTypeLib"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375aa150>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "RegisterTypeLib"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375aa150>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CreateTypeLib2"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'oleaut32', handle 7fff51720000 at 0x209375aa150>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "QueryPathOfRegTypeLib"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 3,
+    "dll": "kernel32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x209375aaf30>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetModuleFileNameW"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x209375792b0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "InterlockedIncrement"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x2093757b8c0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "DispGetIDsOfNames"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'oleaut32', handle 7fff51720000 at 0x2093757b8c0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "DispInvoke"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'ole32', handle 7fff518d0000 at 0x2093757bad0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoInitialize"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x2093757bb60>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoAddRefServerProcess"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x2093757bb60>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoReleaseServerProcess"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 1,
+    "dll": "user32",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x209375a8050>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "PostQuitMessage"
+   },
+   {
+    "api": "ctypes.dlopen",
+    "count": 1,
+    "dll": "shell32.dll",
+    "kind": "dll_load",
+    "source": "audit"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'shell32.dll', handle 7fff50210000 at 0x20937678260>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SHGetSpecialFolderPathW"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<OleDLL 'ole32', handle 7fff518d0000 at 0x209376790a0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CoWaitForMultipleHandles"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x20937679340>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CreateEventA"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x20937679340>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetEvent"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x20937679340>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetConsoleCtrlHandler"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'kernel32', handle 7fff4feb0000 at 0x20937679340>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "CloseHandle"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "MessageBoxW"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetProcessDPIAware"
+   },
+   {
+    "api": "user32.SetProcessDPIAware",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetDC"
+   },
+   {
+    "api": "user32.GetDC",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "VkKeyScanA"
+   },
+   {
+    "api": "user32.VkKeyScanA",
+    "count": 96,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetSystemMetrics"
+   },
+   {
+    "api": "user32.GetSystemMetrics",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 512,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 58,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 44,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 24,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 22,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "SetForegroundWindow"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 21,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 2.0664
+ },
+ "test_phase6_real_windows.py::TestWorkflowC_TypeIntoNotepad::test_type_text_into_notepad": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 4,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 1024,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 118,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 90,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 50,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 44,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "Hello from Genesis Phase 6"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "GetCursorPos"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 79,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "H"
+    ],
+    "count": 26,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "keybd_event"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 64,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowRect",
+    "count": 42,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowThreadProcessId",
+    "count": 42,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetClassNameW",
+    "count": 42,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsZoomed",
+    "count": 42,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 3.3698
+ },
+ "test_phase6_real_windows.py::TestWorkflowD_KeyboardActions::test_press_enter": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 256,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 30,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 23,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 3,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "enter"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "ctypes.dlsym",
+    "count": 1,
+    "dll": "<WinDLL 'user32', handle 7fff513c0000 at 0x20936ee14f0>",
+    "kind": "dll_load",
+    "source": "audit",
+    "symbol": "IsWindow"
+   },
+   {
+    "api": "user32.IsWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 1.9342
+ },
+ "test_phase6_real_windows.py::TestWorkflowE_Hotkey::test_ctrl_a_select_all": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "notepad.exe"
+    ],
+    "count": 1,
+    "exe": "notepad.exe",
+    "kind": "process",
+    "source": "audit"
+   },
+   {
+    "api": "user32.EnumWindows",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsWindowVisible",
+    "count": 512,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextLengthW",
+    "count": 62,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetWindowTextW",
+    "count": 48,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.GetForegroundWindow",
+    "count": 7,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.IsIconic",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "user32.SetForegroundWindow",
+    "count": 2,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.typewrite",
+    "args": [
+     "test text for hotkey"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.GetCursorPos",
+    "count": 62,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.press",
+    "args": [
+     "t"
+    ],
+    "count": 20,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.keybd_event",
+    "count": 44,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   },
+   {
+    "api": "pyautogui.hotkey",
+    "args": [
+     "ctrl",
+     "a"
+    ],
+    "count": 1,
+    "kind": "gui",
+    "source": "module"
+   },
+   {
+    "api": "user32.IsWindow",
+    "count": 1,
+    "kind": "ctypes_call",
+    "source": "ctypes"
+   }
+  ],
+  "seconds": 3.0723
+ },
+ "test_phase6_real_windows.py::TestWorkflowG_Ambiguity::test_ambiguous_target_returns_honest_result": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.003
+ },
+ "test_phase6_real_windows.py::TestWorkflowH_Unsupported::test_unsupported_target_honest_failure": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0029
+ }
+}

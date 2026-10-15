@@ -1,0 +1,102 @@
+[
+  {
+    "phrase": "condense this into a brief overview",
+    "expected": "document.summarize",
+    "current_op": null,
+    "simplified_op": null,
+    "tightened_op": null,
+    "current_correct": false,
+    "simplified_correct": false,
+    "tightened_correct": false
+  },
+  {
+    "phrase": "fix the formatting in the report",
+    "expected": "document.edit",
+    "current_op": null,
+    "simplified_op": null,
+    "tightened_op": null,
+    "current_correct": false,
+    "simplified_correct": false,
+    "tightened_correct": false
+  },
+  {
+    "phrase": "how do these two versions differ",
+    "expected": "document.compare",
+    "current_op": null,
+    "simplified_op": null,
+    "tightened_op": null,
+    "current_correct": false,
+    "simplified_correct": false,
+    "tightened_correct": false
+  },
+  {
+    "phrase": "tell me what this document is about",
+    "expected": "document.read_intel",
+    "current_op": null,
+    "simplified_op": "document.summarize",
+    "tightened_op": "document.summarize",
+    "current_correct": false,
+    "simplified_correct": false,
+    "tightened_correct": false
+  },
+  {
+    "phrase": "put that text on the clipboard",
+    "expected": "clipboard.copy",
+    "current_op": null,
+    "simplified_op": "clipboard.copy",
+    "tightened_op": "clipboard.copy",
+    "current_correct": false,
+    "simplified_correct": true,
+    "tightened_correct": true
+  },
+  {
+    "phrase": "retrieve what I copied last",
+    "expected": "clipboard.paste",
+    "current_op": "clipboard.paste",
+    "simplified_op": "clipboard.paste",
+    "tightened_op": "clipboard.paste",
+    "current_correct": true,
+    "simplified_correct": true,
+    "tightened_correct": true
+  },
+  {
+    "phrase": "press that button on the screen",
+    "expected": "gui.click",
+    "current_op": null,
+    "simplified_op": "gui.click",
+    "tightened_op": "gui.click",
+    "current_correct": false,
+    "simplified_correct": true,
+    "tightened_correct": true
+  },
+  {
+    "phrase": "highlight all the text here",
+    "expected": "gui.select",
+    "current_op": "gui.select",
+    "simplified_op": "gui.select",
+    "tightened_op": "gui.keyboard_action",
+    "current_correct": true,
+    "simplified_correct": true,
+    "tightened_correct": false
+  },
+  {
+    "phrase": "locate the input box on this page",
+    "expected": "browser.find",
+    "current_op": null,
+    "simplified_op": "browser.find",
+    "tightened_op": null,
+    "current_correct": false,
+    "simplified_correct": true,
+    "tightened_correct": false
+  },
+  {
+    "phrase": "pull that picture down from the website",
+    "expected": "browser.download",
+    "current_op": "browser.download",
+    "simplified_op": "browser.download",
+    "tightened_op": "browser.download",
+    "current_correct": true,
+    "simplified_correct": true,
+    "tightened_correct": true
+  }
+]

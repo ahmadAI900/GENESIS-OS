@@ -1,0 +1,2071 @@
+{
+ "files": {
+  "_debug_test.py": {
+   "calls": [],
+   "file": "_debug_test.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "benchmark_real_os/test_benchmark_real_os.py": {
+   "calls": [],
+   "file": "benchmark_real_os/test_benchmark_real_os.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "brain/test_brain.py": {
+   "calls": [],
+   "file": "brain/test_brain.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "conftest.py": {
+   "calls": [],
+   "file": "conftest.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "memory/test_memory.py": {
+   "calls": [],
+   "file": "memory/test_memory.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "run_combined_test.py": {
+   "calls": [],
+   "file": "run_combined_test.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "run_direct_test.py": {
+   "calls": [],
+   "file": "run_direct_test.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "run_prompt_test.py": {
+   "calls": [],
+   "file": "run_prompt_test.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_app_discovery.py": {
+   "calls": [],
+   "file": "test_app_discovery.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_application_identity.py": {
+   "calls": [],
+   "file": "test_application_identity.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_application_intelligence_maturity.py": {
+   "calls": [],
+   "file": "test_application_intelligence_maturity.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_application_resolution.py": {
+   "calls": [],
+   "file": "test_application_resolution.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_approval_channel.py": {
+   "calls": [],
+   "file": "test_approval_channel.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_blast_radius.py": {
+   "calls": [],
+   "file": "test_blast_radius.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_bucket1_verification_regression.py": {
+   "calls": [],
+   "file": "test_bucket1_verification_regression.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_compound_task_router.py": {
+   "calls": [],
+   "file": "test_compound_task_router.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_confirmed_not_an_authority.py": {
+   "calls": [],
+   "file": "test_confirmed_not_an_authority.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_context_hint_resolver.py": {
+   "calls": [],
+   "file": "test_context_hint_resolver.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_context_resolver.py": {
+   "calls": [],
+   "file": "test_context_resolver.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_core_reliability.py": {
+   "calls": [],
+   "file": "test_core_reliability.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_debug_decision.py": {
+   "calls": [],
+   "file": "test_debug_decision.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_debug_planner.py": {
+   "calls": [],
+   "file": "test_debug_planner.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_file_intelligence_foundation.py": {
+   "calls": [],
+   "file": "test_file_intelligence_foundation.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_gate_paths.py": {
+   "calls": [],
+   "file": "test_gate_paths.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_genesis_arming.py": {
+   "calls": [
+    "subprocess.run"
+   ],
+   "file": "test_genesis_arming.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_gui_window_focus_regression.py": {
+   "calls": [],
+   "file": "test_gui_window_focus_regression.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_import_smoke.py": {
+   "calls": [],
+   "file": "test_import_smoke.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_intent_gate_and_confirmation_prompt.py": {
+   "calls": [],
+   "file": "test_intent_gate_and_confirmation_prompt.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level2_5_agent_tools.py": {
+   "calls": [],
+   "file": "test_level2_5_agent_tools.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level2_hardening.py": {
+   "calls": [],
+   "file": "test_level2_hardening.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_10_universal_control.py": {
+   "calls": [],
+   "file": "test_level3_10_universal_control.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_11_unified_intelligence.py": {
+   "calls": [],
+   "file": "test_level3_11_unified_intelligence.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_12_windows_daily.py": {
+   "calls": [],
+   "file": "test_level3_12_windows_daily.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_14_e2e_integration.py": {
+   "calls": [],
+   "file": "test_level3_14_e2e_integration.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_14_generalization.py": {
+   "calls": [],
+   "file": "test_level3_14_generalization.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_15_cross_level_integration.py": {
+   "calls": [],
+   "file": "test_level3_15_cross_level_integration.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_20_generalization.py": {
+   "calls": [],
+   "file": "test_level3_20_generalization.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_23_gui_text_input_compound.py": {
+   "calls": [],
+   "file": "test_level3_23_gui_text_input_compound.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_2_applications.py": {
+   "calls": [],
+   "file": "test_level3_2_applications.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_3_browser_adversarial.py": {
+   "calls": [],
+   "file": "test_level3_3_browser_adversarial.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_3_browser_closed_loop.py": {
+   "calls": [],
+   "file": "test_level3_3_browser_closed_loop.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_3_browser_select_download_upload.py": {
+   "calls": [],
+   "file": "test_level3_3_browser_select_download_upload.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_3_execution_maturity.py": {
+   "calls": [],
+   "file": "test_level3_3_execution_maturity.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_4_document_edit_transform_verify.py": {
+   "calls": [],
+   "file": "test_level3_4_document_edit_transform_verify.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_4_execution_safety.py": {
+   "calls": [],
+   "file": "test_level3_4_execution_safety.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_5_safety_integration.py": {
+   "calls": [],
+   "file": "test_level3_5_safety_integration.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_6_capability_integration.py": {
+   "calls": [],
+   "file": "test_level3_6_capability_integration.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_6_capability_registry.py": {
+   "calls": [],
+   "file": "test_level3_6_capability_registry.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_6_golden_workflow.py": {
+   "calls": [],
+   "file": "test_level3_6_golden_workflow.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_7_file_intelligence.py": {
+   "calls": [],
+   "file": "test_level3_7_file_intelligence.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_7_phase7_lifecycle.py": {
+   "calls": [],
+   "file": "test_level3_7_phase7_lifecycle.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_4_target_resolution.py": {
+   "calls": [],
+   "file": "test_level3_8_4_target_resolution.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_5_context_state_binding.py": {
+   "calls": [],
+   "file": "test_level3_8_5_context_state_binding.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_5_semantic_resolution.py": {
+   "calls": [],
+   "file": "test_level3_8_5_semantic_resolution.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_6_capability_resolution.py": {
+   "calls": [],
+   "file": "test_level3_8_6_capability_resolution.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_7_dynamic_plan.py": {
+   "calls": [],
+   "file": "test_level3_8_7_dynamic_plan.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_7_integration.py": {
+   "calls": [],
+   "file": "test_level3_8_7_integration.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_objective_understanding.py": {
+   "calls": [],
+   "file": "test_level3_8_objective_understanding.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_os_expansion.py": {
+   "calls": [],
+   "file": "test_level3_8_os_expansion.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_universal_workflow.py": {
+   "calls": [],
+   "file": "test_level3_8_universal_workflow.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_8_workflow_decomposition.py": {
+   "calls": [],
+   "file": "test_level3_8_workflow_decomposition.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_9_application_state_machine.py": {
+   "calls": [],
+   "file": "test_level3_9_application_state_machine.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_9_application_verification.py": {
+   "calls": [],
+   "file": "test_level3_9_application_verification.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_9_multi_step_workflows.py": {
+   "calls": [],
+   "file": "test_level3_9_multi_step_workflows.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_9_natural_language_execution.py": {
+   "calls": [],
+   "file": "test_level3_9_natural_language_execution.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_level3_9_session_context.py": {
+   "calls": [],
+   "file": "test_level3_9_session_context.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_live_failover.py": {
+   "calls": [],
+   "file": "test_live_failover.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_modal_dialog_recovery.py": {
+   "calls": [
+    "pyautogui.hotkey",
+    "pyautogui.press",
+    "pyautogui.typewrite",
+    "subprocess.Popen",
+    "subprocess.run"
+   ],
+   "file": "test_modal_dialog_recovery.py",
+   "from_imports": [],
+   "imports": [
+    "pyautogui"
+   ],
+   "parse_error": null,
+   "signals": [
+    "gui_call",
+    "gui_construct",
+    "gui_import"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.hotkey",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.press",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.typewrite",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "UIAutomationProvider",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_uia_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_uia_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.hotkey",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_uia_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.press",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_uia_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.typewrite",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestReadFocusedTextModalRecovery::test_uia_read_focused_text_returns_within_timeout_with_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestTypeTextModalRecovery::test_type_text_recovers_with_modal_present"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "TestTypeTextModalRecovery::test_type_text_recovers_with_modal_present"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.hotkey",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestTypeTextModalRecovery::test_type_text_recovers_with_modal_present"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.press",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestTypeTextModalRecovery::test_type_text_recovers_with_modal_present"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.typewrite",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestTypeTextModalRecovery::test_type_text_recovers_with_modal_present"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "TestFullWorkflowModalRecovery::test_workflow_recovers_after_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestFullWorkflowModalRecovery::test_workflow_recovers_after_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "UIAutomationProvider",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestFullWorkflowModalRecovery::test_workflow_recovers_after_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.hotkey",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestFullWorkflowModalRecovery::test_workflow_recovers_after_modal"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.press",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestFullWorkflowModalRecovery::test_workflow_recovers_after_modal"
+    }
+   ]
+  },
+  "test_multi_agent_response_format_regression.py": {
+   "calls": [],
+   "file": "test_multi_agent_response_format_regression.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase0_mixed_data_flow.py": {
+   "calls": [],
+   "file": "test_phase0_mixed_data_flow.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase1_actionplan_pydantic_contract.py": {
+   "calls": [],
+   "file": "test_phase1_actionplan_pydantic_contract.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase1_contracts_maturity.py": {
+   "calls": [],
+   "file": "test_phase1_contracts_maturity.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [
+    "gui_construct"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "GUIObserver",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestObservationContract::test_live_snapshot_passes_boundary"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIVerifier",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestVerificationContract::test_live_verifier_passes_boundary"
+    }
+   ]
+  },
+  "test_phase1_gui_focus_verification.py": {
+   "calls": [],
+   "file": "test_phase1_gui_focus_verification.py",
+   "from_imports": [],
+   "imports": [
+    "pyautogui"
+   ],
+   "parse_error": null,
+   "signals": [
+    "gui_import"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "test_a_probe_text_write_hello_world_does_not_pyautogui_typewrite"
+    }
+   ]
+  },
+  "test_phase2_agent_framework_adapter.py": {
+   "calls": [],
+   "file": "test_phase2_agent_framework_adapter.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase2_agent_framework_adapter_expansion.py": {
+   "calls": [],
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase2_deferred_items.py": {
+   "calls": [],
+   "file": "test_phase2_deferred_items.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase2_destructive_capabilities.py": {
+   "calls": [],
+   "file": "test_phase2_destructive_capabilities.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase2_multi_tool_sequence.py": {
+   "calls": [],
+   "file": "test_phase2_multi_tool_sequence.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase3_control_plane_maturity.py": {
+   "calls": [],
+   "file": "test_phase3_control_plane_maturity.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase3_cross_domain_arbitration.py": {
+   "calls": [],
+   "file": "test_phase3_cross_domain_arbitration.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase3_fp_negative_rigor.py": {
+   "calls": [],
+   "file": "test_phase3_fp_negative_rigor.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase3_ledger_items_20_21.py": {
+   "calls": [],
+   "file": "test_phase3_ledger_items_20_21.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase3_minimal_context_channel.py": {
+   "calls": [],
+   "file": "test_phase3_minimal_context_channel.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase3_precondition_enforcement.py": {
+   "calls": [],
+   "file": "test_phase3_precondition_enforcement.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase3_semantic_grounding.py": {
+   "calls": [],
+   "file": "test_phase3_semantic_grounding.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase3_trigger_hardening.py": {
+   "calls": [],
+   "file": "test_phase3_trigger_hardening.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase4_provider_conformance.py": {
+   "calls": [],
+   "file": "test_phase4_provider_conformance.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase5_provider_registry.py": {
+   "calls": [],
+   "file": "test_phase5_provider_registry.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [
+    "gui_construct"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestPart1AuditExistingInfrastructure::test_gui_controller_single_provider_honest"
+    }
+   ]
+  },
+  "test_phase5_universal_runtime_maturity.py": {
+   "calls": [],
+   "file": "test_phase5_universal_runtime_maturity.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase6_failure_injection.py": {
+   "calls": [],
+   "file": "test_phase6_failure_injection.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [
+    "gui_construct"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "GUIObserver",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestTimeoutHandling::test_wait_for_condition_respects_timeout"
+    }
+   ]
+  },
+  "test_phase6_integration.py": {
+   "calls": [],
+   "file": "test_phase6_integration.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [
+    "gui_construct"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestGUIControllerExtended::test_gui_controller_capabilities"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestGUIControllerExtended::test_gui_controller_provider_health"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestMockProviderIntegration::test_hotkey_delegation"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestMockProviderIntegration::test_drag_delegation"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestMockProviderIntegration::test_wait_for_window_delegation"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestMockProviderIntegration::test_inspect_ui_tree_delegation"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestMockProviderIntegration::test_unavailable_provider"
+    }
+   ]
+  },
+  "test_phase6_real_windows.py": {
+   "calls": [
+    "subprocess.Popen"
+   ],
+   "file": "test_phase6_real_windows.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [
+    "gui_construct",
+    "process_call"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "subprocess.Popen",
+       "signal": "process_call"
+      }
+     ],
+     "test": "TestWorkflowA_OpenNotepad::test_open_notepad_creates_window"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.Popen",
+       "signal": "process_call"
+      }
+     ],
+     "test": "TestWorkflowB_FocusNotepad::test_focus_notepad"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestWorkflowB_FocusNotepad::test_focus_notepad"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIVerifier",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestWorkflowB_FocusNotepad::test_focus_notepad"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.Popen",
+       "signal": "process_call"
+      }
+     ],
+     "test": "TestWorkflowC_TypeIntoNotepad::test_type_text_into_notepad"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestWorkflowC_TypeIntoNotepad::test_type_text_into_notepad"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIVerifier",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestWorkflowC_TypeIntoNotepad::test_type_text_into_notepad"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.Popen",
+       "signal": "process_call"
+      }
+     ],
+     "test": "TestWorkflowD_KeyboardActions::test_press_enter"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestWorkflowD_KeyboardActions::test_press_enter"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.Popen",
+       "signal": "process_call"
+      }
+     ],
+     "test": "TestWorkflowE_Hotkey::test_ctrl_a_select_all"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestWorkflowE_Hotkey::test_ctrl_a_select_all"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.Popen",
+       "signal": "process_call"
+      }
+     ],
+     "test": "TestWindowResolverReal::test_find_by_pattern"
+    }
+   ]
+  },
+  "test_phase6_text_verification.py": {
+   "calls": [
+    "pyautogui.hotkey",
+    "pyautogui.press",
+    "pyautogui.typewrite",
+    "subprocess.Popen",
+    "subprocess.run"
+   ],
+   "file": "test_phase6_text_verification.py",
+   "from_imports": [],
+   "imports": [
+    "pyautogui"
+   ],
+   "parse_error": null,
+   "signals": [
+    "gui_call",
+    "gui_construct",
+    "gui_import"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestReadFocusedTextHonestBehavior::test_read_focused_text_returns_structured_result"
+    },
+    {
+     "signals": [
+      {
+       "detail": "UIAutomationProvider",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestReadFocusedTextHonestBehavior::test_read_focused_text_when_no_uia"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_exact_content_empty_editor"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_exact_content_empty_editor"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.hotkey",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_exact_content_empty_editor"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.press",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_exact_content_empty_editor"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_exact_content_append"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_exact_content_append"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.hotkey",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_exact_content_append"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.press",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_exact_content_append"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.typewrite",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_exact_content_append"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_paste_text_content_verification"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_paste_text_content_verification"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.hotkey",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_paste_text_content_verification"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.press",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_paste_text_content_verification"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_read_focused_text_returns_honest_when_unreadable"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIController",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestNotepadContentVerification::test_type_text_focus_retained"
+    }
+   ]
+  },
+  "test_phase6_unit.py": {
+   "calls": [],
+   "file": "test_phase6_unit.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [
+    "gui_construct"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "GUIObserver",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestGUIObserver::test_availability"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIObserver",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestGUIObserver::test_take_snapshot"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIObserver",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestGUIObserver::test_observe_windows"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIVerifier",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestGUIVerifier::test_verify_window_exists_notepad"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIVerifier",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestGUIVerifier::test_verify_window_not_exists"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIVerifier",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestGUIVerifier::test_verify_condition_timeout"
+    },
+    {
+     "signals": [
+      {
+       "detail": "GUIVerifier",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "TestGUIVerifier::test_verify_condition_immediate"
+    }
+   ]
+  },
+  "test_phase7_filesystem_intelligence.py": {
+   "calls": [],
+   "file": "test_phase7_filesystem_intelligence.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase9_document_edit_safety.py": {
+   "calls": [],
+   "file": "test_phase9_document_edit_safety.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_phase9_spreadsheet_safety.py": {
+   "calls": [],
+   "file": "test_phase9_spreadsheet_safety.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_result_aggregator_regression.py": {
+   "calls": [],
+   "file": "test_result_aggregator_regression.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_scratch_tripwire_offenders.py": {
+   "calls": [
+    "subprocess.run"
+   ],
+   "file": "test_scratch_tripwire_offenders.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [
+    "process_call"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "subprocess.run",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_scratch_non_allowlisted_executable_is_caught"
+    }
+   ]
+  },
+  "test_splitter_generalization.py": {
+   "calls": [],
+   "file": "test_splitter_generalization.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_string_identity.py": {
+   "calls": [],
+   "file": "test_string_identity.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_structural_census.py": {
+   "calls": [],
+   "file": "test_structural_census.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_type_text_verification_live.py": {
+   "calls": [
+    "pyautogui.hotkey",
+    "pyautogui.press",
+    "subprocess.Popen",
+    "subprocess.run"
+   ],
+   "file": "test_type_text_verification_live.py",
+   "from_imports": [],
+   "imports": [
+    "pyautogui"
+   ],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_unified_discovery.py": {
+   "calls": [],
+   "file": "test_unified_discovery.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_unified_executor.py": {
+   "calls": [],
+   "file": "test_unified_executor.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_unseen_task_semantic.py": {
+   "calls": [],
+   "file": "test_unseen_task_semantic.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_verification_honesty_sweep.py": {
+   "calls": [],
+   "file": "test_verification_honesty_sweep.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_windows_registered_apps.py": {
+   "calls": [],
+   "file": "test_windows_registered_apps.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_workflow_routing_maturity.py": {
+   "calls": [],
+   "file": "test_workflow_routing_maturity.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "test_workspace_boundary.py": {
+   "calls": [],
+   "file": "test_workspace_boundary.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [],
+   "tests": []
+  },
+  "tools/test_record_probe_canaries.py": {
+   "calls": [
+    "os.startfile",
+    "os.system",
+    "pyautogui.moveTo",
+    "pyautogui.position",
+    "subprocess.Popen",
+    "subprocess.run",
+    "win32api.GetCursorPos",
+    "win32gui.GetForegroundWindow"
+   ],
+   "file": "tools/test_record_probe_canaries.py",
+   "from_imports": [
+    {
+     "module": "win32gui",
+     "name": "GetForegroundWindow"
+    },
+    {
+     "module": "selenium",
+     "name": "webdriver"
+    },
+    {
+     "module": "selenium.webdriver.chrome.options",
+     "name": "Options"
+    },
+    {
+     "module": "selenium.webdriver.chrome.service",
+     "name": "Service"
+    },
+    {
+     "module": "playwright.sync_api",
+     "name": "sync_playwright"
+    }
+   ],
+   "imports": [
+    "playwright.sync_api",
+    "pyautogui",
+    "selenium",
+    "selenium.webdriver.chrome.options",
+    "selenium.webdriver.chrome.service",
+    "win32api",
+    "win32gui"
+   ],
+   "parse_error": null,
+   "signals": [
+    "gui_call",
+    "gui_construct",
+    "gui_import",
+    "process_call",
+    "stale_risk_from_import"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "subprocess.run",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_canary_subprocess_popen"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.Popen",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_canary_subprocess_popen_direct"
+    },
+    {
+     "signals": [
+      {
+       "detail": "os.startfile",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_canary_os_startfile"
+    },
+    {
+     "signals": [
+      {
+       "detail": "os.system",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_canary_os_system"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32gui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "test_canary_win32gui_imported_before_install"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32gui.GetForegroundWindow",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "test_canary_win32gui_imported_before_install"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32gui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "test_canary_win32gui_imported_lazily_inside_function::call_it"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32gui.GetForegroundWindow",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "test_canary_win32gui_imported_lazily_inside_function::call_it"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32gui",
+       "signal": "gui_import"
+      },
+      {
+       "detail": "from win32gui import GetForegroundWindow",
+       "signal": "stale_risk_from_import"
+      }
+     ],
+     "test": "test_canary_win32gui_from_import_after_install"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32gui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "test_canary_win32gui_return_value_unchanged"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32gui.GetForegroundWindow",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "test_canary_win32gui_return_value_unchanged"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "test_canary_pyautogui_imported_lazily_inside_function::call_it"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.position",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "test_canary_pyautogui_imported_lazily_inside_function::call_it"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "test_canary_pyautogui_write_call_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.position",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "test_canary_pyautogui_write_call_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.moveTo",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "test_canary_pyautogui_write_call_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "WindowsGUIProvider",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "test_canary_pyautogui_product_module_first_use"
+    },
+    {
+     "signals": [
+      {
+       "detail": "WindowsGUIProvider",
+       "signal": "gui_construct"
+      }
+     ],
+     "test": "test_canary_pyautogui_action_through_product_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "test_canary_pyautogui_action_through_product_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "pyautogui.position",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "test_canary_pyautogui_action_through_product_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32api",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "test_canary_win32api_input_call_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32api.GetCursorPos",
+       "signal": "gui_call"
+      }
+     ],
+     "test": "test_canary_win32api_input_call_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "selenium",
+       "signal": "gui_import"
+      },
+      {
+       "detail": "from selenium import webdriver",
+       "signal": "stale_risk_from_import"
+      }
+     ],
+     "test": "test_canary_selenium_start_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "selenium.webdriver.chrome.options",
+       "signal": "gui_import"
+      },
+      {
+       "detail": "from selenium.webdriver.chrome.options import Options",
+       "signal": "stale_risk_from_import"
+      }
+     ],
+     "test": "test_canary_selenium_start_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "selenium.webdriver.chrome.service",
+       "signal": "gui_import"
+      },
+      {
+       "detail": "from selenium.webdriver.chrome.service import Service",
+       "signal": "stale_risk_from_import"
+      }
+     ],
+     "test": "test_canary_selenium_start_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "playwright.sync_api",
+       "signal": "gui_import"
+      },
+      {
+       "detail": "from playwright.sync_api import sync_playwright",
+       "signal": "stale_risk_from_import"
+      }
+     ],
+     "test": "test_canary_playwright_start_is_recorded"
+    },
+    {
+     "signals": [
+      {
+       "detail": "win32gui",
+       "signal": "gui_import"
+      }
+     ],
+     "test": "test_known_blind_spot_stale_from_import_binding_is_real"
+    }
+   ]
+  },
+  "tools/test_record_probe_transparency.py": {
+   "calls": [
+    "os.system",
+    "subprocess.Popen",
+    "subprocess.run"
+   ],
+   "file": "tools/test_record_probe_transparency.py",
+   "from_imports": [],
+   "imports": [],
+   "parse_error": null,
+   "signals": [
+    "process_call"
+   ],
+   "tests": [
+    {
+     "signals": [
+      {
+       "detail": "subprocess.run",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_subprocess_run_returns_the_same_result_recorded_and_not"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.run",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_subprocess_run_propagates_failure_identically"
+    },
+    {
+     "signals": [
+      {
+       "detail": "os.system",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_os_system_returns_the_same_value"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.Popen",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_popen_propagates_a_missing_executable"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.run",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_recorder_records_without_raising"
+    },
+    {
+     "signals": [
+      {
+       "detail": "subprocess.run",
+       "signal": "process_call"
+      }
+     ],
+     "test": "test_recorder_records_without_raising"
+    }
+   ]
+  }
+ },
+ "files_scanned": 112,
+ "parse_errors": {},
+ "root": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\backend"
+}

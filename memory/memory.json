@@ -1,0 +1,90 @@
+[
+    {
+        "message": "My favorite language is python"
+    },
+    {
+        "message": "my favorite programming language is python"
+    },
+    {
+        "message": "what programming language do i prefer?"
+    },
+    {
+        "message": "what is my favorite language?"
+    },
+    {
+        "message": "my name is ahmad",
+        "category": "profile"
+    },
+    {
+        "message": "what is my favorite programming language?",
+        "category": "preference"
+    },
+    {
+        "message": "My project is Genesis AI",
+        "category": "project"
+    },
+    {
+        "message": "My project is called Genesis AI.",
+        "category": "project"
+    },
+    {
+        "message": "my project is genesis os.",
+        "category": "project"
+    },
+    {
+        "message": "My project is called Genesis os.",
+        "category": "project"
+    },
+    {
+        "message": "My project is called Genensis OS.",
+        "category": "project"
+    },
+    {
+        "message": "i am very happy today",
+        "category": "profile"
+    },
+    {
+        "message": "I prefer Python.",
+        "category": "general"
+    },
+    {
+        "message": "You: I prefer Python.",
+        "category": "general"
+    },
+    {
+        "message": "What do I prefer?",
+        "category": "general"
+    },
+    {
+        "message": "Which language I prefer for new project?",
+        "category": "general"
+    },
+    {
+        "message": "What is my favorite movie?",
+        "category": "preference"
+    },
+    {
+        "message": "Which language do I prefer?",
+        "category": "general"
+    },
+    {
+        "message": "Which programming language do I prefer?",
+        "category": "general"
+    },
+    {
+        "message": "You: Actually, I prefer java  now.",
+        "category": "general"
+    },
+    {
+        "message": "You: Which language do I prefer?",
+        "category": "general"
+    },
+    {
+        "message": "my favorite movie",
+        "category": "preference"
+    },
+    {
+        "message": "you know i am the creator of genesis os",
+        "category": "profile"
+    }
+]

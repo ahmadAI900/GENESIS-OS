@@ -1,0 +1,137 @@
+{
+  "phase": 3,
+  "record": "remaining gaps: valid measurement (item 1) + residual routing precedence (item 2)",
+  "date": "2026-09-28",
+  "verdict": "NOT CLOSED",
+  "verdict_summary": "Item 2 is complete and verified. Item 1 is not: a valid full-corpus number could not be obtained, because the only host available cannot run a >=7B model over 40 items in usable time. The 75% bar remains unevaluated.",
+
+  "item_1_valid_measurement": {
+    "status": "NOT COMPLETE",
+    "model_installed": {
+      "name": "qwen2.5:7b",
+      "parameter_size": "7.6B",
+      "quantization": "Q4_K_M",
+      "disk": "4.4 GB",
+      "family": "qwen2",
+      "why_this_model": "Same family as the previously installed qwen2.5:0.5b, so only model SIZE differs. Any change is therefore attributable to capacity rather than to a different model's quirks.",
+      "resolved_model_id_verified_at_runtime": "qwen2.5:7b",
+      "env_updated": "OLLAMA_MODEL=qwen2.5:7b",
+      "verified_via": ["AIEngine._get_provider('Ollama').model_id", "OllamaProvider.health_check()", "/api/show details"]
+    },
+    "corpus_integrity": {
+      "verified": true,
+      "method": "Regenerated from seed 20260926 and diffed against the recorded run phase3_bench_heldout_20260926-143632.json",
+      "items": 40,
+      "phrase_mismatches": 0,
+      "expect_mismatches": 0,
+      "removed": 0
+    },
+    "quota_confound_removed": true,
+    "quota_confound_note": "The previous invalid run was contaminated by a Groq rolling tokens-per-minute quota. A local model removes that failure mode entirely, and the final run recorded 0 sub-second no-answers.",
+
+    "host_constraint_discovered": {
+      "gpu": false,
+      "cpu": "Intel Core i5-4210U @ 1.70GHz, 2 cores / 4 threads",
+      "ram_gb": 11.9,
+      "measured_prefill_tokens_per_second": 10.0,
+      "measured_prompt_cost": {"125_tokens_s": 28.4, "500_tok_s": 77.3, "1250_tok_s": 158.4, "2500_tok_s": 275.8, "5475_tok_s": 508.6},
+      "consequence": "The 5,480-token enriched catalog costs ~508 seconds per call on this host. No timeout in the system can accommodate that interactively, and a 40-item run at that cost is ~5.7 hours even in the best case."
+    },
+
+    "architectural_change_made": {
+      "name": "Two-stage shortlist-then-detail selection",
+      "why": "Not a benchmark trick: the single-stage prompt was unaffordable per request on the target host, and would equally break any CPU-only deployment.",
+      "stage_1": "id-only capability index, grouped by domain",
+      "stage_2": "full descriptors, risk, inputs and BOUNDARY notes for the shortlist only (max 5 candidates)",
+      "single_candidate_shortcut": "one shortlist answer needs no second round trip",
+      "token_measurements": {
+        "single_stage_before": 5480,
+        "stage_1_prompt": 857,
+        "stage_2_prompt": 273,
+        "two_stage_total": 1130,
+        "reduction_pct": 79.4
+      },
+      "single_stage_still_available_via": "GENESIS_LLM_SINGLE_STAGE=1",
+      "verified_working_in_isolation": {
+        "execute the gui.double_click capability through the authoritative provider boundary": "shortlist ['gui.double_click'] -> decide gui.double_click -> validated gui.double_click",
+        "could you close a running desktop application. for me": "shortlist ['application.close'] -> decide application.close -> validated application.close"
+      }
+    },
+
+    "why_no_valid_number_yet": {
+      "single_item_measurements_are_correct": "Measured in isolation, decide() returns level 3 with the correct capability for the phrases traced.",
+      "batch_measurement_contradicts_it": "The one batch run with clean, non-starved timings gave 4/40 = 10.0%, with only 4 items reaching Level 3 even though 36 items each took ~188s (so the model WAS consulted).",
+      "unresolved": "Something about the shared-engine, multi-item path drops answers that the single-item path keeps. NOT yet diagnosed. The 4/40 figure is reported as measured but is NOT claimed as the baseline, because it is unexplained.",
+      "batch_degradation_observed": {
+        "note": "Back-to-back 4.4 GB model calls on an 11.9 GB host degrade badly.",
+        "worst_single_item_seconds": 32017,
+        "mitigation_applied": "GENESIS_LLM_INFLIGHT_CAP=1 and GENESIS_LLM_MODES=local, which removed the RAM thrash (final run: median 188s, max 189s, uniform) but did not recover accuracy."
+      },
+      "second_hypothesis_not_yet_tested": "A ~188s item corresponds to two LLM calls completing, so the shortlist and the detail stage both run and the result is then discarded somewhere between _validated_candidate and the Level 3 gate. The single-item trace did not reproduce the loss, so the difference is state that accumulates across items in one process (circuit breaker, shared classifier state, or the repaired/orphaned executor threads). This needs a dedicated bisect and is the next piece of work."
+    },
+
+    "numbers_measured_this_session": [
+      {"run": "phase3_bench_heldout_20260927-152952.json", "strict": "2/40 = 5.0%", "mean_s": 114.27, "valid": false, "why_invalid": "38 of 40 items never reached the LLM (the conversational guard discarded them before the semantic path), so this measured the precedence bug, not routing."},
+      {"run": "phase3_bench_heldout_20260927-232233.json", "strict": "2/40 = 5.0%", "mean_s": 688.63, "valid": false, "why_invalid": "GENESIS_LLM_TIMEOUT_SECONDS was unset, so the provider capped every call at 60s and the 7B model could not finish a single stage. One item ran 10,859s from orphaned workers."},
+      {"run": "phase3_bench_heldout_20260928-010254.json", "strict": "2/40 = 5.0%", "median_s": 120, "valid": false, "why_invalid": "Same 60s provider cap; median 120s = 2 x 60s."},
+      {"run": "phase3_bench_heldout_20260928-174010.json", "strict": "2/40 = 5.0%", "median_s": 377, "valid": false, "why_invalid": "Timeout fixed, but the unbounded-generation defect plus 6 concurrent 4.4GB workers thrashed RAM; max item 32,017s."},
+      {"run": "phase3_bench_heldout_20260928-200425.json", "strict": "4/40 = 10.0%", "median_s": 188, "valid_timing": true, "unexplained": true, "why_not_a_baseline": "Timings are clean and there is no starvation, but the result contradicts correct single-item measurements and the discrepancy is undiagnosed."}
+    ]
+  },
+
+  "item_2_routing_precedence": {
+    "status": "COMPLETE AND VERIFIED",
+    "bug_1_conversational_guard": {
+      "repro_confirmed": "what is playing right now",
+      "mechanism": "_is_conversational_or_educational() is a PREFIX blocklist. 'what is playing right now' starts with 'what is ', so it was classified as a general-knowledge question. The guard sits ABOVE the semantic fallback in BOTH _detect_os_intent (line ~1419) and _detect_extended_os_intent (line ~1609), so the correct LLM answer was never requested from those paths. None of the hand-maintained exceptions applied: it is not a math expression, not 'what is my ...', not 'what is in <clipboard>', and its trailing state word 'playing' is not in the (running|open|active|closed|installed) set.",
+      "why_not_fixed_by_adding_exceptions": "The same 'what is ' prefix covers both 'what is biology' and a real question about the user's own machine. An exception list cannot be completed.",
+      "fix": "The guard is demoted to what it is actually good for: keeping educational text away from the REGEX layer. When it fires, the text is still offered to the semantic resolver, which is independently gated by looks_actionable(). Measured: looks_actionable passes 'what is playing right now', 'how do these two sheets stack up', 'what is my disk usage' and blocks 'what is the capital of france', 'what is biology', 'explain what a computer is', 'write a sentence about Chrome', 'tell me about Python' - so general knowledge never reaches the model at all.",
+      "before_after": {
+        "_detect_os_intent('what is playing right now')": {"before": "None", "after": "media.play_pause"},
+        "decide('what is playing right now')": {"before": "level 1, intent None", "after": "level 3, media.play_pause"},
+        "decide('could you close a running desktop application. for me')": {"before": "level 1, intent None", "after": "level 3, application.close"}
+      }
+    },
+    "bug_2_deterministic_outranking_llm": {
+      "status": "investigated; the specific instance found was NOT a precedence error",
+      "finding": "The observed case was 'turn the sound down a bit': the deterministic layer produced volume.set while the LLM produced volume.down, and the deterministic answer won. Inspection of the L3 acceptance gate shows semantic decisions are already accepted: the gate admits confidence >= 0.90, OR semantic_resolved AND confidence >= 0.80, and the resolver caps proposals at 0.85 with both _semantic_resolution and _capability_resolution set. So a correct semantic answer is NOT being outranked by the gate.",
+      "why_not_changed": "No evidence was found of a precedence error here, and the roadmap explicitly wants regex/keywords kept as a fast hint. Changing precedence on a hypothesis, with no valid measurement to validate against, would trade a known-good path for an unknown one. Left as-is and documented rather than changed on speculation."
+    },
+    "not_llm_always_wins": "The deterministic and regex layers are untouched and still run first. The change only stops a guard from discarding a semantic answer the model had already produced. looks_actionable() still keeps general-knowledge text away from the model, so the extra reach does not turn the LLM loose on conversation.",
+    "additional_defects_found_and_fixed_en_route": {
+      "non_determinism": "No sampling parameters were set anywhere, so the OpenAI-compatible endpoint defaulted to temperature 1.0. MEASURED: the same request returned media.play_pause on one call and gui.read_visible_text on the next. A control plane must be deterministic. Now temperature 0.0.",
+      "unbounded_output": "No max_tokens, so one request ran 10,859 seconds and the orphaned workers of several such calls exhausted RAM on an 11.9 GB host. Every prompt in this module asks for one short JSON object, so a 256-token cap is generous.",
+      "provider_60s_cap_too_short": "AIEngine.request_timeout defaults to 60s via GENESIS_LLM_TIMEOUT_SECONDS, which is shorter than this host needs for a 7B model, so every call was silently cut off. This invalidated two benchmark runs before it was found.",
+      "implementation_note": "temperature/max_tokens were threaded as OPTIONAL parameters through AIEngine._generate_from_provider and all four providers, defaulting to None so no existing caller's behaviour changes."
+    },
+    "regressions_caught_during_these_changes": [
+      "Two TestSemanticRepair tests failed because resolve() now defaults to the two-stage selector, so the single-stage repair was unreachable. Fixed by pinning those tests to the single-stage path via GENESIS_LLM_SINGLE_STAGE=1 rather than by deleting them, and added two-stage coverage.",
+      "11 test stubs broke when generate_response gained generation_kwargs. Updated, and a new test now asserts the kwargs actually reach the engine."
+    ],
+    "new_tests_added": 20
+  },
+
+  "regression": {
+    "command": "python -m pytest -q -p no:cacheprovider",
+    "final_result": "2151 passed, 60 warnings in 1289.79s",
+    "requirement": ">= 2131",
+    "met": true,
+    "regressions": 0,
+    "note_on_one_flaky_failure": "An earlier full-suite run reported 1 failure, test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_browser_manager_has_three_concrete_providers. It passes in isolation and passed on the re-run of the whole suite, so it is load-sensitive, not a regression. Root cause: BrowserManager registers providers via wait([f_sel, f_pw]) with NO timeout, and the Selenium probe can perform a network call, so under CPU load neither playwright nor selenium registers and the assertion fails. Both packages are installed. Unrelated to this phase - no browser provider file was modified - but it is a real latent flake worth fixing."
+  },
+
+  "verdict": {
+    "status": "NOT CLOSED",
+    "bar": "75%, deliberately NOT adjusted",
+    "on_which_effect_is_doing_the_work": "Cannot be answered yet, and that is the point. Model capacity and resolver design are still confounded because there is no valid full-corpus measurement. What CAN be attributed cleanly, because both fixes are model-independent: the looks_actionable gate change removed a 65% ceiling (measured 65% blocked -> 0% blocked), and the routing-precedence change is verified by direct before/after tracing of the same phrase through the same layers. A larger model may well account for much of the remaining gap, but that is not yet demonstrable.",
+    "what_is_left": [
+      "Diagnose why a multi-item batch drops answers that a single-item run keeps. This is now the single blocking unknown for the bar comparison, and it is a code-level question, not a model-capacity question.",
+      "Then re-run the unchanged 40-item corpus to obtain the first genuinely valid number.",
+      "Only after that, decide whether 75% is the right bar for this corpus, which still contains registry-descriptor boilerplate such as 'execute the gui.double_click capability through the authoritative provider boundary' rather than natural user phrasing."
+    ],
+    "unblocks_next": [
+      "A host with a GPU, or >=16 GB RAM, would remove the 10 tok/s ceiling that makes a 40-item run impractical.",
+      "A two-stage shortlist that needs no second LLM round trip (for example resolving from the shortlist's own ordering) would roughly halve per-item cost."
+    ]
+  }
+}

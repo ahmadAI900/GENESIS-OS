@@ -1,0 +1,258 @@
+﻿[
+  {
+    "additional_properties": {
+      "genesis_capability_id": "application.open",
+      "postconditions": [],
+      "provider": "genesis.application",
+      "result_envelope": [
+        "success",
+        "trustworthy_success",
+        "executed",
+        "verified",
+        "status",
+        "verification",
+        "metadata.evidence_contract"
+      ],
+      "risk_level": "low",
+      "side_effect_class": "read_only",
+      "side_effects": [],
+      "supported_inputs": [
+        "application"
+      ]
+    },
+    "capability_id": "application.open",
+    "description": "Genesis capability: application.open. Open a resolved desktop application. Accepts: application Provider: genesis.application. Risk level: low. Required permissions: application.launch Side effects: read-only or non-destructive (risk level: low). Category: application. Result carries a real verified/verification_reason envelope sourced from Genesis's ActionExecutor, including status, execution, verification, and metadata.evidence_contract - a 'verified=true' result means the post-state was actually observed, not just that the provider reported success.",
+    "descriptor": {
+      "postconditions": [],
+      "risk_level": "low",
+      "side_effects": [],
+      "supported_inputs": [
+        "application"
+      ]
+    },
+    "parameters": {
+      "properties": {
+        "application": {
+          "description": "Name of the desktop application to open (e.g. 'notepad', 'chrome').",
+          "type": "string"
+        }
+      },
+      "required": [
+        "application"
+      ],
+      "type": "object"
+    },
+    "wire_name": "application_open"
+  },
+  {
+    "additional_properties": {
+      "genesis_capability_id": "file.create",
+      "postconditions": [],
+      "provider": "genesis.filesystem",
+      "result_envelope": [
+        "success",
+        "trustworthy_success",
+        "executed",
+        "verified",
+        "status",
+        "verification",
+        "metadata.evidence_contract"
+      ],
+      "risk_level": "medium",
+      "side_effect_class": "mutating",
+      "side_effects": [],
+      "supported_inputs": [
+        "path"
+      ]
+    },
+    "capability_id": "file.create",
+    "description": "Genesis capability: file.create. Create a new file through the controlled filesystem safety path. Accepts: path Provider: genesis.filesystem. Risk level: medium. Required permissions: filesystem.write Side effects: mutating capability (risk level: medium). Category: filesystem. Result carries a real verified/verification_reason envelope sourced from Genesis's ActionExecutor, including status, execution, verification, and metadata.evidence_contract - a 'verified=true' result means the post-state was actually observed, not just that the provider reported success.",
+    "descriptor": {
+      "postconditions": [],
+      "risk_level": "medium",
+      "side_effects": [],
+      "supported_inputs": [
+        "path"
+      ]
+    },
+    "parameters": {
+      "properties": {
+        "content": {
+          "description": "Initial text content.",
+          "type": "string"
+        },
+        "overwrite": {
+          "description": "Overwrite if exists.",
+          "type": "boolean"
+        },
+        "path": {
+          "description": "Absolute path for the new file.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "type": "object"
+    },
+    "wire_name": "file_create"
+  },
+  {
+    "additional_properties": {
+      "genesis_capability_id": "file.delete",
+      "postconditions": [],
+      "provider": "genesis.filesystem",
+      "result_envelope": [
+        "success",
+        "trustworthy_success",
+        "executed",
+        "verified",
+        "status",
+        "verification",
+        "metadata.evidence_contract"
+      ],
+      "risk_level": "critical",
+      "side_effect_class": "always_destructive",
+      "side_effects": [],
+      "supported_inputs": [
+        "path"
+      ]
+    },
+    "capability_id": "file.delete",
+    "description": "Genesis capability: file.delete. Delete a file through the controlled filesystem safety path. Accepts: path Provider: genesis.filesystem. Risk level: critical. Required permissions: filesystem.write Side effects: destructive mutation (always_destructive tier). Category: filesystem. Result carries a real verified/verification_reason envelope sourced from Genesis's ActionExecutor, including status, execution, verification, and metadata.evidence_contract - a 'verified=true' result means the post-state was actually observed, not just that the provider reported success.",
+    "descriptor": {
+      "postconditions": [],
+      "risk_level": "critical",
+      "side_effects": [],
+      "supported_inputs": [
+        "path"
+      ]
+    },
+    "parameters": {
+      "properties": {
+        "approval_token": {
+          "description": "Explicit human-approval token, format 'HUMAN-APPROVE:file.delete:<nonce>' (nonce >= 4 chars). Required; without a valid token the call bounces with confirmation_required and is NOT executed.",
+          "type": "string"
+        },
+        "confirmed": {
+          "description": "Legacy confirmation flag. Still forwarded when supplied, but NOT sufficient alone for high/critical capabilities \u2014 a valid approval_token is required.",
+          "type": "boolean"
+        },
+        "path": {
+          "description": "Absolute filesystem path of the file to permanently delete.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "path"
+      ],
+      "type": "object"
+    },
+    "wire_name": "file_delete"
+  },
+  {
+    "additional_properties": {
+      "genesis_capability_id": "application.close",
+      "postconditions": [],
+      "provider": "genesis.application",
+      "result_envelope": [
+        "success",
+        "trustworthy_success",
+        "executed",
+        "verified",
+        "status",
+        "verification",
+        "metadata.evidence_contract"
+      ],
+      "risk_level": "medium",
+      "side_effect_class": "conditionally_destructive",
+      "side_effects": [],
+      "supported_inputs": [
+        "application"
+      ]
+    },
+    "capability_id": "application.close",
+    "description": "Genesis capability: application.close. Close a running desktop application. Accepts: application Provider: genesis.application. Risk level: medium. Required permissions: application.control Side effects: conditional mutation (conditionally_destructive tier). Category: application. Result carries a real verified/verification_reason envelope sourced from Genesis's ActionExecutor, including status, execution, verification, and metadata.evidence_contract - a 'verified=true' result means the post-state was actually observed, not just that the provider reported success.",
+    "descriptor": {
+      "postconditions": [],
+      "risk_level": "medium",
+      "side_effects": [],
+      "supported_inputs": [
+        "application"
+      ]
+    },
+    "parameters": {
+      "properties": {
+        "application": {
+          "description": "Name of the desktop application to close (e.g. 'notepad', 'chrome').",
+          "type": "string"
+        },
+        "approval_token": {
+          "description": "Explicit human-approval token, format 'HUMAN-APPROVE:application.close:<nonce>'. Required when the unsaved-changes precondition is active or when the caller wants to force-close.",
+          "type": "string"
+        },
+        "confirmed": {
+          "description": "Legacy confirmation flag.",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "application"
+      ],
+      "type": "object"
+    },
+    "wire_name": "application_close"
+  },
+  {
+    "additional_properties": {
+      "genesis_capability_id": "browser.click",
+      "postconditions": [],
+      "provider": "genesis.browser",
+      "result_envelope": [
+        "success",
+        "trustworthy_success",
+        "executed",
+        "verified",
+        "status",
+        "verification",
+        "metadata.evidence_contract"
+      ],
+      "risk_level": "low",
+      "side_effect_class": "read_only",
+      "side_effects": [],
+      "supported_inputs": [
+        "selector",
+        "session_id"
+      ]
+    },
+    "capability_id": "browser.click",
+    "description": "Genesis capability: browser.click. Click an element on the current page by CSS selector. Accepts: selector, session_id Provider: genesis.browser. Risk level: low. Required permissions: browser.control Side effects: read-only or non-destructive (risk level: low). Category: browser. Result carries a real verified/verification_reason envelope sourced from Genesis's ActionExecutor, including status, execution, verification, and metadata.evidence_contract - a 'verified=true' result means the post-state was actually observed, not just that the provider reported success.",
+    "descriptor": {
+      "postconditions": [],
+      "risk_level": "low",
+      "side_effects": [],
+      "supported_inputs": [
+        "selector",
+        "session_id"
+      ]
+    },
+    "parameters": {
+      "properties": {
+        "selector": {
+          "description": "CSS / XPath / text selector identifying the element to click.",
+          "type": "string"
+        },
+        "session_id": {
+          "description": "Browser session identifier. Defaults to 'default' when omitted by the caller; the adapter always supplies it.",
+          "type": "string"
+        }
+      },
+      "required": [
+        "session_id"
+      ],
+      "type": "object"
+    },
+    "wire_name": "browser_click"
+  }
+]
+

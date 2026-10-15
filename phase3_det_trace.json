@@ -1,0 +1,170 @@
+[
+  {
+    "phrase": "fire up the notepad",
+    "expected": "application.open",
+    "layer": "DETERMINISTIC",
+    "got": "application.open",
+    "correct": true
+  },
+  {
+    "phrase": "stash this somewhere else",
+    "expected": "file.move",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "get rid of this file for me",
+    "expected": "file.delete",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "what's eating up my disk space",
+    "expected": "hardware.storage",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "how bright is my screen right now",
+    "expected": "display.brightness_get",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "turn the sound down a bit",
+    "expected": "volume.down",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "snap a picture of what is on screen",
+    "expected": "screen.capture",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "close the thing I was just working on",
+    "expected": "application.close",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "put these files in order for me",
+    "expected": "folder.organize",
+    "layer": "DETERMINISTIC",
+    "got": "file.move",
+    "correct": false
+  },
+  {
+    "phrase": "make this document into a PDF",
+    "expected": "document.transform",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "grab the text from that webpage",
+    "expected": "browser.extract",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "how do these two sheets stack up against each other",
+    "expected": "spreadsheet.compare",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "what is playing right now",
+    "expected": "media.play_pause",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "organize this folder for me",
+    "expected": "folder.organize",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "search the web for recent news about AI",
+    "expected": "browser.search",
+    "layer": "DETERMINISTIC",
+    "got": "web.research",
+    "correct": false
+  },
+  {
+    "phrase": "create a quick text file with my notes",
+    "expected": "document.create_txt",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "rename this folder to something sensible",
+    "expected": "folder.rename",
+    "layer": "DETERMINISTIC",
+    "got": "folder.rename",
+    "correct": true
+  },
+  {
+    "phrase": "lock my computer real quick",
+    "expected": "workstation.lock",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "what time is it in Tokyo",
+    "expected": "time.world_clock",
+    "layer": "DETERMINISTIC",
+    "got": "time.world_clock",
+    "correct": true
+  },
+  {
+    "phrase": "calculate 15 percent of 3200",
+    "expected": "math.evaluate",
+    "layer": "DETERMINISTIC",
+    "got": "math.evaluate",
+    "correct": true
+  },
+  {
+    "phrase": "copy this file to my downloads",
+    "expected": "file.copy",
+    "layer": "DETERMINISTIC",
+    "got": "file.copy",
+    "correct": true
+  },
+  {
+    "phrase": "clean out the recycle bin",
+    "expected": "cleanup.empty_recycle_bin",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "take a screenshot and save it",
+    "expected": "screen.capture",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  },
+  {
+    "phrase": "sort this spreadsheet by the third column",
+    "expected": "spreadsheet.sort",
+    "layer": "FALLS_TO_L1",
+    "got": null,
+    "correct": false
+  }
+]

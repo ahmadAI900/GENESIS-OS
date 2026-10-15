@@ -1,0 +1,16 @@
+# Recomputed from CONTENT at backup time.
+# Compare with the copy the owner keeps OFF this computer.
+# generated_utc=2026-10-09T07:24:49.994688+00:00
+
+corpus_source_matches_seal True
+dev4_item_count 18
+dev4_matches_recorded True
+dev4_sha256 f263d8a166053f708274b9c3d5cbe033a368c242d9e6466a29d912b679c09a7f
+final3_item_count 102
+final3_self_consistent True
+final3_sha256 785b68217389b260a9c0999519afacc1c225d728444ad5e5a2b8cde37f07fe24
+final4_item_count 82
+final4_matches_recorded True
+final4_rebuilt_item_count 82
+final4_rebuilt_sha256 a74aa1959e172d144a6737d6f3654ac9cdb78a76f94441783af4219641a7577c
+final4_sha256 a74aa1959e172d144a6737d6f3654ac9cdb78a76f94441783af4219641a7577c

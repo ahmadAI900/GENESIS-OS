@@ -1,0 +1,1336 @@
+{
+  "mode": "control",
+  "model_id": null,
+  "final3_sha256": "785b68217389b260a9c0999519afacc1c225d728444ad5e5a2b8cde37f07fe24",
+  "items_total": 102,
+  "positives": 77,
+  "context_items": 16,
+  "negatives": 25,
+  "strict_correct": 13,
+  "acceptable_correct": 13,
+  "strict_pct": 16.9,
+  "acceptable_pct": 16.9,
+  "strict_ci": [
+    10.1,
+    26.8
+  ],
+  "acceptable_ci": [
+    10.1,
+    26.8
+  ],
+  "false_positives": 1,
+  "fp_pct": 4.0,
+  "fp_ci": [
+    0.7,
+    19.5
+  ],
+  "subsecond_noanswers": 0,
+  "errors": 0,
+  "wall_clock_s": 0.3,
+  "determinism_spotcheck": null,
+  "results": [
+    {
+      "i": 1,
+      "expect": "application.close",
+      "accept": [
+        "application.close"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "application"
+    },
+    {
+      "i": 2,
+      "expect": "application.close",
+      "accept": [
+        "application.close"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "application"
+    },
+    {
+      "i": 3,
+      "expect": "browser.extract",
+      "accept": [
+        "browser.extract"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "browser"
+    },
+    {
+      "i": 4,
+      "expect": "browser.extract",
+      "accept": [
+        "browser.extract"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "browser"
+    },
+    {
+      "i": 5,
+      "expect": "browser.open_tab",
+      "accept": [
+        "browser.open_tab"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "browser"
+    },
+    {
+      "i": 6,
+      "expect": "clipboard.copy",
+      "accept": [
+        "clipboard.copy"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 7,
+      "expect": "clipboard.copy",
+      "accept": [
+        "clipboard.copy"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 8,
+      "expect": "clipboard.copy",
+      "accept": [
+        "clipboard.copy"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 9,
+      "expect": "clipboard.copy",
+      "accept": [
+        "clipboard.copy"
+      ],
+      "got": "file.move",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 10,
+      "expect": "clipboard.copy",
+      "accept": [
+        "clipboard.copy"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 11,
+      "expect": "clipboard.paste",
+      "accept": [
+        "clipboard.paste"
+      ],
+      "got": "gui.paste_text",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 12,
+      "expect": "clipboard.paste",
+      "accept": [
+        "clipboard.paste"
+      ],
+      "got": "gui.paste_text",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 13,
+      "expect": "clipboard.paste",
+      "accept": [
+        "clipboard.paste"
+      ],
+      "got": "gui.paste_text",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 14,
+      "expect": "clipboard.paste",
+      "accept": [
+        "clipboard.paste"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 15,
+      "expect": "clipboard.paste",
+      "accept": [
+        "clipboard.paste"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "clipboard"
+    },
+    {
+      "i": 16,
+      "expect": "clipboard.paste",
+      "accept": [
+        "clipboard.paste"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "clipboard"
+    },
+    {
+      "i": 17,
+      "expect": "gui.select",
+      "accept": [
+        "gui.select"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "clipboard"
+    },
+    {
+      "i": 18,
+      "expect": "document.create",
+      "accept": [
+        "document.create"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 19,
+      "expect": "document.edit",
+      "accept": [
+        "document.edit"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 20,
+      "expect": "document.edit",
+      "accept": [
+        "document.edit"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 21,
+      "expect": "document.edit",
+      "accept": [
+        "document.edit"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 22,
+      "expect": "document.read",
+      "accept": [
+        "document.read"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 23,
+      "expect": "document.summarize",
+      "accept": [
+        "document.summarize"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 24,
+      "expect": "document.transform",
+      "accept": [
+        "document.transform"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "documents"
+    },
+    {
+      "i": 25,
+      "expect": "document.transform",
+      "accept": [
+        "document.transform"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "documents"
+    },
+    {
+      "i": 26,
+      "expect": "document.transform",
+      "accept": [
+        "document.transform"
+      ],
+      "got": "file.copy",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 27,
+      "expect": "document.transform",
+      "accept": [
+        "document.transform"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 28,
+      "expect": "document.verify",
+      "accept": [
+        "document.verify"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 29,
+      "expect": "gui.select",
+      "accept": [
+        "gui.select"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "documents"
+    },
+    {
+      "i": 30,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "documents"
+    },
+    {
+      "i": 31,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "documents"
+    },
+    {
+      "i": 32,
+      "expect": "file.copy",
+      "accept": [
+        "file.copy"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "filesystem"
+    },
+    {
+      "i": 33,
+      "expect": "file.copy",
+      "accept": [
+        "file.copy"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "filesystem"
+    },
+    {
+      "i": 34,
+      "expect": "file.delete",
+      "accept": [
+        "file.delete"
+      ],
+      "got": "file.delete",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 35,
+      "expect": "file.delete",
+      "accept": [
+        "file.delete"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "filesystem"
+    },
+    {
+      "i": 36,
+      "expect": "file.delete",
+      "accept": [
+        "file.delete"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "filesystem"
+    },
+    {
+      "i": 37,
+      "expect": "file.inspect",
+      "accept": [
+        "file.inspect"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem"
+    },
+    {
+      "i": 38,
+      "expect": "file.inspect",
+      "accept": [
+        "file.inspect"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem"
+    },
+    {
+      "i": 39,
+      "expect": "file.move",
+      "accept": [
+        "file.move"
+      ],
+      "got": "file.move",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 40,
+      "expect": "file.rename",
+      "accept": [
+        "file.rename"
+      ],
+      "got": "file.rename",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 41,
+      "expect": "file.search",
+      "accept": [
+        "file.search"
+      ],
+      "got": "file.search",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 42,
+      "expect": "filesystem.search",
+      "accept": [
+        "filesystem.search"
+      ],
+      "got": "file.search",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem"
+    },
+    {
+      "i": 43,
+      "expect": "folder.create",
+      "accept": [
+        "folder.create"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem"
+    },
+    {
+      "i": 44,
+      "expect": "folder.open",
+      "accept": [
+        "folder.open"
+      ],
+      "got": "file.open",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem"
+    },
+    {
+      "i": 45,
+      "expect": "folder.open",
+      "accept": [
+        "folder.open"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "filesystem"
+    },
+    {
+      "i": 46,
+      "expect": "media.next",
+      "accept": [
+        "media.next"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media"
+    },
+    {
+      "i": 47,
+      "expect": "media.next",
+      "accept": [
+        "media.next"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media"
+    },
+    {
+      "i": 48,
+      "expect": "media.play_pause",
+      "accept": [
+        "media.play_pause"
+      ],
+      "got": "media.play_pause",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "media",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 49,
+      "expect": "media.play_pause",
+      "accept": [
+        "media.play_pause"
+      ],
+      "got": "media.play_pause",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "media",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 50,
+      "expect": "media.play_pause",
+      "accept": [
+        "media.play_pause"
+      ],
+      "got": "media.play_pause",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 51,
+      "expect": "media.play_pause",
+      "accept": [
+        "media.play_pause"
+      ],
+      "got": "media.play_pause",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 52,
+      "expect": "media.previous",
+      "accept": [
+        "media.previous"
+      ],
+      "got": "media.play_pause",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media"
+    },
+    {
+      "i": 53,
+      "expect": "media.previous",
+      "accept": [
+        "media.previous"
+      ],
+      "got": "media.play_pause",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media"
+    },
+    {
+      "i": 54,
+      "expect": "media.stop",
+      "accept": [
+        "media.stop"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media"
+    },
+    {
+      "i": 55,
+      "expect": "media.stop",
+      "accept": [
+        "media.stop"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media"
+    },
+    {
+      "i": 56,
+      "expect": "media.stop",
+      "accept": [
+        "media.stop"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media"
+    },
+    {
+      "i": 57,
+      "expect": "volume.down",
+      "accept": [
+        "volume.down"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "media"
+    },
+    {
+      "i": 58,
+      "expect": "spreadsheet.add_column",
+      "accept": [
+        "spreadsheet.add_column"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet"
+    },
+    {
+      "i": 59,
+      "expect": "spreadsheet.aggregate",
+      "accept": [
+        "spreadsheet.aggregate"
+      ],
+      "got": "spreadsheet.aggregate",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 60,
+      "expect": "spreadsheet.calculate",
+      "accept": [
+        "spreadsheet.calculate"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet"
+    },
+    {
+      "i": 61,
+      "expect": "spreadsheet.compare",
+      "accept": [
+        "spreadsheet.compare"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet"
+    },
+    {
+      "i": 62,
+      "expect": "spreadsheet.filter",
+      "accept": [
+        "spreadsheet.filter"
+      ],
+      "got": "spreadsheet.filter",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 63,
+      "expect": "spreadsheet.read",
+      "accept": [
+        "spreadsheet.read"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet"
+    },
+    {
+      "i": 64,
+      "expect": "spreadsheet.read",
+      "accept": [
+        "spreadsheet.read"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet"
+    },
+    {
+      "i": 65,
+      "expect": "spreadsheet.sort",
+      "accept": [
+        "spreadsheet.sort"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet"
+    },
+    {
+      "i": 66,
+      "expect": "spreadsheet.sort",
+      "accept": [
+        "spreadsheet.sort"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet"
+    },
+    {
+      "i": 67,
+      "expect": "spreadsheet.update_cell",
+      "accept": [
+        "spreadsheet.update_cell"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "spreadsheet"
+    },
+    {
+      "i": 68,
+      "expect": "application.open",
+      "accept": [
+        "application.open"
+      ],
+      "got": "application.open",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 69,
+      "expect": "cleanup.empty_recycle_bin",
+      "accept": [
+        "cleanup.empty_recycle_bin"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system"
+    },
+    {
+      "i": 70,
+      "expect": "display.brightness_set",
+      "accept": [
+        "display.brightness_set"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "system"
+    },
+    {
+      "i": 71,
+      "expect": "display.brightness_set",
+      "accept": [
+        "display.brightness_set"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "context",
+      "category": "system"
+    },
+    {
+      "i": 72,
+      "expect": "hardware.battery",
+      "accept": [
+        "hardware.battery"
+      ],
+      "got": "hardware.battery",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 73,
+      "expect": "hardware.stats",
+      "accept": [
+        "hardware.stats"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system"
+    },
+    {
+      "i": 74,
+      "expect": "screen.capture",
+      "accept": [
+        "screen.capture"
+      ],
+      "got": "file.copy",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system"
+    },
+    {
+      "i": 75,
+      "expect": "system.status",
+      "accept": [
+        "system.status"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system"
+    },
+    {
+      "i": 76,
+      "expect": "system.status",
+      "accept": [
+        "system.status"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system"
+    },
+    {
+      "i": 77,
+      "expect": "volume.mute_toggle",
+      "accept": [
+        "volume.mute_toggle"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system"
+    },
+    {
+      "i": 78,
+      "expect": "volume.up",
+      "accept": [
+        "volume.up"
+      ],
+      "got": "volume.up",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system",
+      "strict_pass": true,
+      "acceptable_pass": true
+    },
+    {
+      "i": 79,
+      "expect": "workstation.lock",
+      "accept": [
+        "workstation.lock"
+      ],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "positive",
+      "category": "system"
+    },
+    {
+      "i": 80,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 81,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 82,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 83,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 84,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 85,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 86,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 87,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 88,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 89,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 90,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 91,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 92,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 93,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 94,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 95,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 96,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 97,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 98,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 99,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 100,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 101,
+      "expect": null,
+      "accept": [],
+      "got": null,
+      "level": 1,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null
+    },
+    {
+      "i": 102,
+      "expect": null,
+      "accept": [],
+      "got": "gui.type_text",
+      "level": 3,
+      "elapsed_s": 0.0,
+      "error": null,
+      "kind": "negative",
+      "category": null,
+      "false_positive": true
+    }
+  ]
+}

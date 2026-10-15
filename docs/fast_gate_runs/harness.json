@@ -1,0 +1,186 @@
+{
+ "__meta__": {
+  "argv": [
+   "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Lib\\site-packages\\pytest\\__main__.py",
+   "tools/test_tripwire_mutation.py",
+   "tools/test_require_passed.py",
+   "-p",
+   "record_probe",
+   "--record",
+   "--record-tag",
+   "harness",
+   "-q"
+  ],
+  "install": {
+   "audit": true,
+   "ctypes": true,
+   "meta_path": true,
+   "stale_bindings": [],
+   "wrapped_modules": []
+  },
+  "max_distinct_events_per_test": 150,
+  "tag": "harness",
+  "tests": 21,
+  "truncated_tests": []
+ },
+ "tools/test_require_passed.py::test_catches_a_required_set_run_in_the_wrong_mode": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -m pytest tools/test_record_probe_transparency.py -p no:cacheprovider -rA --no-header -q"
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -m pytest tools/test_record_probe_transparency.py -p no:cacheprovider -rA --no-header -q",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 1.7596
+ },
+ "tools/test_require_passed.py::test_cli_exits_nonzero_when_a_set_is_vacuous": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -c \"import sys; sys.path.insert(0, r'C:\\Users\\Muhammad\\Desktop\\gemini_cli\\backend\\tools');\nimport require_passed as rp;\nv = rp.RequiredSet"
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -c \"import sys; sys.path.insert(0, r'C:\\Users\\Muhammad\\Desktop\\gemini_cli\\backend\\tools');\nimport require_passed as rp;\nv = rp.RequiredSet",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 2.0033
+ },
+ "tools/test_require_passed.py::test_evaluate_reports_ok_for_a_real_passing_set": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -m pytest tools/test_tripwire_mutation.py -p no:cacheprovider -rA --no-header -q"
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -m pytest tools/test_tripwire_mutation.py -p no:cacheprovider -rA --no-header -q",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 4.1438
+ },
+ "tools/test_require_passed.py::test_every_required_set_states_why_it_matters": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0015
+ },
+ "tools/test_require_passed.py::test_json_report_records_the_problem_not_just_the_count": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -m pytest tools/test_tripwire_mutation.py -p no:cacheprovider -rA --no-header -q"
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -m pytest tools/test_tripwire_mutation.py -p no:cacheprovider -rA --no-header -q",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 3.9157
+ },
+ "tools/test_require_passed.py::test_non_passing_lists_only_non_passing": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "tools/test_require_passed.py::test_parses_a_clean_summary": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0012
+ },
+ "tools/test_require_passed.py::test_parses_no_tests_ran": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0009
+ },
+ "tools/test_require_passed.py::test_parses_node_statuses": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.001
+ },
+ "tools/test_require_passed.py::test_parses_skips_xfails_and_failures_together": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.001
+ },
+ "tools/test_require_passed.py::test_recorder_sets_require_the_recorder_to_be_active": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0027
+ },
+ "tools/test_require_passed.py::test_skips_are_not_silently_counted_as_passes": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0013
+ },
+ "tools/test_tripwire_mutation.py::test_a_gui_event_is_never_exempt_even_for_self_tests": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0038
+ },
+ "tools/test_tripwire_mutation.py::test_exemption_covers_only_the_two_recorder_files": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0016
+ },
+ "tools/test_tripwire_mutation.py::test_exemptions_are_explicit_and_enumerated": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.002
+ },
+ "tools/test_tripwire_mutation.py::test_offenders_carry_no_marks_and_are_not_in_the_tiering_snapshot": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.007
+ },
+ "tools/test_tripwire_mutation.py::test_tripwire_fails_unmarked_offender_by_name[test_scratch_ctypes_window_station_is_caught-window-station]": {
+  "dropped": 0,
+  "events": [
+   {
+    "api": "Popen",
+    "argv": [
+     "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -m pytest C:\\Users\\Muhammad\\Desktop\\gemini_cli\\backend\\tools\\fixtures\\tripwire_offenders_scratch.py -q --no-header -p no:cacheprovider"
+    ],
+    "count": 1,
+    "exe": "C:\\Users\\Muhammad\\Desktop\\gemini_cli\\.venv\\Scripts\\python.exe -m pytest C:\\Users\\Muhammad\\Desktop\\gemini_cli\\backend\\tools\\fixtures\\tripwire_offenders_scratch.py -q --no-header -p no:cacheprovider",
+    "kind": "process",
+    "source": "audit"
+   }
+  ],
+  "seconds": 2.1943
+ },
+ "tools/test_tripwire_mutation.py::test_tripwire_fails_unmarked_offender_by_name[test_scratch_non_allowlisted_executable_is_caught-allowlist]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0022
+ },
+ "tools/test_tripwire_mutation.py::test_tripwire_fails_unmarked_offender_by_name[test_scratch_non_loopback_network_is_caught-non-loopback network]": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0017
+ },
+ "tools/test_tripwire_mutation.py::test_tripwire_failure_names_the_offending_action": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0011
+ },
+ "tools/test_tripwire_mutation.py::test_tripwire_message_explains_how_to_resolve_it": {
+  "dropped": 0,
+  "events": [],
+  "seconds": 0.0017
+ }
+}

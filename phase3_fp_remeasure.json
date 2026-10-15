@@ -1,0 +1,348 @@
+{
+  "mode": "cloud",
+  "model": "",
+  "total": 23,
+  "false_positives": 2,
+  "overall": {
+    "pct": 8.7,
+    "lo": 2.4,
+    "hi": 26.8
+  },
+  "with_prior": {
+    "pct": 0.0,
+    "lo": 0.0,
+    "hi": 49.0
+  },
+  "without_prior": {
+    "pct": 10.5,
+    "lo": 2.9,
+    "hi": 31.4
+  },
+  "by_tier": {
+    "actionable": {
+      "pct": 11.8,
+      "lo": 3.3,
+      "hi": 34.3
+    },
+    "ambiguous": {
+      "pct": 0.0,
+      "lo": 0.0,
+      "hi": 43.4
+    },
+    "blocked": {
+      "pct": 0.0,
+      "lo": 0.0,
+      "hi": 79.3
+    }
+  },
+  "by_category": {
+    "advice_not_request": {
+      "pct": 50.0,
+      "lo": 9.5,
+      "hi": 90.5
+    },
+    "ambiguous_even_with_context": {
+      "pct": 0.0,
+      "lo": 0.0,
+      "hi": 49.0
+    },
+    "knowledge_action_adjacent": {
+      "pct": 0.0,
+      "lo": 0.0,
+      "hi": 35.4
+    },
+    "narration_not_request": {
+      "pct": 33.3,
+      "lo": 6.1,
+      "hi": 79.2
+    },
+    "smalltalk": {
+      "pct": 0.0,
+      "lo": 0.0,
+      "hi": 49.0
+    },
+    "unexecutable_ambiguity": {
+      "pct": 0.0,
+      "lo": 0.0,
+      "hi": 56.2
+    }
+  },
+  "rows": [
+    {
+      "n": 1,
+      "phrase": "how do I work out compound interest by hand",
+      "prior": null,
+      "category": "knowledge_action_adjacent",
+      "lexical_tier": "ambiguous",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 0.0,
+      "error": ""
+    },
+    {
+      "n": 2,
+      "phrase": "explain how a hash table resolves collisions",
+      "prior": null,
+      "category": "knowledge_action_adjacent",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 2.9,
+      "error": ""
+    },
+    {
+      "n": 3,
+      "phrase": "what time zone does Lisbon observe in summer",
+      "prior": null,
+      "category": "knowledge_action_adjacent",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 0.7,
+      "error": ""
+    },
+    {
+      "n": 4,
+      "phrase": "tell me which sorting algorithm is fastest for large random arrays",
+      "prior": null,
+      "category": "knowledge_action_adjacent",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 0.7,
+      "error": ""
+    },
+    {
+      "n": 5,
+      "phrase": "walk me through converting a CSV into a spreadsheet by hand",
+      "prior": null,
+      "category": "knowledge_action_adjacent",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 1.0,
+      "error": ""
+    },
+    {
+      "n": 6,
+      "phrase": "who first described the Krebs cycle",
+      "prior": null,
+      "category": "knowledge_action_adjacent",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 0.4,
+      "error": ""
+    },
+    {
+      "n": 7,
+      "phrase": "how would you normally rename a variable in a codebase",
+      "prior": null,
+      "category": "knowledge_action_adjacent",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 1.2,
+      "error": ""
+    },
+    {
+      "n": 8,
+      "phrase": "morning, hope you are having a decent day",
+      "prior": null,
+      "category": "smalltalk",
+      "lexical_tier": "ambiguous",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 0.7,
+      "error": ""
+    },
+    {
+      "n": 9,
+      "phrase": "thanks, that was genuinely helpful",
+      "prior": null,
+      "category": "smalltalk",
+      "lexical_tier": "blocked",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 0.0,
+      "error": ""
+    },
+    {
+      "n": 10,
+      "phrase": "are you still there",
+      "prior": null,
+      "category": "smalltalk",
+      "lexical_tier": "ambiguous",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 0.3,
+      "error": ""
+    },
+    {
+      "n": 11,
+      "phrase": "good evening to you",
+      "prior": null,
+      "category": "smalltalk",
+      "lexical_tier": "ambiguous",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 0.2,
+      "error": ""
+    },
+    {
+      "n": 12,
+      "phrase": "I already moved the quarterly folder across to the archive drive yesterday",
+      "prior": null,
+      "category": "narration_not_request",
+      "lexical_tier": "actionable",
+      "intent": "folder.organize",
+      "level": 3,
+      "false_positive": true,
+      "seconds": 10.1,
+      "error": ""
+    },
+    {
+      "n": 13,
+      "phrase": "last night I copied the tax documents onto the external drive",
+      "prior": null,
+      "category": "narration_not_request",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 5.7,
+      "error": ""
+    },
+    {
+      "n": 14,
+      "phrase": "the screenshot I took earlier ended up in my downloads folder",
+      "prior": null,
+      "category": "narration_not_request",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 7.7,
+      "error": ""
+    },
+    {
+      "n": 15,
+      "phrase": "should I keep the archive folder nested or flat",
+      "prior": null,
+      "category": "advice_not_request",
+      "lexical_tier": "actionable",
+      "intent": "folder.organize",
+      "level": 3,
+      "false_positive": true,
+      "seconds": 16.5,
+      "error": ""
+    },
+    {
+      "n": 16,
+      "phrase": "what would you do about a spreadsheet with a broken formula",
+      "prior": null,
+      "category": "advice_not_request",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 5.8,
+      "error": ""
+    },
+    {
+      "n": 17,
+      "phrase": "do the needful with the rest of it",
+      "prior": null,
+      "category": "unexecutable_ambiguity",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 8.0,
+      "error": ""
+    },
+    {
+      "n": 18,
+      "phrase": "deal with the situation however you judge best",
+      "prior": null,
+      "category": "unexecutable_ambiguity",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 8.1,
+      "error": ""
+    },
+    {
+      "n": 19,
+      "phrase": "make things a bit nicer all round",
+      "prior": null,
+      "category": "unexecutable_ambiguity",
+      "lexical_tier": "ambiguous",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 7.0,
+      "error": ""
+    },
+    {
+      "n": 20,
+      "phrase": "can you sort that out for me",
+      "prior": "I have been thinking about the weather a lot this week.",
+      "category": "ambiguous_even_with_context",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 7.2,
+      "error": ""
+    },
+    {
+      "n": 21,
+      "phrase": "put a copy of it somewhere sensible",
+      "prior": "It has been a strange week for a number of reasons.",
+      "category": "ambiguous_even_with_context",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 7.0,
+      "error": ""
+    },
+    {
+      "n": 22,
+      "phrase": "close the other one",
+      "prior": "There has been a good deal going on at the office lately.",
+      "category": "ambiguous_even_with_context",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 8.6,
+      "error": ""
+    },
+    {
+      "n": 23,
+      "phrase": "take that out of the list",
+      "prior": "The train was delayed again this morning.",
+      "category": "ambiguous_even_with_context",
+      "lexical_tier": "actionable",
+      "intent": null,
+      "level": 1,
+      "false_positive": false,
+      "seconds": 3.0,
+      "error": ""
+    }
+  ]
+}

@@ -1,0 +1,1141 @@
+{
+ "counts": {
+  "agree": 29,
+  "dynamic_event_no_static_signal": 118,
+  "static_signal_no_dynamic_event": 2
+ },
+ "dynamic_event_no_static_signal": [
+  {
+   "file": "benchmark_real_os/test_benchmark_real_os.py",
+   "file_signals": [],
+   "nodeid": "benchmark_real_os/test_benchmark_real_os.py::TestRunnerWithMockOSM::test_runner_initializes",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "dll_load",
+    "process"
+   ]
+  },
+  {
+   "file": "test_compound_task_router.py",
+   "file_signals": [],
+   "nodeid": "test_compound_task_router.py::TestCompoundStepsDispatchThroughActionExecutor::test_compound_path_dispatches_multiple_operations",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_compound_task_router.py",
+   "file_signals": [],
+   "nodeid": "test_compound_task_router.py::TestCompoundStepsDispatchThroughActionExecutor::test_two_step_plan_executes_both_steps",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_compound_task_router.py",
+   "file_signals": [],
+   "nodeid": "test_compound_task_router.py::TestDirectiveCompoundPipelineExecutesBoth::test_compound_pipeline_returns_workflowresult_with_both_steps",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "process"
+   ]
+  },
+  {
+   "file": "test_compound_task_router.py",
+   "file_signals": [],
+   "nodeid": "test_compound_task_router.py::TestDirectiveCompoundPipelineExecutesBoth::test_open_chrome_and_search_python_tutorials_both_execute",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "process"
+   ]
+  },
+  {
+   "file": "test_context_hint_resolver.py",
+   "file_signals": [],
+   "nodeid": "test_context_hint_resolver.py::TestContextResolvedPlanExecutes::test_browser_compound_plan_is_valid",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "process"
+   ]
+  },
+  {
+   "file": "test_context_hint_resolver.py",
+   "file_signals": [],
+   "nodeid": "test_context_hint_resolver.py::TestContextResolvedPlanExecutes::test_settings_compound_plan_is_valid",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_genesis_arming.py",
+   "file_signals": [],
+   "nodeid": "test_genesis_arming.py::test_bare_process_with_variable_preset_is_armed",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_genesis_arming.py",
+   "file_signals": [],
+   "nodeid": "test_genesis_arming.py::test_dotenv_alone_does_not_arm_the_boundary",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_genesis_arming.py",
+   "file_signals": [],
+   "nodeid": "test_genesis_arming.py::test_explicit_load_arms_the_boundary_in_a_fresh_process",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_genesis_arming.py",
+   "file_signals": [],
+   "nodeid": "test_genesis_arming.py::test_importing_the_executor_does_not_arm_the_boundary",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_gui_window_focus_regression.py",
+   "file_signals": [],
+   "nodeid": "test_gui_window_focus_regression.py::test_windows_provider_type_text_logs_hwnd_and_calls_typewrite",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "dll_load"
+   ]
+  },
+  {
+   "file": "test_gui_window_focus_regression.py",
+   "file_signals": [],
+   "nodeid": "test_gui_window_focus_regression.py::test_windows_provider_type_text_without_focus_still_types",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_import_smoke.py",
+   "file_signals": [],
+   "nodeid": "test_import_smoke.py::test_product_module_imports[genesis_os.filesystem_monitor]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "dll_load"
+   ]
+  },
+  {
+   "file": "test_import_smoke.py",
+   "file_signals": [],
+   "nodeid": "test_import_smoke.py::test_product_module_imports[phase0_probe_type_text]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "dll_load",
+    "network"
+   ]
+  },
+  {
+   "file": "test_level3_10_universal_control.py",
+   "file_signals": [],
+   "nodeid": "test_level3_10_universal_control.py::test_clipboard_copy_verifies_by_readback",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "dll_load"
+   ]
+  },
+  {
+   "file": "test_level3_11_unified_intelligence.py",
+   "file_signals": [],
+   "nodeid": "test_level3_11_unified_intelligence.py::test_pure_level3_objectives_do_not_invoke_agents",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_12_windows_daily.py",
+   "file_signals": [],
+   "nodeid": "test_level3_12_windows_daily.py::test_storage_report_contract",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "dll_load"
+   ]
+  },
+  {
+   "file": "test_level3_2_applications.py",
+   "file_signals": [],
+   "nodeid": "test_level3_2_applications.py::test_application_inspection",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_2_applications.py",
+   "file_signals": [],
+   "nodeid": "test_level3_2_applications.py::test_application_resolution",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_2_applications.py",
+   "file_signals": [],
+   "nodeid": "test_level3_2_applications.py::test_unknown_application",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_adversarial.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_adversarial.py::TestAdversarialStalePage::test_stale_page_title_mismatch",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_adversarial.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_adversarial.py::TestAdversarialStalePage::test_stale_page_url_mismatch",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_adversarial.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_adversarial.py::TestAdversarialUnexpectedPopup::test_verify_with_popup_changes_url",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_adversarial.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_adversarial.py::TestAdversarialWrongResult::test_verify_both_correct",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_adversarial.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_adversarial.py::TestAdversarialWrongResult::test_verify_both_wrong",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_adversarial.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_adversarial.py::TestAdversarialWrongResult::test_verify_wrong_title",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_adversarial.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_adversarial.py::TestAdversarialWrongResult::test_verify_wrong_url",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_select_download_upload.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_select_download_upload.py::TestBrowserDownloadAdversarial::test_download_invalid_url",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_select_download_upload.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_select_download_upload.py::TestBrowserDownloadAdversarial::test_download_network_failure",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_select_download_upload.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_select_download_upload.py::TestBrowserSelectAdversarial::test_select_with_empty_selector",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_select_download_upload.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_select_download_upload.py::TestBrowserUploadAdversarial::test_upload_missing_file",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_level3_3_browser_select_download_upload.py",
+   "file_signals": [],
+   "nodeid": "test_level3_3_browser_select_download_upload.py::TestBrowserUploadAdversarial::test_upload_no_selector",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_level3_6_golden_workflow.py",
+   "file_signals": [],
+   "nodeid": "test_level3_6_golden_workflow.py::TestBrowserGoldenWorkflow::test_search_youtube_open_second_result",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_9_application_verification.py",
+   "file_signals": [],
+   "nodeid": "test_level3_9_application_verification.py::test_inspect_running_app_reports_verified_state",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_9_application_verification.py",
+   "file_signals": [],
+   "nodeid": "test_level3_9_application_verification.py::test_open_missing_application_executor_does_not_pretend_verified",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_level3_9_application_verification.py",
+   "file_signals": [],
+   "nodeid": "test_level3_9_application_verification.py::test_uri_open_reports_dispatched_not_verified",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "test_phase1_contracts_maturity.py",
+   "file_signals": [],
+   "nodeid": "test_phase1_contracts_maturity.py::TestObservationContract::test_live_snapshot_passes_boundary",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "dll_load"
+   ]
+  },
+  {
+   "file": "test_phase1_contracts_maturity.py",
+   "file_signals": [],
+   "nodeid": "test_phase1_contracts_maturity.py::TestVerificationContract::test_live_verifier_passes_boundary",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase1_gui_focus_verification.py",
+   "file_signals": [
+    "gui_import"
+   ],
+   "nodeid": "test_phase1_gui_focus_verification.py::test_a_probe_text_write_hello_world_does_not_pyautogui_typewrite",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_application_open_reaches_real_executor_dispatch",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_browser_open_url_routes_through_real_executor",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_document_read_reaches_real_executor_with_honest_verified",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter.py::TestAdapterRouting::test_gui_type_text_reaches_real_executor_runtime_resolver",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::TestGuiPasteText::test_gui_paste_text_routes_through_real_executor",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.close_tab-arguments7]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.download-arguments12]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.extract-arguments1]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.find-arguments2]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.get_tabs-arguments8]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.get_title-arguments3]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.get_url-arguments4]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.open_tab-arguments6]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.screenshot-arguments10]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.search-arguments0]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.select-arguments11]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.switch_tab-arguments5]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.verify-arguments13]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_browser_capability_reaches_real_executor[browser.wait-arguments9]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_document_capability_reaches_real_executor[document.compare-arguments1]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_document_capability_reaches_real_executor[document.edit-arguments3]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_document_capability_reaches_real_executor[document.search-arguments0]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_document_capability_reaches_real_executor[document.summarize-arguments2]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_document_capability_reaches_real_executor[document.transform-arguments4]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_document_capability_reaches_real_executor[document.verify-arguments5]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_file_capability_reaches_real_executor[file.copy-arguments0]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_file_capability_reaches_real_executor[file.move-arguments1]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_spreadsheet_capability_reaches_real_executor[spreadsheet.aggregate-arguments7]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_spreadsheet_capability_reaches_real_executor[spreadsheet.calculate-arguments4]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_spreadsheet_capability_reaches_real_executor[spreadsheet.compare-arguments8]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_spreadsheet_capability_reaches_real_executor[spreadsheet.filter-arguments3]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_spreadsheet_capability_reaches_real_executor[spreadsheet.group_by-arguments6]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_spreadsheet_capability_reaches_real_executor[spreadsheet.inspect-arguments0]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_spreadsheet_capability_reaches_real_executor[spreadsheet.rank-arguments5]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_spreadsheet_capability_reaches_real_executor[spreadsheet.read-arguments1]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_agent_framework_adapter_expansion.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_agent_framework_adapter_expansion.py::test_spreadsheet_capability_reaches_real_executor[spreadsheet.sort-arguments2]",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_destructive_capabilities.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_destructive_capabilities.py::TestBrowserClick::test_browser_click_reaches_executor_without_confirmation",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase2_destructive_capabilities.py",
+   "file_signals": [],
+   "nodeid": "test_phase2_destructive_capabilities.py::test_tool_call_path_rejects_cross_target_token_before_dispatch",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase4_provider_conformance.py",
+   "file_signals": [],
+   "nodeid": "test_phase4_provider_conformance.py::TestGroqProviderConformance::test_groq_health_check_shape",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart2PlaywrightAvailabilityFix::test_playwright_fallback_on_launch_failure",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart4Amendment1HealthChecks::test_playwright_health_check_attempts_real_operation",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart4Amendment1HealthChecks::test_registry_health_check_returns_dict",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart4Amendment1HealthChecks::test_selenium_health_check_attempts_real_operation",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart4IntegrationWithBrowserManager::test_get_healthy_provider_returns_real_provider",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart4VerificationHonesty::test_fallback_result_gets_same_verification",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart4VerificationHonesty::test_os_manager_verification_helpers_bind_to_result",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart5LiveProof::test_live_click_without_browser_returns_structured_error",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart5LiveProof::test_live_download_structured_result",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_dispatch_with_fallback_on_timeout_marks_unhealthy",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser"
+   ]
+  },
+  {
+   "file": "test_phase5_provider_registry.py",
+   "file_signals": [],
+   "nodeid": "test_phase5_provider_registry.py::TestPart5WiringPerOperationDispatch::test_resolve_provider_for_operation_uses_registry",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "browser",
+    "network",
+    "process"
+   ]
+  },
+  {
+   "file": "test_phase6_failure_injection.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_failure_injection.py::TestStaleTargetHandling::test_window_resolver_returns_none_for_destroyed_window",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_failure_injection.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_failure_injection.py::TestTimeoutHandling::test_window_resolver_find_window_timeout_bounded",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_real_windows.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_real_windows.py::TestWindowResolverReal::test_enumerate_real_windows",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_real_windows.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_real_windows.py::TestWindowResolverReal::test_get_foreground_real",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_text_verification.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_text_verification.py::TestNotepadContentVerification::test_read_focused_text_returns_honest_when_unreadable",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "process"
+   ]
+  },
+  {
+   "file": "test_phase6_text_verification.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_text_verification.py::TestNotepadContentVerification::test_type_text_focus_retained",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "gui",
+    "process"
+   ]
+  },
+  {
+   "file": "test_phase6_text_verification.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_text_verification.py::TestReadFocusedTextHonestBehavior::test_read_focused_text_returns_structured_result",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_text_verification.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_text_verification.py::TestReadFocusedTextHonestBehavior::test_read_focused_text_when_no_uia",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_unit.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_unit.py::TestGUIObserver::test_observe_windows",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_unit.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_unit.py::TestGUIObserver::test_take_snapshot",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_unit.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_unit.py::TestGUIVerifier::test_verify_window_exists_notepad",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_unit.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_unit.py::TestGUIVerifier::test_verify_window_not_exists",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_unit.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_unit.py::TestWindowResolver::test_enumerate_returns_list",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "test_phase6_unit.py",
+   "file_signals": [],
+   "nodeid": "test_phase6_unit.py::TestWindowResolver::test_get_foreground",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_ctypes_call_uses_the_real_product_path",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_ctypes_dll_attribute_passthrough",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_ctypes_exception_propagates",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_ctypes_function_protocol_survives_wrapping",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_ctypes_user32_call",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_network_connect",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_network_getaddrinfo",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_network_loopback_flagged_not_suppressed",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_pyautogui_import_time_gui_work_is_recorded",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "process"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_pyautogui_imported_lazily_inside_function",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "ctypes_call",
+    "dll_load"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_canaries.py::test_canary_win32gui_imported_lazily_inside_function",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "gui"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_transparency.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_transparency.py::test_create_connection_to_closed_port_raises_the_same_error",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_transparency.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_transparency.py::test_getaddrinfo_returns_the_same_shape",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  },
+  {
+   "file": "tools/test_record_probe_transparency.py",
+   "file_signals": [],
+   "nodeid": "tools/test_record_probe_transparency.py::test_getaddrinfo_still_raises_for_nonsense",
+   "note": "product module performed the action on the test's behalf",
+   "recorded_kinds": [
+    "network"
+   ]
+  }
+ ],
+ "dynamic_tests": 3107,
+ "evidence_files": [
+  "docs\\fast_gate_evidence.json"
+ ],
+ "files_with_static_signal_but_no_evidence": [],
+ "static_signal_no_dynamic_event": [
+  {
+   "file": "tools/test_record_probe_canaries.py",
+   "file_signals": [
+    "gui_import"
+   ],
+   "nodeid": "tools/test_record_probe_canaries.py::test_known_blind_spot_stale_from_import_binding_is_real",
+   "recorded_kinds": [],
+   "scope": "test"
+  },
+  {
+   "file": "tools/test_record_probe_transparency.py",
+   "file_signals": [
+    "process_call"
+   ],
+   "nodeid": "tools/test_record_probe_transparency.py::test_recorder_records_without_raising",
+   "recorded_kinds": [],
+   "scope": "test"
+  }
+ ]
+}

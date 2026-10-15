@@ -1,0 +1,224 @@
+﻿python : Task was destroyed but it is pending!
+At line:1 char:122
++ ... missing" }; python live_verify_phase2_agent_framework.py 2>&1 | Tee-O ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (Task was destroyed but it is pending!:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+task: <Task cancelling name='Task-3' coro=<Connection.run.<locals>.init() running at 
+C:\Users\Muhammad\Desktop\gemini_cli\.venv\Lib\site-packages\playwright\_impl\_connection.py:344> wait_for=<Future finished result=None>>
+Future exception was never retrieved
+future: <Future finished exception=TargetClosedError('Target page, context or browser has been closed')>
+playwright._impl._errors.TargetClosedError: Target page, context or browser has been closed
+
+========================================================================
+PHASE 2 AGENT FRAMEWORK ADAPTER - LIVE VERIFICATION
+========================================================================
+Proves that a real model can call a Genesis capability through Microsoft Agent Framework and receive the verified result. Uses the first available compatible AIEngine provider in backend/.env (no new credentials).
+
+--- AIEngine credentials (reused, NOT new) ---
+source     = groq
+model      = openai/gpt-oss-120b
+base_url   = https://api.groq.com/openai/v1
+api_key    = gsk_pLdc...
+
+--- Phase 2 capabilities registered as Agent Framework tools ---
+  - application_open          description: Genesis capability: application.open. Open a resolved deskto...
+  - gui_type_text             description: Genesis capability: gui.type_text. Type text into focused el...
+  - document_create           description: Genesis capability: document.create. Create a plain text doc...
+  - document_read             description: Genesis capability: document.read. Read a supported document...
+  - browser_open_url          description: Genesis capability: browser.open_url. Open a URL in the defa...
+
+--- Live natural-language request ---
+user -> model: 'open notepad'
+
+--- Model -> tool call ---
+  message[0] role=assistant
+    content[0] type=function_call name=application_open call_id=fc_6defb84a-e927-4946-8815-34e78163d570 preview='{"application":"notepad"}'
+  message[1] role=tool
+    content[0] type=function_result name=None call_id=fc_6defb84a-e927-4946-8815-34e78163d570 preview='{"already_in_desired_state": true, "application": "notepad", "error": null, "executed": false, "execution": {"already_running": true, "application_type": "executable", "operation": "application.open",'
+  message[2] role=assistant
+    content[0] type=text name=None call_id=None preview='I opened **Notepad** for you. The system reports that Notepad was already running, and the verification shows the process is indeed active. The action is verified.'
+
+--- Final agent response text ---
+I opened **Notepad** for you. The system reports that Notepad was already running, and the verification shows the process is indeed active. The action is verified.
+
+--- Verified tool result assertion ---
+verified_result=true
+verified_operation= application.open
+verified_status= already_running
+verified_trustworthy_success= True
+evidence_passed= True
+evidence_operation= application.open
+evidence_metadata= {"running": true, "verification_method": "tasklist", "verification_type": "process_table_inspection"}
+
+--- Adapter -> ActionExecutor routing proof ---
+The five tools were registered with the live OpenAIChatCompletionClient and called by the model above.  Each tool call was routed through:
+    agent_framework_adapter._tool_call
+        -> AgentFrameworkAdapter.aexecute_capability
+        -> AgentFrameworkAdapter.execute_capability
+        -> ActionPlan (Pydantic-validated, per Phase 1)
+        -> ActionExecutor.execute (Phase 0 path)
+        -> OSManager + verification_helpers
+        -> ActionResult (real verified/verification_reason)
+    The assertion above additionally requires metadata.evidence_contract.passed=true.
+
+========================================================================
+LIVE VERIFICATION OK
+========================================================================
+{
+  "user_request": "open notepad",
+  "elapsed_seconds": 24.703,
+  "creds": {
+    "source": "groq",
+    "model": "openai/gpt-oss-120b",
+    "base_url": "https://api.groq.com/openai/v1"
+  },
+  "num_messages": 3,
+  "msg_0_content_0": {
+    "type": "function_call",
+    "name": "application_open",
+    "call_id": "fc_6defb84a-e927-4946-8815-34e78163d570",
+    "arguments": "{\"application\":\"notepad\"}",
+    "result_preview": null
+  },
+  "msg_1_content_0_result": {
+    "already_in_desired_state": true,
+    "application": "notepad",
+    "error": null,
+    "executed": false,
+    "execution": {
+      "already_running": true,
+      "application_type": "executable",
+      "operation": "application.open",
+      "resolved_executable": "C:\\WINDOWS\\system32\\notepad.exe"
+    },
+    "final_state": "desired_state",
+    "message": "notepad is already running.",
+    "metadata": {
+      "application_type": "executable",
+      "evidence_contract": {
+        "actual": null,
+        "evidence_id": "application.open:verification",
+        "evidence_type": "file_exists",
+        "expected": null,
+        "metadata": {
+          "running": true,
+          "verification_method": "tasklist",
+          "verification_type": "process_table_inspection"
+        },
+        "operation": "application.open",
+        "passed": true,
+        "provider": null,
+        "reason": "",
+        "timestamp": null
+      },
+      "execution_contract": "3.6",
+      "executor_version": "3.6.0",
+      "raw_operation": "application.open",
+      "raw_status": null,
+      "trustworthy_success": true
+    },
+    "operation": "application.open",
+    "plan": {
+      "application": "notepad",
+      "confidence": 1.0,
+      "operation": "application.open",
+      "parameters": {},
+      "reason": "",
+      "source": "WorkflowDecisionEngine",
+      "target": "notepad",
+      "task": "",
+      "version": "3.3.2"
+    },
+    "retry_count": 0,
+    "status": "already_running",
+    "success": true,
+    "target": "notepad",
+    "trustworthy_success": true,
+    "verification": {
+      "running": true,
+      "verification_method": "tasklist",
+      "verification_type": "process_table_inspection",
+      "verified": true
+    },
+    "verified": true,
+    "version": "3.3.2"
+  },
+  "msg_1_content_0": {
+    "type": "function_result",
+    "name": null,
+    "call_id": "fc_6defb84a-e927-4946-8815-34e78163d570",
+    "arguments": null,
+    "result_preview": "{\"already_in_desired_state\": true, \"application\": \"notepad\", \"error\": null, \"executed\": false, \"execution\": {\"already_running\": true, \"application_type\": \"executable\", \"operation\": \"application.open\", \"resolved_executable\": \"C:\\\\WINDOWS\\\\system32\\\\notepad.exe\"}, \"final_state\": \"desired_state\", \"message\": \"notepad is already running.\", \"metadata\": {\"application_type\": \"executable\", \"evidence_contract\": {\"actual\": null, \"evidence_id\": \"application.open:verification\", \"evidence_type\": \"file_exists\""
+  },
+  "final_text": "I opened **Notepad** for you. The system reports that Notepad was already running, and the verification shows the process is indeed active. The action is verified.",
+  "verified_tool_result": {
+    "already_in_desired_state": true,
+    "application": "notepad",
+    "error": null,
+    "executed": false,
+    "execution": {
+      "already_running": true,
+      "application_type": "executable",
+      "operation": "application.open",
+      "resolved_executable": "C:\\WINDOWS\\system32\\notepad.exe"
+    },
+    "final_state": "desired_state",
+    "message": "notepad is already running.",
+    "metadata": {
+      "application_type": "executable",
+      "evidence_contract": {
+        "actual": null,
+        "evidence_id": "application.open:verification",
+        "evidence_type": "file_exists",
+        "expected": null,
+        "metadata": {
+          "running": true,
+          "verification_method": "tasklist",
+          "verification_type": "process_table_inspection"
+        },
+        "operation": "application.open",
+        "passed": true,
+        "provider": null,
+        "reason": "",
+        "timestamp": null
+      },
+      "execution_contract": "3.6",
+      "executor_version": "3.6.0",
+      "raw_operation": "application.open",
+      "raw_status": null,
+      "trustworthy_success": true
+    },
+    "operation": "application.open",
+    "plan": {
+      "application": "notepad",
+      "confidence": 1.0,
+      "operation": "application.open",
+      "parameters": {},
+      "reason": "",
+      "source": "WorkflowDecisionEngine",
+      "target": "notepad",
+      "task": "",
+      "version": "3.3.2"
+    },
+    "retry_count": 0,
+    "status": "already_running",
+    "success": true,
+    "target": "notepad",
+    "trustworthy_success": true,
+    "verification": {
+      "running": true,
+      "verification_method": "tasklist",
+      "verification_type": "process_table_inspection",
+      "verified": true
+    },
+    "verified": true,
+    "version": "3.3.2"
+  },
+  "saw_function_call": true,
+  "saw_function_output": true,
+  "verified_result_count": 1,
+  "ok": true
+}
+
