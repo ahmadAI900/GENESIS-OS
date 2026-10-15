@@ -490,7 +490,28 @@ class SemanticCapabilityAdapter:
     def invoke(self, function_name: str, arguments: Dict[str, Any]) -> Dict[str, Any]:
         """Invoke a semantic function by name with arguments.
 
-        Routes through security assessment and returns structured result.
+        Routes through the SAME authorization authority the executor uses.
+
+        CHOICE (2026-10-15, Item 3B-2) -- why the gate, not the executor
+        ------------------------------------------------------
+        The directive allowed either routing through
+        ``ActionExecutor.execute(plan)`` or requiring the shared
+        ``_operation_requires_authorization`` + a valid grant before the
+        handler reaches the manager. This module chose the SECOND.
+
+        Reason: this adapter's 48 registrations are not all canonical
+        executor capabilities -- ``_build_action_plan`` raises
+        ``ValueError`` for any id it does not know -- so routing every
+        invoke through the executor would break the unknown ones. The
+        gate is one insertion point, covers all 24 handlers, and calls
+        the very same ``_operation_requires_authorization`` the executor
+        gate calls, so there is still exactly ONE authority for "is this
+        Tier 1". It is defence at the boundary, not a parallel system.
+
+        Before this, the only check was a CONTEXT-FREE
+        ``assess_operation_risk(func.capability_id, arguments)``. That is
+        a risk heuristic, not the authorization gate, and it let a Tier 1
+        capability reach ``os_manager.delete_file`` with no grant at all.
         """
         func = self._functions.get(function_name)
         if func is None:
@@ -500,9 +521,23 @@ class SemanticCapabilityAdapter:
                 "available_functions": list(self._functions.keys()),
             }
 
-        # Security check
+        # ONE AUTHORITY: the shared gate. Tier 1 (irreversible or
+        # outward-facing) requires a real AuthorizationGrant, exactly as
+        # it would through the executor. Fails closed.
+        authorization = self._require_authorization(func, arguments)
+        if authorization is not None:
+            return authorization
+
+        # A VALID GRANT IS THE AUTHORITY. When one is present the
+        # context-free risk heuristic below is advisory only: it exists to
+        # ASK for approval, and a human already gave one through the
+        # token that minted this grant. Blocking a properly authorised
+        # call on a heuristic would make the grant meaningless.
+        has_grant = self._has_valid_grant(func, arguments)
+
+        # Security check (heuristic; not the authority)
         risk = assess_operation_risk(func.capability_id, arguments)
-        if risk.requires_confirmation:
+        if risk.requires_confirmation and not has_grant:
             return {
                 "success": False,
                 "requires_confirmation": True,
@@ -525,6 +560,98 @@ class SemanticCapabilityAdapter:
                 "error": str(exc),
                 "function": function_name,
             }
+
+    def _operation_arguments(self, arguments: Dict[str, Any]) -> Dict[str, Any]:
+        """The arguments an authorization hash binds to.
+
+        Authority is not an argument, so ``authorization`` is excluded --
+        exactly as the executor keeps the grant off ``parameters``.
+        """
+        return {
+            key: value
+            for key, value in dict(arguments).items()
+            if key != "authorization"
+        }
+
+    def _has_valid_grant(
+        self,
+        func: "SemanticCapabilityFunction",
+        arguments: Dict[str, Any],
+    ) -> bool:
+        """Whether a valid AuthorizationGrant accompanies this call."""
+        from .authorization_grant import grant_is_valid_for
+
+        grant = arguments.get("authorization")
+        if grant is None:
+            return False
+        try:
+            return bool(grant_is_valid_for(
+                grant,
+                operation=func.capability_id,
+                arguments=self._operation_arguments(arguments),
+            ))
+        except Exception:
+            return False
+
+    def _require_authorization(
+        self,
+        func: "SemanticCapabilityFunction",
+        arguments: Dict[str, Any],
+    ) -> Optional[Dict[str, Any]]:
+        """Refuse a Tier 1 capability that has no valid grant.
+
+        Returns ``None`` when the call may proceed, or a
+        ``confirmation_required`` envelope when it may not.
+
+        The grant is read from ``arguments["authorization"]`` (the
+        trusted channel the adapter attaches) and validated with the
+        shared ``grant_is_valid_for``, which re-derives the canonical
+        argument hash. A caller cannot satisfy this by putting anything
+        in model-controlled JSON, because a grant can only be minted
+        from a consumed, human-approved record.
+
+        The grant itself is EXCLUDED from the hashed arguments: it is
+        authority, not an argument, so it must not change the hash the
+        grant was bound to. This mirrors the executor, where the grant
+        travels on ``plan.authorization`` rather than inside
+        ``parameters``.
+        """
+        from .action_executor import _operation_requires_authorization
+
+        operation_arguments = self._operation_arguments(arguments)
+
+        try:
+            gated = _operation_requires_authorization(
+                func.capability_id,
+                func.capability_id,
+                dict(operation_arguments),
+            )
+        except Exception:
+            # Cannot classify -> treat as gated. Deny-by-default.
+            gated = True
+
+        if not gated:
+            return None
+
+        if self._has_valid_grant(func, arguments):
+            return None
+
+        return {
+            "success": False,
+            "status": "confirmation_required",
+            "requires_confirmation": True,
+            "confirmation_required": True,
+            "reason": (
+                f"{func.capability_id} is irreversible or outward-facing "
+                f"and requires a human-approval AuthorizationGrant. "
+                f"Attach a valid `authorization` grant to the arguments; "
+                f"`confirmed` is not an authority."
+            ),
+            "function": func.function_id,
+            "capability": func.capability_id,
+            "executed": False,
+            "verified": False,
+        }
 
     # =========================================================
     # HANDLERS
