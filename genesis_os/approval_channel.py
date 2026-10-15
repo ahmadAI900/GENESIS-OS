@@ -363,6 +363,10 @@ class ApprovalChannel:
         self.timeout = timeout
         self.require_tty = require_tty
         self._denied_in_turn: set = set()
+        # request.identity() -> approval_id, recorded ONLY when a human
+        # decision approved this exact operation+arguments. mint_grant
+        # refuses anything absent from here.
+        self._human_approved: Dict[tuple, str] = {}
 
     # -- property 5: discard buffered type-ahead before reading -----------
     def _discard_buffered_input(self) -> None:
@@ -455,7 +459,33 @@ class ApprovalChannel:
                 request, False, "denied", channel="human-stdin",
                 note=f"expected {expected!r}, got {answer[:40]!r}",
             )
+
+        # A real human approved THIS exact operation+arguments. Persist
+        # that decision so mint_grant can consume it rather than
+        # manufacturing one.
+        self._record_human_approval(request)
         return self._decide(request, True, "approved", channel="human-stdin")
+
+    def _record_human_approval(self, request: ApprovalRequest) -> str:
+        """Persist the human decision in ApprovalStore.
+
+        This is the ONE sanctioned call to ``ApprovalStore.approve()``
+        (property 1). It runs only on the branch where a real human
+        typed the exact expected phrase, and only after the channel has
+        read and matched that phrase.
+
+        Previously nothing was recorded here: ``mint_grant`` created and
+        approved its own record, so the human decision was not what made
+        the approval -- mint_grant was. Recording it here means the
+        store, not the caller, is the source of truth about whether an
+        approval exists.
+        """
+        store = ApprovalStore.get_default()
+        record = store.request(request.operation, dict(request.arguments))
+        approval_id = record["approval_id"]
+        store.approve(approval_id, approver="human")
+        self._human_approved[request.identity()] = approval_id
+        return approval_id
 
     def _read_line(self) -> Optional[str]:
         stream = self._stdin if self._stdin is not None else sys.stdin
@@ -518,16 +548,60 @@ class ApprovalChannel:
         }
 
     def mint_grant(self, request: ApprovalRequest) -> Any:
-        """Turn an APPROVED request into the real grant.
+        """Mint the grant for a request a HUMAN ALREADY APPROVED.
 
-        Called only after :meth:`request_approval` returned approved=True.
-        Property 6: the grant is single-use and bound to the exact
-        arguments hash, so approving A cannot authorize B.
+        Property 1: only a human decision may approve. Property 6: the
+        grant is single-use and bound to the exact arguments hash, so
+        approving A cannot authorize B.
+
+        DESIGN NOTE (2026-10-15) -- why this is not `issue` + `approve`:
+
+        The previous implementation called
+        ``ApprovalStore.issue_token(...)`` and then
+        ``ApprovalStore.get_default().approve(...)`` ITSELF. That made
+        the human decision structurally optional: the module approved on
+        its own behalf, so the very call that was supposed to require a
+        human supplied the approval. It also contradicted this module's
+        own property 1, which names a single sanctioned caller of
+        ``ApprovalStore.approve()``.
+
+        So the approval must already EXIST and must already be APPROVED,
+        recorded by this channel when a human typed the expected phrase.
+        This method CONSUMES that record and mints from the consumption
+        (via ``grant_from_consumed_record``, which re-checks the binding).
+        If no approved record matches this exact operation and arguments
+        hash, it raises rather than manufacturing one.
+
+        Consuming the human's own record -- rather than issuing a fresh
+        token -- is what makes the approval structural: the token's nonce
+        IS that record's approval_id, so there is exactly one approval
+        per grant and it can be spent only once.
         """
-        token = ApprovalStore.issue_token(request.operation, dict(request.arguments))
-        ApprovalStore.get_default().approve(token.rsplit(":", 1)[1])
-        return issue_authorization_grant(
+        store = ApprovalStore.get_default()
+        approval_id = self._human_approved.get(request.identity())
+        record = store.status(approval_id) if approval_id else None
+        if (record is None
+                or record.get("status") != "approved"
+                or str(record.get("capability_id")) != str(request.operation)
+                or record.get("arguments_hash") != request.arguments_hash):
+            raise RuntimeError(
+                "refusing to mint a grant: no HUMAN-APPROVED approval record "
+                f"exists for {request.operation!r} with arguments hash "
+                f"{request.arguments_hash[:16]}... A human must approve the "
+                "request through this channel before a grant can be minted."
+            )
+
+        # Spend the human's own approval. The token nonce is that
+        # approval_id, so consume_token verifies and consumes THAT record.
+        token = f"HUMAN-APPROVE:{request.operation}:{approval_id}"
+        consumed = store.consume_token(
+            token, arguments=dict(request.arguments)
+        )
+        self._human_approved.pop(request.identity(), None)
+        from genesis_os.authorization_grant import grant_from_consumed_record
+
+        return grant_from_consumed_record(
             operation=request.operation,
             arguments=dict(request.arguments),
-            token=token,
+            record=consumed,
         )

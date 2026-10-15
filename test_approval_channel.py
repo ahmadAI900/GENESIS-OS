@@ -662,3 +662,89 @@ def test_e2e_garbage_blocks(tmp_path):
     request = build_request("file.create", {"path": str(_outside(tmp_path))})
     channel = ApprovalChannel(timeout=None, stdin=FakeTTY("\x00\x01garbage\n"), stdout=io.StringIO())
     assert channel.request_approval(request)["approved"] is False
+
+# ----------------------------------------------------------------------
+# mint_grant must consume a REAL human approval, never manufacture one.
+#
+# Before 2026-10-15 mint_grant called ApprovalStore.issue_token() and
+# then ApprovalStore.approve() ITSELF. The human decision was therefore
+# structurally optional: the module approved on its own behalf. These
+# tests pin that a grant is unobtainable without a human saying yes.
+# ----------------------------------------------------------------------
+
+
+def test_mint_grant_refuses_without_a_human_decision(tmp_path):
+    """The core property: no human said yes -> no grant, ever."""
+    from genesis_os.authorization_grant import AuthorizationGrant
+
+    request = build_request(
+        "file.create", {"path": str(_outside(tmp_path))})
+    # A channel that was never asked, so no human decision exists.
+    channel = ApprovalChannel(
+        timeout=None, stdin=FakeTTY("approve\n"), stdout=io.StringIO())
+    with pytest.raises(RuntimeError):
+        channel.mint_grant(request)
+    assert not isinstance(None, AuthorizationGrant)
+
+
+def test_mint_grant_refuses_after_the_human_denied(tmp_path):
+    """A denial must not leave a mintable approval behind."""
+    request = build_request(
+        "file.create", {"path": str(_outside(tmp_path))})
+    channel = ApprovalChannel(
+        timeout=None, stdin=FakeTTY("nope\n"), stdout=io.StringIO())
+    assert channel.request_approval(request)["approved"] is False
+    with pytest.raises(RuntimeError):
+        channel.mint_grant(request)
+
+
+def test_mint_grant_succeeds_only_after_a_real_approval(tmp_path):
+    """The legitimate path still works end to end."""
+    request = build_request(
+        "file.create", {"path": str(_outside(tmp_path))})
+    channel = ApprovalChannel(
+        timeout=None, stdin=FakeTTY("approve\n"), stdout=io.StringIO())
+    assert channel.request_approval(request)["approved"] is True
+    grant = channel.mint_grant(request)
+    assert grant.operation == "file.create"
+    result, n = _dispatch(request, grant)
+    assert n == 1, result.status
+
+
+def test_a_grant_cannot_be_minted_twice_from_one_approval(tmp_path):
+    """Single-use now survives the mint path: the human record is spent."""
+    request = build_request(
+        "file.create", {"path": str(_outside(tmp_path))})
+    channel = ApprovalChannel(
+        timeout=None, stdin=FakeTTY("approve\n"), stdout=io.StringIO())
+    assert channel.request_approval(request)["approved"] is True
+    channel.mint_grant(request)
+    with pytest.raises(RuntimeError):
+        channel.mint_grant(request)
+
+
+def test_mint_grant_does_not_call_store_approve_itself():
+    """Structural: approve() may only run on the recorded human branch."""
+    # Dedent first: this is a method, so getsource returns it still
+    # indented and ast.parse would raise IndentationError. Then walk
+    # only the executable body -- the function's own docstring explains
+    # the removed self-approval and so contains the text ".approve(",
+    # but prose is not a call.
+    import textwrap
+
+    tree = ast.parse(textwrap.dedent(
+        inspect.getsource(AC.ApprovalChannel.mint_grant)))
+    fn = tree.body[0]
+    body = (fn.body[1:]
+            if (fn.body and isinstance(fn.body[0], ast.Expr))
+            else fn.body)
+    for node in body:
+        for sub in ast.walk(node):
+            if not isinstance(sub, ast.Call):
+                continue
+            func = sub.func
+            if isinstance(func, ast.Attribute) and func.attr == "approve":
+                pytest.fail(
+                    "mint_grant calls .approve(...); it must consume a human "
+                    "approval, never create one"
+                )
