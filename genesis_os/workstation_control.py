@@ -33,8 +33,14 @@ class WorkstationController:
             return self._unsupported()
 
         try:
-            ctypes.windll.user32.LockWorkStation()
-            result = True
+            # LockWorkStation returns a BOOL: nonzero means the lock was
+            # accepted. That return value was previously discarded and
+            # `result` was hardcoded to True, so a refusal by Windows
+            # (for example with no interactive session) was reported as
+            # success=True / verified=True. The `accepted = ...` branch
+            # below already existed and correctly described a refusal; it
+            # was simply unreachable.
+            result = ctypes.windll.user32.LockWorkStation()
         except Exception as error:
             return {
                 "success": False,
@@ -44,12 +50,15 @@ class WorkstationController:
                 "verified": False,
             }
 
-        accepted = result != 0
+        accepted = bool(result)
 
         return {
             "success": accepted,
             "operation": "workstation.lock",
-            "executed": True,
+            # `executed` now tracks the API's own verdict. Reporting
+            # executed=True alongside success=False would claim the
+            # request took effect when Windows declined it.
+            "executed": accepted,
             "verified": accepted,
             "verification_type": "dispatch_confirmed",
             "message": (
