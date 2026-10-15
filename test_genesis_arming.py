@@ -17,7 +17,6 @@ from pathlib import Path
 import pytest
 
 from genesis_os.genesis_config import (
-    default_dotenv_path,
     load_genesis_config,
     reset_for_tests,
     was_loaded,
@@ -53,9 +52,13 @@ UNSET = ("import os\n",
          "import os\nos.environ.pop('GENESIS_WORKSPACE_ROOT', None)\n")
 
 
-def _fresh(prelude=""):
+def _fresh(prelude="", dotenv_path=None):
     env = dict(os.environ)
     env.pop(WORKSPACE_ROOT_ENV, None)
+    if dotenv_path is not None:
+        # The fresh process must not inherit a developer's real .env; the
+        # probe loads exactly the file this test created.
+        env["GENESIS_TEST_DOTENV"] = str(dotenv_path)
     proc = subprocess.run(
         [PYTHON, "-c", prelude + FRESH_PROBE],
         capture_output=True, text=True, cwd=str(BACKEND), env=env, timeout=180,
@@ -92,23 +95,68 @@ def test_importing_the_executor_does_not_arm_the_boundary():
     )
 
 
-def test_dotenv_alone_does_not_arm_the_boundary():
-    """`.env` declaring a root must not arm anything implicitly."""
-    if default_dotenv_path() is None:
-        pytest.skip("no .env on this machine")
-    result = _fresh(UNSET[1])
-    assert result["enforced"] is False
+def _write_temp_dotenv(tmp_path):
+    """A throwaway `.env` declaring a workspace root, on any machine.
+
+    Returns (path, workspace_root_value). The root points INSIDE tmp_path
+    so the boundary, once armed by an explicit load, is a real existing
+    directory -- no reliance on whatever the developer happens to have
+    configured, and no skip when there is no `.env` on the machine.
+    """
+    workspace = tmp_path / "gen_workspace"
+    workspace.mkdir(parents=True, exist_ok=True)
+    dotenv = tmp_path / ".env"
+    dotenv.write_text(
+        f"{WORKSPACE_ROOT_ENV}={workspace.as_posix()}\n", encoding="utf-8"
+    )
+    return dotenv, workspace
 
 
-def test_explicit_load_arms_the_boundary_in_a_fresh_process():
-    """This is the fix, proven end to end in a real process."""
-    if default_dotenv_path() is None:
-        pytest.skip("no .env on this machine")
-    result = _fresh(UNSET[1] +
-                    "from genesis_os.genesis_config import load_genesis_config\n"
-                    "load_genesis_config()\n")
-    assert result["enforced"] is True
-    assert result["root"] and result["root"].endswith(".genesis_workspace")
+def test_dotenv_alone_does_not_arm_the_boundary(tmp_path):
+    """`.env` declaring a root must not arm anything implicitly.
+
+    Runs on any clean checkout: the test creates its OWN `.env` and points
+    the fresh process at it. The file exists and declares a root, but the
+    subprocess never calls ``load_genesis_config``, so the boundary must
+    stay unarmed -- arming is explicit, not a side effect of a file being
+    present on disk.
+    """
+    dotenv, _workspace = _write_temp_dotenv(tmp_path)
+    # UNSET clears any inherited GENESIS_*; GENESIS_TEST_DOTENV tells the
+    # probe where the throwaway file is, but nothing loads it.
+    result = _fresh(UNSET[1], dotenv_path=dotenv)
+    assert result["enforced"] is False, (
+        "a `.env` file was present and declared a root, but nothing called "
+        "load_genesis_config(); the boundary must stay unarmed"
+    )
+
+
+def test_explicit_load_arms_the_boundary_in_a_fresh_process(tmp_path):
+    """This is the fix, proven end to end in a real process.
+
+    Runs on any clean checkout: the test creates its OWN `.env` and loads
+    exactly that file in a fresh interpreter, so it neither skips on a
+    machine without a real `.env` nor depends on the developer's own
+    configuration.
+    """
+    dotenv, workspace = _write_temp_dotenv(tmp_path)
+    result = _fresh(
+        UNSET[1] +
+        "import os\n"
+        "from genesis_os.genesis_config import load_genesis_config\n"
+        "load_genesis_config(os.environ['GENESIS_TEST_DOTENV'])\n",
+        dotenv_path=dotenv,
+    )
+    assert result["enforced"] is True, (
+        "an explicit load_genesis_config() on a file declaring a root must "
+        "arm the boundary"
+    )
+    assert result["root"], "an armed boundary must report a root"
+    assert result["root"].replace("\\", "/").rstrip("/") == \
+        workspace.as_posix().rstrip("/"), (
+        f"the boundary resolved to {result['root']!r}, expected the root "
+        f"declared in the temporary .env ({workspace})"
+    )
 
 
 def test_bare_process_with_variable_preset_is_armed():
