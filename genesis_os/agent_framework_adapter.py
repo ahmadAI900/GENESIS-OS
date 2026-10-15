@@ -568,35 +568,31 @@ def _consume_approval_token(
     token: Optional[str],
     capability_id: str,
     arguments: Optional[Mapping[str, Any]] = None,
-) -> bool:
-    """Consume an approval token. Returns True on success.
+) -> Optional[Dict[str, Any]]:
+    """Consume an approval token. Returns the consumed record, or None.
 
-    Also stashes the consumed record on the module so the trusted
-    AuthorizationGrant can be minted from the SAME consumption. The
-    token is single-use: minting by consuming it a second time is
-    correctly refused by ApprovalStore, which would leave Tier 1
-    permanently blocked.
+    The consumed record is RETURNED rather than stashed on the module.
+    It used to be assigned to a process-global ``_LAST_CONSUMED_APPROVAL``
+    and read later by the plan builder, which meant one request's
+    approval was visible to a different, later request: the record was
+    not tied to the call that produced it, so concurrent requests could
+    read each other's authority (a cross-request authorization leak).
+
+    The token is single-use, so the grant must be minted from this same
+    consumption -- returning it lets the caller thread it explicitly to
+    the plan it belongs to. Nothing shared is left behind.
     """
-    global _LAST_CONSUMED_APPROVAL
-    _LAST_CONSUMED_APPROVAL = None
     if not is_valid_approval_token(token, capability_id):
-        return False
+        return None
     try:
         from .approval_store import ApprovalStore
-        _LAST_CONSUMED_APPROVAL = ApprovalStore.consume_token(
+
+        return ApprovalStore.consume_token(
             token,
             arguments=dict(arguments or {}),
         )
     except (TypeError, ValueError):
-        return False
-    return True
-
-
-# Records the most recent successful ApprovalStore consumption in this
-# module, so the grant can be derived from that single consumption
-# rather than a second one. Reset by every _consume_approval_token
-# call, so a stale record can never authorise a later plan.
-_LAST_CONSUMED_APPROVAL: Optional[Dict[str, Any]] = None
+        return None
 
 
 # ============================================================
@@ -2532,6 +2528,7 @@ def _action_result_to_text(result: ActionResult) -> str:
 def _build_action_plan(
     capability_id: str,
     arguments: Mapping[str, Any],
+    consumed_approval: Optional[Dict[str, Any]] = None,
 ) -> ActionPlan:
     """
     Translate a tool call's arguments into the ActionPlan shape
@@ -2541,6 +2538,11 @@ def _build_action_plan(
     capability's supported inputs (already known to the executor)
     to ``ActionPlan.parameters`` / ``target`` / ``application``.
     No new logic is introduced here.
+
+    ``consumed_approval`` is the ApprovalStore record THIS call just
+    consumed, passed explicitly so the grant is minted from this
+    request's own approval and never from one left over from another
+    request. It is never read from module state.
     """
 
     capability_id = canonical_adapter_capability_id(capability_id)
@@ -2605,11 +2607,13 @@ def _build_action_plan(
                             from .authorization_grant import (
                                 grant_from_consumed_record,
                             )
-                            from .agent_framework_adapter import (
-                                _LAST_CONSUMED_APPROVAL,
-                            )
 
-                            record = _LAST_CONSUMED_APPROVAL
+                            # The record comes from THIS call's own
+                            # token consumption, threaded in by the
+                            # caller. It used to be read from a module
+                            # global, so a previous request's approval
+                            # could satisfy this one.
+                            record = consumed_approval
                             if record is None:
                                 raise RuntimeError(
                                     "no consumed approval available"
@@ -4442,13 +4446,21 @@ class AgentFrameworkAdapter:
         self,
         capability_id: str,
         arguments: Mapping[str, Any],
+        consumed_approval: Optional[Dict[str, Any]] = None,
     ) -> ActionPlan:
         """
         Translate tool-call arguments into an ActionPlan.  Pure
         function - does not touch the executor.
+
+        ``consumed_approval`` is the record produced by consuming THIS
+        request's own approval token. It is threaded through to
+        ``_build_action_plan`` so the grant is derived from this
+        request only.
         """
 
-        plan = _build_action_plan(capability_id, arguments)
+        plan = _build_action_plan(
+            capability_id, arguments, consumed_approval
+        )
 
         # Record which registered capability this plan invokes. The
         # adapter knows this from its own routing; the executor only
@@ -4555,6 +4567,7 @@ class AgentFrameworkAdapter:
         capability_id: str,
         arguments: Mapping[str, Any],
         approval_token: Optional[str] = None,
+        consumed_out: Optional[Dict[str, Any]] = None,
     ) -> Optional[ActionResult]:
         """
         Return a structured ``confirmation_required``
@@ -4562,6 +4575,13 @@ class AgentFrameworkAdapter:
         capability without a real approval token.  Return
         ``None`` when the call is safe to forward to the
         executor.
+
+        ``consumed_out`` is an optional dict the caller supplies to
+        RECEIVE the ApprovalStore record this call just consumed. That
+        record must reach the plan builder so the grant is minted from
+        this request's own approval. It is passed out explicitly because
+        the previous mechanism -- a module global -- was readable by any
+        other in-flight request.
 
         Explicit human-approval token gate (high/critical risk):
         for capabilities in ``APPROVAL_REQUIRED_CAPABILITIES``
@@ -4602,11 +4622,12 @@ class AgentFrameworkAdapter:
                 needs_token = active
                 precondition_reason = reason
             if needs_token:
-                if not _consume_approval_token(
+                consumed = _consume_approval_token(
                     effective_token,
                     capability_id,
                     arguments,
-                ):
+                )
+                if consumed is None:
                     if capability_id == "application.close":
                         msg = (
                             f"This tool call proposes to perform "
@@ -4658,6 +4679,12 @@ class AgentFrameworkAdapter:
                 # For application.close with an active precondition
                 # we are done; for the unconditional set we are
                 # done too.  Fall through to return None.
+                #
+                # Hand the consumed record to the caller so the grant is
+                # minted from THIS request's approval. It travels with
+                # the call rather than through shared module state.
+                if consumed_out is not None:
+                    consumed_out["consumed_approval"] = consumed
                 if capability_id == "application.close":
                     return None
                 return None
@@ -5020,8 +5047,13 @@ class AgentFrameworkAdapter:
         """
 
         capability_id = canonical_adapter_capability_id(capability_id)
+        # Receives this request's own consumed approval record, if any.
+        consumed: Dict[str, Any] = {}
         pre_check = self._risk_tier_pre_check(
-            capability_id, arguments, approval_token=approval_token
+            capability_id,
+            arguments,
+            approval_token=approval_token,
+            consumed_out=consumed,
         )
         if pre_check is not None:
             return pre_check
@@ -5040,7 +5072,11 @@ class AgentFrameworkAdapter:
             and "approval_token" not in effective_args
         ):
             effective_args["approval_token"] = effective_token
-        plan = self.build_plan(capability_id, effective_args)
+        plan = self.build_plan(
+            capability_id,
+            effective_args,
+            consumed.get("consumed_approval"),
+        )
         return self.execute_plan(plan, _approval_prechecked=True)
 
     # ----------------------------------------------------

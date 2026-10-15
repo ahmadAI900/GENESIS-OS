@@ -1,4 +1,4 @@
-"""
+﻿"""
 Genesis OS - Phase 2 destructive-capability regression tests.
 
 Scope (per the user's session-B prompt):
@@ -747,3 +747,98 @@ class TestBrowserClick:
             verification.get("verification_type")
             == "click_dispatched"
         ), verification
+
+
+# ----------------------------------------------------------------------
+# A consumed approval must not leak across requests (H-06).
+#
+# `_consume_approval_token` used to stash the consumed record on a
+# MODULE GLOBAL (`_LAST_CONSUMED_APPROVAL`), which the plan builder read
+# later. Nothing tied that record to the request that produced it, so a
+# later request presenting no token of its own could reach it. The record
+# is now threaded explicitly from the consumption to the plan.
+# ----------------------------------------------------------------------
+def test_the_consumed_approval_global_no_longer_exists():
+    """Structural: the shared module global is gone."""
+    from genesis_os import agent_framework_adapter as adapter_mod
+
+    assert not hasattr(adapter_mod, "_LAST_CONSUMED_APPROVAL"), (
+        "the process-global consumed-approval slot is back; it lets one "
+        "request's approval authorise another"
+    )
+
+
+def test_request_b_without_a_token_is_refused_after_request_a_consumed(
+    adapter, destructive_osm
+):
+    """A consumes a valid token; B presents NO token and must be refused.
+
+    Before the fix, A's consumed record was still on the module when B's
+    decision was built, so B could reach A's authority.
+    """
+    token = ApprovalStore.issue_token(
+        "file.delete", {"path": "C:/approved_by_a.txt"}
+    )
+    _approve_issued_token(token)
+
+    # Request A: a real, human-approved token for its own target.
+    result_a = adapter.execute_capability(
+        "file.delete",
+        {"path": "C:/approved_by_a.txt", "approval_token": token},
+    )
+    assert result_a.executed is True, result_a
+
+    # Request B: same adapter, DIFFERENT target, and NO token at all.
+    result_b = adapter.execute_capability(
+        "file.delete",
+        {"path": "C:/request_b_target.txt"},
+    )
+    assert result_b.status == "confirmation_required", (
+        "request B presented no approval token yet was authorised: "
+        f"{result_b}"
+)
+    assert result_b.executed is False, result_b
+    assert len(destructive_osm.calls) == 1, (
+        "only request A may dispatch; B must be blocked before dispatch"
+    )
+
+
+def test_a_request_presenting_its_own_token_is_still_authorised(
+    adapter, destructive_osm
+):
+    """The legitimate path keeps working: own token -> executed once."""
+    token = ApprovalStore.issue_token(
+        "file.delete", {"path": "C:/own_token.txt"}
+    )
+    _approve_issued_token(token)
+
+    result = adapter.execute_capability(
+        "file.delete",
+        {"path": "C:/own_token.txt", "approval_token": token},
+    )
+    assert result.executed is True, result
+    assert len(destructive_osm.calls) == 1
+
+
+def test_two_authorised_requests_each_use_their_own_token(
+    adapter, destructive_osm
+):
+    """Two approvals, two dispatches, each bound to its own arguments."""
+    token_a = ApprovalStore.issue_token(
+        "file.delete", {"path": "C:/a.txt"}
+    )
+    token_b = ApprovalStore.issue_token(
+        "file.delete", {"path": "C:/b.txt"}
+    )
+    _approve_issued_token(token_a)
+    _approve_issued_token(token_b)
+
+    first = adapter.execute_capability(
+        "file.delete", {"path": "C:/a.txt", "approval_token": token_a}
+    )
+    second = adapter.execute_capability(
+        "file.delete", {"path": "C:/b.txt", "approval_token": token_b}
+    )
+    assert first.executed is True, first
+    assert second.executed is True, second
+    assert len(destructive_osm.calls) == 2
