@@ -500,28 +500,30 @@ class TestCrossLevelReferenceResolution:
         # it could only ever fail by raising. It now asserts what its name
         # and docstring promise.
         #
-        # THIS ASSERTION CURRENTLY FAILS, and that is a real product
-        # defect, not a bad test. Measured 2026-10-14:
-        #   _resolve_entity_reference("open it") -> "open C:\report.xlsx"   (works)
-        #   decision_engine.decide(that)         -> level 3, file.open, 0.96 (works)
+        # These assertions FAILED until 2026-10-15, and that was a real
+        # product defect, not a bad test. Measured 2026-10-14:
+        #   _resolve_entity_reference("open it") -> "open C:\report.xlsx"   (worked)
+        #   decision_engine.decide(that)         -> level 3, file.open, 0.96 (worked)
         #   try_rebind("open it")                -> None                    (broken)
         #
-        # Cause: genesis_os/session_context.py try_rebind() assigns
+        # Cause: genesis_os/session_context.py try_rebind() assigned
         # `text = resolved_text` BEFORE the `stripped == text` check, so
         # the guard `if resolved_text is not None and resolved_text != text`
-        # compares resolved_text to itself, is always False, and falls
-        # into `else: return None`. The branch intended to handle "no
-        # markers were stripped, but an entity WAS resolved" is therefore
-        # unreachable. The sibling test passes only because "now" is a
-        # marker, so stripping changes the string and the broken branch is
+        # compared resolved_text to itself, was always False, and fell into
+        # `else: return None`. The branch intended to handle "no markers
+        # were stripped, but an entity WAS resolved" was therefore
+        # unreachable. The sibling test passed only because "now" is a
+        # marker, so stripping changes the string and the broken branch was
         # never entered.
+        #
+        # FIXED 2026-10-15: try_rebind() now captures `entity_resolved`
+        # BEFORE reassigning `text`, and the branch keys off that flag
+        # instead of re-deriving it from the already-overwritten `text`.
         assert result is not None, (
             "try_rebind('open it') returned None. The entity reference WAS "
             "resolved (to 'open C:\\report.xlsx') and the decision engine "
             "decides that text as level 3 / file.open at confidence 0.96, "
-            "so the binder drops a decision it should have returned. See "
-            "the comment above: try_rebind compares resolved_text to "
-            "itself after reassigning text.")
+            "so the binder must not drop a decision it should return.")
         assert result["level"] == 3, result
         # decide() lowercases the target, so compare case-insensitively.
         assert "report.xlsx" in str(result.get("target", "")).lower(), (

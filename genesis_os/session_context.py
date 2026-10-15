@@ -254,6 +254,13 @@ class SessionContextBinder:
         # Then re-evaluate the resolved text.
         # -----------------------------------------------
 
+        # `entity_resolved` records that the resolution actually rewrote
+        # the text. It MUST be captured here, before `text` is reassigned:
+        # afterwards `text is resolved_text`, so re-deriving the fact later
+        # compares the value to itself and is always False. That is exactly
+        # how the "resolved a bare pronoun, but stripping was a no-op"
+        # branch below used to become unreachable (2026-10-15).
+        entity_resolved = False
         resolved_text = self._resolve_entity_reference(text)
         if resolved_text is not None and resolved_text != text:
             print(
@@ -261,6 +268,7 @@ class SessionContextBinder:
                 f"Entity reference resolved: "
                 f"'{text}' -> '{resolved_text}'"
             )
+            entity_resolved = True
             text = resolved_text
 
         # -----------------------------------------------
@@ -273,9 +281,12 @@ class SessionContextBinder:
         stripped = self._strip_markers(text)
 
         if not stripped or stripped == text:
-            # If markers weren't present but we resolved
-            # an entity reference, try the resolved text.
-            if resolved_text is not None and resolved_text != text:
+            # Nothing was stripped. That is only fatal if no entity
+            # reference was resolved either. If one WAS, the resolved
+            # text is already the whole request -- "open it" became
+            # "open C:\report.xlsx" and there is no marker to remove --
+            # so decide it rather than dropping a valid level-3 turn.
+            if entity_resolved:
                 stripped = self._strip_markers(resolved_text)
                 if not stripped:
                     return None
