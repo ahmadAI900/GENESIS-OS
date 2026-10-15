@@ -1790,18 +1790,22 @@ class ActionExecutor:
         if op == "file.open": return self.os_manager.open_file(t)
         if op == "filesystem.open": return self.os_manager.open_file(t)
         if op == "file.watch": return self.os_manager.watch_file(t, p.get("event", "modified"))
-        if op == "file.create": return self.os_manager.create_file(t, p.get("content", ""), overwrite=bool(p.get("overwrite", False)), confirmed=True)
-        if op == "file.copy": return self.os_manager.copy_file(p.get("source", t), p.get("destination", t), confirmed=True)
-        if op == "file.move": return self.os_manager.move_file(p.get("source", t), p.get("destination", t), confirmed=True)
-        if op == "file.rename": return self.os_manager.rename_file(p.get("source", t), p.get("new_name", t), confirmed=True)
-        if op == "file.delete": return self.os_manager.delete_file(t, confirmed=True)
+        # Item 3B-3b: the OS managers no longer branch on `confirmed`, so the
+        # hardcoded `confirmed=True` that used to prop up their internal
+        # gates is gone. Authorization is decided ONCE, above, by
+        # `_operation_requires_authorization` + a valid AuthorizationGrant.
+        if op == "file.create": return self.os_manager.create_file(t, p.get("content", ""), overwrite=bool(p.get("overwrite", False)))
+        if op == "file.copy": return self.os_manager.copy_file(p.get("source", t), p.get("destination", t))
+        if op == "file.move": return self.os_manager.move_file(p.get("source", t), p.get("destination", t))
+        if op == "file.rename": return self.os_manager.rename_file(p.get("source", t), p.get("new_name", t))
+        if op == "file.delete": return self.os_manager.delete_file(t)
+        if op == "folder.organize": return self.os_manager.organize_folder(t, dry_run=bool(p.get("dry_run", False)))
+        if op == "folder.rename": return self.os_manager.rename_folder(t, p.get("new_name", ""))
+        if op == "folder.move": return self.os_manager.move_folder(t, p.get("destination"))
+        if op == "folder.delete": return self.os_manager.delete_folder(t)
         if op == "folder.inspect": return self.os_manager.inspect_folder(t)
         if op == "folder.open": return self.os_manager.open_folder(t)
         if op == "folder.create": return self.os_manager.create_folder(t)
-        if op == "folder.organize": return self.os_manager.organize_folder(t, confirmed=bool(p.get("confirmed", False)), dry_run=bool(p.get("dry_run", False)))
-        if op == "folder.rename": return self.os_manager.rename_folder(t, p.get("new_name", ""), confirmed=True)
-        if op == "folder.move": return self.os_manager.move_folder(t, p.get("destination"), confirmed=True)
-        if op == "folder.delete": return self.os_manager.delete_folder(t, confirmed=True)
         if op == "process.list": return self.os_manager.list_processes(None if t in {None, "", "computer"} else t, limit=p.get("limit", 500))
         if op == "process.inspect": return self.os_manager.inspect_process(t)
         if op == "browser.open_url": return self.os_manager.open_url(t)
@@ -1809,7 +1813,7 @@ class ActionExecutor:
         if op == "system.status": return self.os_manager.system_status()
         if op == "system.open_settings": return self.os_manager.open_settings(t)
         if op == "network.list_wifi": return self.os_manager.list_wifi()
-        if op == "network.connect_wifi": return self.os_manager.connect_wifi(p.get("ssid", t), p.get("password", ""), confirmed=True)
+        if op == "network.connect_wifi": return self.os_manager.connect_wifi(p.get("ssid", t), p.get("password", ""))
 
         # -----------------------------------------------------
         # LEVEL 3.10 — UNIVERSAL DESKTOP CONTROL

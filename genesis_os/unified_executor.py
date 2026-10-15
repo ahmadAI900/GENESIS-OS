@@ -1,16 +1,16 @@
 """
-Genesis OS — Level 3 Mixed Intelligence + OS Workflow Integration.
+Genesis OS â€” Level 3 Mixed Intelligence + OS Workflow Integration.
 
 Automatic agent selection and unified execution for mixed requests:
 
     "Research three laptops, compare in Excel, save to Shopping folder"
-          ↓
+          â†“
     Research Agent (intelligence)
-          ↓
+          â†“
     Data Agent (structure/compare)
-          ↓
+          â†“
     Level 3: Create/open Excel, write data, save, verify
-          ↓
+          â†“
     Unified result
 
 This module connects the WorkflowDecisionEngine, Level 2 agents,
@@ -415,7 +415,7 @@ class MixedWorkflowPlanner:
         if not intent:
             return None
         # GUI typing/pasting can carry target=None when the
-        # user did not name a window ("type Hello") — the
+        # user did not name a window ("type Hello") â€” the
         # executor types into whatever window currently has
         # focus. Skip the "missing target" gate for these
         # intents, since they ARE dispatchable as-is.
@@ -470,23 +470,14 @@ class MixedWorkflowPlanner:
         # unified-executor markers the runtime expects.
         merged_parameters: Dict[str, Any] = dict(parameters or {})
 
-        # Mixed executor's OS steps derive from a natural-
-        # language request that the user already confirmed by
-        # sending it. Pre-set ``confirmed=True`` for non
-        # destructive operations so the executor's
-        # confirmation gate (which protects interactive users
-        # from accidental destructive mutations) does not
-        # block the L3 dispatch when the unified executor is
-        # carrying the L2 agent's output forward into the
-        # filesystem. Truly destructive ops (file.delete,
-        # folder.delete) keep the default gate.
-        destructive = {
-            "file.delete", "folder.delete", "folder.move",
-            "folder.rename", "file.move", "file.rename",
-            "cleanup.empty_recycle_bin",
-        }
-        if operation not in destructive:
-            merged_parameters.setdefault("confirmed", True)
+        # Item 3B-3b: the blanket ``confirmed=True`` injection is REMOVED.
+        # It pre-approved every non-destructive OS step so the OS managers'
+        # internal confirmation gates would let them through, making
+        # `confirmed` a blanket authority that quietly bypassed the real
+        # gate. Authorization now comes only from the executor's
+        # blast-radius gate plus a valid AuthorizationGrant: a Tier 2 step
+        # needs nothing here, and a Tier 1 step must present a grant.
+        # Injecting the flag would contradict both.
 
         return OSWorkflowStep(
             step_id=step_id,
@@ -663,7 +654,6 @@ class MixedWorkflowPlanner:
                                 if structured_code is not None
                                 else ""
                             ),
-                            "confirmed": True,
                         },
                     ),
                     depends_on=(last_agent_step,) if last_agent_step else (),
@@ -688,7 +678,6 @@ class MixedWorkflowPlanner:
                             "agent": "Coding Agent",
                             "content": str(structured_code),
                             "language": extension,
-                            "confirmed": True,
                         },
                     ),
                     depends_on=(last_agent_step,) if last_agent_step else (),
@@ -735,7 +724,6 @@ class MixedWorkflowPlanner:
                                 "agent": "Coding Agent",
                                 "language": lang,
                                 "content": block.strip(),
-                                "confirmed": True,
 
                                 },
                             ),
@@ -840,7 +828,6 @@ class MixedWorkflowPlanner:
                 parameters.update({
                     "content": pdf_source,
                     "title": "Research Report",
-                    "confirmed": True,
                 })
                 pdf_step.action_plan = pdf_step.action_plan.model_copy(
                     update={"parameters": parameters}
@@ -857,7 +844,6 @@ class MixedWorkflowPlanner:
                         parameters={
                             "content": pdf_source,
                             "title": "Research Report",
-                            "confirmed": True,
                         },
                     ),
                     depends_on=(last_agent_step,) if last_agent_step else (),

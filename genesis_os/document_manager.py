@@ -9,13 +9,15 @@ class DocumentManager:
     VERSION = "3.8.0"
 
     def create_docx(self, path: Any, title: str, sections: list[dict] | None = None, *, confirmed=False) -> dict:
+        # `confirmed` is ACCEPTED BUT IGNORED (Item 3B-3b); it is not an
+        # authority. Replacing an existing document is Tier 1 at the
+        # executor's blast-radius gate (Item 3B-3a) and requires a valid
+        # AuthorizationGrant before this is reached; a create onto a free
+        # path is Tier 2 and proceeds.
         v = PathSecurity.validate(path)
         if not v["allowed"]:
             return {"success": False, "operation": "document.create_docx", "error": v["reason"]}
         target = Path(v["path"])
-        if target.exists() and not confirmed:
-            return {"success": False, "operation": "document.create_docx", "status": "confirmation_required", "requires_confirmation": True,
-                    "confirmation_message": f"Confirm replacing '{target}'."}
         try:
             from docx import Document
         except ImportError:

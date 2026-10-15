@@ -208,6 +208,13 @@ class SafeFileManager:
         return self.manager.hash(validation["path"], algorithm=algorithm)
 
     def create(self, path: Any, content: str = "", *, overwrite=False, confirmed=False) -> dict:
+        # `confirmed` is ACCEPTED BUT IGNORED (Item 3B-3b). It is not an
+        # authority. Overwriting an existing file is Tier 1 at the
+        # executor's blast-radius gate (Item 3B-3a) and requires a valid
+        # AuthorizationGrant BEFORE this method is reached; a create onto
+        # a free path is Tier 2. The `overwrite` flag still decides
+        # whether an existing target is clobbered, but it no longer has to
+        # be paired with a confirmation to be allowed through.
         validation = self._validate(path)
         if not validation["allowed"]:
             return self._failure("file.create", validation)
@@ -215,8 +222,6 @@ class SafeFileManager:
         if target.exists() and not overwrite:
             return {"success": False, "operation": "file.create", "status": "already_exists",
                     "path": str(target), "message": "The destination already exists."}
-        if overwrite and not confirmed:
-            return self._confirmation("file.create", target, "overwrite an existing file")
         try:
             target.parent.mkdir(parents=True, exist_ok=True)
             expected = str(content)
@@ -238,16 +243,15 @@ class SafeFileManager:
         return self._mutate("file.move", source, destination, confirmed, self.manager.move, overwrite=True)
 
     def rename(self, source: Any, new_name: str, *, confirmed=False) -> dict:
+        # `confirmed` accepted but ignored; see create() and Item 3B-3b.
+        # Renaming ONTO an existing file is Tier 1 at the executor gate;
+        # a rename to a free name is Tier 2 and proceeds.
         validation = self._validate(source, existing=True, file=True)
         if not validation["allowed"]:
             return self._failure("file.rename", validation)
         if not isinstance(new_name, str) or not new_name.strip() or Path(new_name).name != new_name:
             return {"success": False, "operation": "file.rename", "error": "A safe file name is required."}
         target = Path(validation["path"]).parent / new_name.strip()
-        if target.exists() and not confirmed:
-            return self._confirmation("file.rename", target, "replace an existing file")
-        if not confirmed:
-            return self._confirmation("file.rename", Path(validation["path"]), f"rename it to {new_name.strip()}")
         result = self.manager.rename(validation["path"], new_name.strip())
         old_path = Path(validation["path"])
         new_path = Path(result.get("new_path", target)) if isinstance(result, dict) else target
@@ -266,12 +270,13 @@ class SafeFileManager:
         return result
 
     def delete(self, path: Any, *, confirmed=False) -> dict:
+        # `confirmed` accepted but ignored; see create() and Item 3B-3b.
+        # file.delete is Tier 1 at the executor gate, so reaching here
+        # already required a valid AuthorizationGrant.
         validation = self._validate(path, existing=True, file=True)
         if not validation["allowed"]:
             return self._failure("file.delete", validation)
         target = Path(validation["path"])
-        if not confirmed:
-            return self._confirmation("file.delete", target, "delete it permanently")
         result = self.manager.delete(target, confirm=True)
         verified = bool(
             result.get("success")
@@ -299,6 +304,9 @@ class SafeFileManager:
         return digests[0] == digests[1]
 
     def _mutate(self, operation, source, destination, confirmed, fn, *, overwrite=False):
+        # `confirmed` accepted but ignored; see create() and Item 3B-3b.
+        # Overwriting an existing destination is Tier 1 at the executor
+        # gate (Item 3B-3a); a free destination is Tier 2 and proceeds.
         src = self._validate(source, existing=True, file=True)
         if not src["allowed"]:
             return self._failure(operation, src)
@@ -306,10 +314,6 @@ class SafeFileManager:
         if not dst["allowed"]:
             return self._failure(operation, dst)
         target = Path(dst["path"])
-        if target.exists() and not confirmed:
-            return self._confirmation(operation, target, "overwrite the existing destination")
-        if not confirmed:
-            return self._confirmation(operation, Path(src["path"]), f"perform {operation.split('.', 1)[1]} to {target}")
         try:
             result = fn(src["path"], str(target))
             source_path = Path(src["path"])

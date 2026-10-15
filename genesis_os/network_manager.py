@@ -23,9 +23,11 @@ class NetworkManager:
             return {"success": False, "operation": "network.list_wifi", "error": str(exc)}
 
     def connect_wifi(self, ssid: str, password: str, *, confirmed=False) -> dict:
-        if not confirmed:
-            return {"success": False, "operation": "network.connect_wifi", "status": "confirmation_required",
-                    "requires_confirmation": True, "confirmation_message": f"Confirm connecting this computer to Wi-Fi network '{ssid}'."}
+        # `confirmed` is ACCEPTED BUT IGNORED (Item 3B-3b); it is not an
+        # authority. Connecting to a network is Tier 1 at the executor's
+        # blast-radius gate and requires a valid AuthorizationGrant before
+        # this is reached. The Wi-Fi password itself is written in
+        # plaintext into the WLAN profile below -- see the TODO there.
         if os.name != "nt":
             return {"success": False, "operation": "network.connect_wifi", "error": "Wi-Fi connection is currently implemented for Windows."}
         if not isinstance(ssid, str) or not ssid.strip() or not isinstance(password, str):

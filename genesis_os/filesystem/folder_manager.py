@@ -68,15 +68,18 @@ class FolderManager:
             return {"success": False, "operation": "folder.create", "path": str(p), "error": str(exc)}
 
     def rename(self, source: Any, new_name: str, *, confirmed=False) -> dict:
+        # `confirmed` is ACCEPTED BUT IGNORED (Item 3B-3b). It is no longer
+        # an authority: authorization comes only from the executor's
+        # blast-radius gate plus a valid AuthorizationGrant. A rename onto
+        # an EXISTING target is Tier 1 there and needs a grant; a rename
+        # onto a free target is Tier 2 and simply proceeds. Callers may
+        # keep passing the flag; it changes nothing.
         v = self._validate(source, require_existing=True, require_directory=True)
         if not v["allowed"]:
             return {"success": False, "operation": "folder.rename", "error": v["reason"]}
         if not isinstance(new_name, str) or not new_name.strip() or Path(new_name).name != new_name:
             return {"success": False, "operation": "folder.rename", "error": "A safe folder name is required."}
         target = Path(v["path"]).parent / new_name.strip()
-        if not confirmed:
-            return {"success": False, "operation": "folder.rename", "status": "confirmation_required",
-                    "requires_confirmation": True, "confirmation_message": f"Confirm renaming '{v['path']}' to '{target}'."}
         try:
             Path(v["path"]).rename(target)
             verified = target.is_dir() and not Path(v["path"]).exists()
@@ -86,13 +89,11 @@ class FolderManager:
             return {"success": False, "operation": "folder.rename", "error": str(exc)}
 
     def move(self, source: Any, destination: Any, *, confirmed=False) -> dict:
+        # `confirmed` accepted but ignored; see rename() and Item 3B-3b.
         v = self._validate(source, require_existing=True, require_directory=True)
         d = self._validate(destination)
         if not v["allowed"]: return {"success": False, "operation": "folder.move", "error": v["reason"]}
         if not d["allowed"]: return {"success": False, "operation": "folder.move", "error": d["reason"]}
-        if not confirmed:
-            return {"success": False, "operation": "folder.move", "status": "confirmation_required",
-                    "requires_confirmation": True, "confirmation_message": f"Confirm moving '{v['path']}' to '{d['path']}'."}
         try:
             target = Path(d["path"])
             target.parent.mkdir(parents=True, exist_ok=True)
@@ -104,12 +105,12 @@ class FolderManager:
             return {"success": False, "operation": "folder.move", "error": str(exc)}
 
     def delete(self, path: Any, *, confirmed=False) -> dict:
+        # `confirmed` accepted but ignored; see rename() and Item 3B-3b.
+        # folder.delete is Tier 1 at the executor gate, so reaching this
+        # method at all already required a valid AuthorizationGrant.
         v = self._validate(path, require_existing=True, require_directory=True)
         if not v["allowed"]: return {"success": False, "operation": "folder.delete", "error": v["reason"]}
         p = Path(v["path"])
-        if not confirmed:
-            return {"success": False, "operation": "folder.delete", "status": "confirmation_required",
-                    "requires_confirmation": True, "confirmation_message": f"Confirm permanent deletion of '{p}'."}
         if any(p.iterdir()):
             return {"success": False, "operation": "folder.delete", "status": "not_empty",
                     "error": "Genesis will not delete a non-empty folder without an explicit recursive policy."}
@@ -122,6 +123,7 @@ class FolderManager:
             return {"success": False, "operation": "folder.delete", "error": str(exc)}
 
     def organize(self, path: Any, *, confirmed: bool = False, dry_run: bool = False) -> dict:
+        # `confirmed` accepted but ignored; see rename() and Item 3B-3b.
         v = self._validate(path, require_existing=True, require_directory=True)
         if not v["allowed"]:
             return {"success": False, "operation": "folder.organize", "error": v["reason"], "executed": False, "verified": False}
@@ -186,20 +188,9 @@ class FolderManager:
                 "post_state_matches": True,
             }
 
-        if not confirmed:
-            return {
-                "success": False,
-                "operation": "folder.organize",
-                "path": str(p),
-                "status": "confirmation_required",
-                "requires_confirmation": True,
-                "confirmation_message": f"Confirm organizing {len(planned_moves)} file(s) into categorized folders in '{p.name}'.",
-                "planned_count": len(planned_moves),
-                "planned_moves": planned_moves,
-                "message": f"Genesis identified {len(planned_moves)} file(s) to organize into categorized subfolders. Confirmation is required.",
-                "executed": False,
-                "verified": False,
-            }
+        # `confirmed` accepted but ignored; see rename() and Item 3B-3b.
+        # folder.organize is Tier 1 at the executor gate, so reaching this
+        # method already required a valid AuthorizationGrant.
 
         # Execute organization
         executed_moves = []
