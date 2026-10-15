@@ -625,31 +625,56 @@ class TestPart4Amendment2RiskPreservation:
             assert result_pw.executed == result_sel.executed
             assert result_pw.verified == result_sel.verified
 
-        # --- Gate test 2: With confirmed=True, gate must pass ---
+        # --- Gate test 2: RETARGETED 2026-10-15 (Item 3B-1) ---
+        # Previously this block asserted that ``confirmed=True`` made the
+        # gate PASS. That was the confirmed-only bypass: ``confirmed`` is
+        # caller (i.e. model) controlled JSON and is not authority.
+        # Now a caller-supplied ``confirmed`` must NOT open the gate.
+        #
+        # NOTE on the token half: this test SIMULATES a policy escalation
+        # by patching browser.download into ALWAYS_DESTRUCTIVE, but
+        # `requires_approval_token` is driven by blast_radius, where
+        # browser.download is Tier 2 (reversible). So for this
+        # artificially elevated capability the token branch is never
+        # reached and the simulated elevation can only ever BLOCK.
+        # "A real token authorises the operation" is proven against a
+        # genuinely destructive capability in
+        # test_phase2_destructive_capabilities.py, where file.delete
+        # requires a token.
         with patch(
             "genesis_os.agent_framework_adapter.ALWAYS_DESTRUCTIVE",
             elevated,
         ):
-            # Playwright path with confirmation
+            dl_args = {"url": "https://example.com/file.zip"}
+
+            # A bare confirmed=True must NOT pass the gate any more.
+            for label in ("Playwright", "Selenium"):
+                result_confirmed_only = adapter._risk_tier_pre_check(
+                    "browser.download", {**dl_args, "confirmed": True},
+                )
+                assert result_confirmed_only is not None, (
+                    f"a caller-supplied confirmed=True opened the "
+                    f"destructive gate via the {label} path with no human "
+                    f"approval involved -- SAFETY BYPASS"
+                )
+                assert result_confirmed_only.status == "confirmation_required"
+
+            # Both provider paths behave identically, still. Compare the
+            # gate properties rather than whole ActionResults, which
+            # carry per-call identifiers/timestamps.
             result_pw_confirmed = adapter._risk_tier_pre_check(
-                "browser.download",
-                {"url": "https://example.com/file.zip", "confirmed": True},
+                "browser.download", dict(dl_args),
             )
-            assert result_pw_confirmed is None, (
-                "Gate blocked a confirmed download via Playwright"
-            )
-
-            # Selenium path with same confirmation
             result_sel_confirmed = adapter._risk_tier_pre_check(
-                "browser.download",
-                {"url": "https://example.com/file.zip", "confirmed": True},
+                "browser.download", dict(dl_args),
             )
-            assert result_sel_confirmed is None, (
-                "Gate blocked a confirmed download via Selenium"
+            assert result_pw_confirmed is not None
+            assert result_sel_confirmed is not None
+            assert (
+                result_pw_confirmed.status == result_sel_confirmed.status
+                and result_pw_confirmed.executed == result_sel_confirmed.executed
+                and result_pw_confirmed.verified == result_sel_confirmed.verified
             )
-
-            # Both pass identically
-            assert result_pw_confirmed == result_sel_confirmed
 
         # --- Cleanup: ALWAYS_DESTRUCTIVE is a frozenset (immutable),
         # so patching restores the original on context-manager exit ---

@@ -2550,59 +2550,35 @@ def _build_action_plan(
     def _clean_str(value: Any) -> str:
         return str(value or "").strip()
 
-    # The executor's confirmation gate (action_executor.py
-    # line 482) reads ``plan.parameters["confirmed"]``.  In a
-    # real deployment the runtime confirmation flow injects
-    # ``confirmed=True`` into the tool-call arguments AFTER the
-    # user explicitly approves the action; the adapter itself
-    # never injects this token (the
-    # ``TestExpansionDoesNotBypassSafety`` test pins that
-    # invariant).  This helper just forwards the token through
-    # when the caller has supplied it.
-
-    # Helper: forward the runtime ``confirmed`` / ``approval_token``
-    # tokens to the executor when (and only when) the caller supplied
-    # them.  The adapter itself NEVER injects ``confirmed=True``;
-    # ``TestExpansionDoesNotBypassSafety`` pins that
-    # invariant.  When the model calls a tool without the
-    # flag, the executor's confirmation gate returns the
-    # standard ``confirmation_required`` ActionResult - the
-    # adapter doesn't try to second-guess that.
+    # Approval authority (2026-10-15): `confirmed` is NO LONGER forwarded
+    # or promoted here.
     #
-    # For high/critical capabilities (see
-    # ``APPROVAL_REQUIRED_CAPABILITIES``) a valid
-    # ``approval_token`` (``HUMAN-APPROVE:<capability_id>:<nonce>``)
-    # also promotes ``confirmed=True`` into the plan so the
-    # executor's own gate passes AFTER the adapter's explicit
-    # human-approval gate has accepted the token.  No token is
-    # ever synthesized here — only forwarded.
+    # Previously this helper copied a CALLER-SUPPLIED
+    # `arguments["confirmed"]` into the plan, and promoted
+    # `params["confirmed"] = True` whenever a token looked syntactically
+    # valid. Both made `plan.parameters["confirmed"]` a second,
+    # model-reachable authority channel: `arguments` is tool-call JSON,
+    # so a model could set `confirmed: true` and be believed.
+    #
+    # The ONLY authority now is a validated `approval_token` and the
+    # AuthorizationGrant minted from its consumption. The token is still
+    # forwarded to the plan (the executor reads it), and the grant is
+    # still minted, so the authorized path is unchanged.
     def _runtime_tokens(params: Dict[str, Any]) -> Dict[str, Any]:
-        if "confirmed" in arguments:
-            params["confirmed"] = bool(arguments["confirmed"])
         if "approval_token" in arguments:
             token_val = arguments["approval_token"]
             if isinstance(token_val, str) and token_val.strip():
                 params["approval_token"] = token_val.strip()
-                # Promote to confirmed so the downstream executor
-                # gate (which reads plan.parameters["confirmed"])
-                # also passes.  This only happens when the caller
-                # supplied a syntactically valid token for THIS
-                # capability; invalid/mismatched tokens are left
-                # for the pre-check to bounce (do NOT execute).
+                # Mint the trusted AuthorizationGrant from this call's
+                # own consumed approval. Minting consumes a real,
+                # argument-hash-bound approval, so it cannot grant
+                # authority the token route has not already granted —
+                # and if it fails, no grant is attached and the executor
+                # blocks the Tier 1 plan. Fails closed.
                 try:
                     if is_valid_approval_token(
                         token_val.strip(), capability_id
                     ):
-                        params["confirmed"] = True
-                        # ALSO mint the trusted AuthorizationGrant.
-                        # `confirmed` is the legacy channel, scheduled
-                        # for removal; the grant is what the executor
-                        # now honours. Minting consumes a real,
-                        # argument-hash-bound approval, so it cannot
-                        # grant authority the token route has not
-                        # already granted — and if it fails, no grant is
-                        # attached and the executor blocks the Tier 1
-                        # plan. Fails closed.
                         try:
                             from .authorization_grant import (
                                 grant_from_consumed_record,
@@ -4689,15 +4665,18 @@ class AgentFrameworkAdapter:
                     return None
                 return None
 
-        # Honour an existing ``confirmed`` token for the
-        # non-approval-gated destructive tier: the caller
-        # (test harness, runtime confirmation flow, or a
-        # second call from the model after the human said yes)
-        # has explicitly approved the action.  The adapter
-        # passes the token through to the executor's
-        # confirmation gate; it does NOT inject it.
-        if bool(arguments.get("confirmed", False)):
-            return None
+        # NOTE (2026-10-15): the previous early return here was
+        #
+        #     if bool(arguments.get("confirmed", False)):
+        #         return None
+        #
+        # which let a CALLER-SUPPLIED `confirmed` skip the
+        # ALWAYS_DESTRUCTIVE and CONDITIONALLY_DESTRUCTIVE checks below.
+        # `arguments` is model-controlled tool-call JSON, so a model
+        # could set `confirmed: true` and unlock its own destructive
+        # operation with no human involved. Approval authority now comes
+        # ONLY from a validated approval token (see `requires_approval_token`
+        # above) and the AuthorizationGrant it mints.
 
         if capability_id in ALWAYS_DESTRUCTIVE:
             return self._build_confirmation_required_result(

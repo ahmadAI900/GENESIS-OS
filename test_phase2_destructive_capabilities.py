@@ -603,18 +603,26 @@ class TestAdapterNeverInjectsConfirmedToken:
 
     def test_confirmed_token_passes_through_when_caller_supplies_it(self):
         """
-        When the caller (test harness, runtime confirmation
-        flow, or a second call from the model after the
-        human said yes) supplies ``confirmed=True``, the
-        adapter forwards it to the executor.  The adapter
-        itself never injects it - this test pins that the
-        token is forwarded without modification.
+        RETARGETED 2026-10-15 (Item 3B-1).
+
+        This test previously asserted that a caller-supplied
+        ``confirmed=True`` was forwarded into ``plan.parameters``. That
+        was the defect: ``arguments`` is model-controlled tool-call JSON,
+        so ``confirmed`` was a second, model-reachable authority channel.
+        A model could set ``confirmed: true`` and be believed.
+
+        Approval authority now comes ONLY from a validated
+        ``approval_token`` and the AuthorizationGrant it mints, so a
+        caller-supplied ``confirmed`` must NOT reach the plan.
         """
         plan = _build_action_plan(
             "file.delete",
             {"path": "C:/x.txt", "confirmed": True},
         )
-        assert plan.parameters.get("confirmed") is True
+        assert "confirmed" not in plan.parameters, (
+            "a caller-supplied confirmed leaked into plan.parameters; "
+            f"parameters={plan.parameters}"
+        )
 
     def test_browser_click_plan_has_no_confirmed_when_caller_omits_it(self):
         """
@@ -842,3 +850,73 @@ def test_two_authorised_requests_each_use_their_own_token(
     assert first.executed is True, first
     assert second.executed is True, second
     assert len(destructive_osm.calls) == 2
+
+
+# ----------------------------------------------------------------------
+# A caller-supplied `confirmed` is NOT approval (Item 3B-1).
+#
+# `arguments` is model-controlled tool-call JSON. Before this fix a model
+# could set `confirmed: true` and unlock a destructive operation with no
+# human involved: `_risk_tier_pre_check` returned early (allow) on
+# `arguments.get("confirmed")`, and `_runtime_tokens` copied the same
+# value into `plan.parameters`.
+# ----------------------------------------------------------------------
+def test_a_model_tool_call_with_confirmed_only_is_refused(
+    adapter, destructive_osm
+):
+    """confirmed=True and no token must NOT authorise a destructive cap."""
+    from unittest.mock import patch
+
+    from genesis_os.agent_framework_adapter import AgentFrameworkAdapter
+
+    # Activate the precondition so the conditionally destructive branch
+    # is the one under test.
+    with patch.object(
+        AgentFrameworkAdapter,
+        "_check_unsaved_changes_precondition",
+        return_value=(True, "document has unsaved changes"),
+    ):
+        result = adapter.execute_capability(
+            "folder.rename",
+            {
+                "source": "C:/docs",
+                "new_name": "renamed",
+                "confirmed": True,
+            },
+        )
+
+    assert result.status == "confirmation_required", (
+        "a caller-supplied confirmed=True executed a destructive "
+        f"capability with no human approval: {result}"
+    )
+    assert result.executed is False, result
+    assert destructive_osm.calls == [], (
+        f"the unapproved rename dispatched: {destructive_osm.calls}"
+    )
+
+
+def test_a_real_approval_token_still_executes_exactly_once(
+    adapter, destructive_osm
+):
+    """The authorised path is untouched: own token -> one dispatch."""
+    token = ApprovalStore.issue_token(
+        "file.delete", {"path": "C:/token_authorised.txt"}
+    )
+    _approve_issued_token(token)
+
+    result = adapter.execute_capability(
+        "file.delete",
+        {"path": "C:/token_authorised.txt", "approval_token": token},
+    )
+    assert result.executed is True, result
+    assert len(destructive_osm.calls) == 1, (
+        f"expected exactly one dispatch, got {destructive_osm.calls}"
+    )
+
+
+def test_confirmed_is_never_copied_into_plan_parameters():
+    """Structural: _build_action_plan ignores a supplied confirmed."""
+    plan = _build_action_plan(
+        "file.delete", {"path": "C:/x.txt", "confirmed": True}
+    )
+    assert "confirmed" not in plan.parameters, plan.parameters
