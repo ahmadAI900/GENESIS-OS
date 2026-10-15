@@ -188,3 +188,62 @@ def test_denied_operations_are_not_registered_capabilities():
                   if CapabilityRegistry.exists(op)]
     # system.shutdown / system.restart ARE registered (Tier 1, unavailable).
     assert set(registered) <= {"system.shutdown", "system.restart"}
+
+# ---------------------------------------------------------------------------
+# A grant must be BOUND to the approval that was actually consumed.
+#
+# `grant_from_consumed_record` exists because the token is single-use:
+# the adapter consumes it, then mints the grant from that same
+# consumption. Before 2026-10-15 it re-hashed the CALLER's operation and
+# arguments and read only `approval_id` from the record, so one human
+# approval for `file.delete` of one path minted working grants for a
+# different path and for a different capability entirely.
+# ---------------------------------------------------------------------------
+def _consumed_record(operation, arguments):
+    token = ApprovalStore.issue_token(operation, dict(arguments))
+    ApprovalStore.get_default().approve(token.rsplit(":", 1)[1])
+    return ApprovalStore.get_default().consume_token(
+        token, arguments=dict(arguments)
+    )
+
+
+def test_a_consumed_record_mints_the_grant_it_was_approved_for():
+    """The legitimate case still works."""
+    from genesis_os.authorization_grant import grant_from_consumed_record
+
+    record = _consumed_record("file.delete", {"path": "C:/approved.txt"})
+    grant = grant_from_consumed_record(
+        operation="file.delete",
+        arguments={"path": "C:/approved.txt"},
+        record=record,
+    )
+    assert grant.operation == "file.delete"
+    assert grant.approval_id == record["approval_id"]
+
+
+def test_consumed_record_cannot_be_repointed_at_a_different_file():
+    from genesis_os.authorization_grant import (
+        AuthorizationError, grant_from_consumed_record,
+    )
+
+    record = _consumed_record("file.delete", {"path": "C:/approved.txt"})
+    with pytest.raises(AuthorizationError):
+        grant_from_consumed_record(
+            operation="file.delete",
+            arguments={"path": "C:/somebody_elses_file.txt"},
+            record=record,
+        )
+
+
+def test_consumed_record_cannot_be_repointed_at_a_different_operation():
+    from genesis_os.authorization_grant import (
+        AuthorizationError, grant_from_consumed_record,
+    )
+
+    record = _consumed_record("file.delete", {"path": "C:/approved.txt"})
+    with pytest.raises(AuthorizationError):
+        grant_from_consumed_record(
+            operation="application.close",
+            arguments={"application": "chrome"},
+            record=record,
+        )

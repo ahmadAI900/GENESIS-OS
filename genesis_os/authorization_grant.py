@@ -141,6 +141,13 @@ def grant_from_consumed_record(
 
     ``record`` must be the dict ApprovalStore.consume_token returned;
     anything else is refused.
+
+    The record is BOUND to the capability and arguments the human
+    actually approved, so the grant is minted only from the record's own
+    ``capability_id`` and ``arguments_hash``. Re-hashing caller-supplied
+    arguments without comparing them to the record would let a single
+    approval for ``file.delete`` of one path be re-pointed at another
+    path, or at a different operation entirely.
     """
     if not isinstance(record, dict):
         raise AuthorizationError(
@@ -151,12 +158,29 @@ def grant_from_consumed_record(
         raise AuthorizationError(
             f"approval record is not consumed (status={status!r})"
         )
+
+    approved_capability = record.get("capability_id")
+    if str(approved_capability) != str(operation):
+        raise AuthorizationError(
+            f"the consumed approval is for {approved_capability!r}, not "
+            f"{operation!r}; a grant may not be re-pointed at a different "
+            f"capability"
+        )
+
     args = dict(arguments or {})
     from .approval_store import _approval_arguments_hash
 
+    approved_hash = record.get("arguments_hash")
+    presented_hash = _approval_arguments_hash(str(operation), args)
+    if approved_hash != presented_hash:
+        raise AuthorizationError(
+            "the consumed approval is bound to different arguments; a "
+            "grant may not be re-pointed at a different target"
+        )
+
     return AuthorizationGrant(
         operation=str(operation),
-        arguments_hash=_approval_arguments_hash(str(operation), args),
+        arguments_hash=presented_hash,
         approval_id=str(record.get("approval_id", "")),
         _mint=_MINT_TOKEN,
     )
