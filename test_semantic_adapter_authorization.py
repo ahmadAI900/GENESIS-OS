@@ -114,9 +114,17 @@ def test_a_grant_for_another_target_does_not_authorise(adapter, osm):
     )
 
 
-def test_a_benign_read_only_call_is_unaffected(adapter, osm):
-    """A non-destructive function must still work with no grant."""
-    result = adapter.invoke("file_read", {"path": "C:/notes.txt"})
+def test_a_benign_read_only_call_is_unaffected(adapter, osm, workspace_root):
+    """A non-destructive function must still work with no grant.
+
+    Uses the `workspace_root` fixture rather than tmp_path: the workspace
+    boundary escalates any access OUTSIDE the configured root, so a
+    tmp_path target made this fail whenever an earlier test had armed the
+    boundary. Inside the root it is Tier 2 in every environment.
+    """
+    target = workspace_root / "notes.txt"
+    target.write_text("hello", encoding="utf-8")
+    result = adapter.invoke("file_read", {"path": str(target)})
     assert [c for c in osm.calls if c[0] == "read_file"], (
         f"the read path was gated: {result}"
     )

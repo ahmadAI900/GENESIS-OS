@@ -542,8 +542,8 @@ _OVERWRITE_DESTINATION_KEYS: Dict[str, Tuple[str, ...]] = {
     "document.create_docx": ("path", "output_path", "destination"),
 }
 
-# Operations whose argument key names the SOURCE, so a ``new_name``
-# destination is resolved relative to the source's parent.
+# Operations whose destination arrives as a BARE ``new_name``, which must
+# be resolved against the source's parent rather than the process CWD.
 _RENAME_OPERATIONS = frozenset({"file.rename", "folder.rename"})
 
 
@@ -551,19 +551,39 @@ def _resolve_overwrite_destination(
     operation: Optional[str],
     arguments: Mapping[str, Any],
 ) -> Optional[str]:
-    """The path this call would write onto, or None."""
+    """The path this call would write onto, or None.
+
+    The operation's PRIMARY destination key is tried first, then the
+    generic destination keys (``destination``/``output``/``output_path``/
+    ``save_path``/``target_path``). The fallback matters: callers may use
+    any of them for any operation, and
+    ``test_alternate_destination_argument_names_are_honoured`` pins that
+    the alternate names are inspected.
+    """
     keys = _OVERWRITE_DESTINATION_KEYS.get(operation or "")
-    if not keys:
-        # Unknown operation: fall back to the generic destination keys
-        # so an unrecognised mutator is not silently left ungated.
-        keys = _DESTINATION_ARG_KEYS
+    # An ABSOLUTE path among the generic destination keys is an explicit
+    # full destination and always wins over a bare `new_name`, which only
+    # means anything relative to the source.
+    generic_absolute = None
+    for key in _DESTINATION_ARG_KEYS:
+        candidate = arguments.get(key)
+        if (isinstance(candidate, (str, os.PathLike)) and str(candidate).strip()
+                and os.path.isabs(os.fspath(candidate))):
+            generic_absolute = os.fspath(candidate)
+            break
 
     value = None
-    for key in keys:
-        candidate = arguments.get(key)
-        if isinstance(candidate, (str, os.PathLike)) and str(candidate).strip():
-            value = os.fspath(candidate)
-            break
+    if generic_absolute is not None:
+        value = generic_absolute
+    else:
+        candidate_keys = (tuple(keys) + tuple(_DESTINATION_ARG_KEYS)
+                          if keys else tuple(_DESTINATION_ARG_KEYS))
+        for key in candidate_keys:
+            candidate = arguments.get(key)
+            if (isinstance(candidate, (str, os.PathLike))
+                    and str(candidate).strip()):
+                value = os.fspath(candidate)
+                break
     if value is None:
         return None
 
@@ -573,19 +593,16 @@ def _resolve_overwrite_destination(
     if operation == "file.create" and not bool(arguments.get("overwrite")):
         return None
 
-    # A rename carries a bare new_name; resolve it beside the source so
-    # `os.path.exists` sees the real target rather than a relative name
-    # resolved against the process CWD. Uses os.path (not pathlib) so
-    # this module keeps its existing small dependency surface; an
-    # exception here would be swallowed by the resolver's
-    # `except Exception` and silently downgrade the escalation.
-    if operation in _RENAME_OPERATIONS:
+    # A rename carrying a BARE new_name must be resolved beside the
+    # source. A rename that supplied an absolute destination key is
+    # already a full path and is used as-is.
+    if operation in _RENAME_OPERATIONS and not os.path.isabs(value):
         source = arguments.get("source") or arguments.get("path")
         if isinstance(source, (str, os.PathLike)) and str(source).strip():
             try:
                 parent = os.path.dirname(os.path.abspath(os.fspath(source)))
                 if not parent:
-                    return None
+                    return os.path.join(".", "__unresolvable__")
                 return os.path.join(parent, value)
             except (OSError, ValueError, TypeError):
                 # Cannot resolve the destination. Fail closed.

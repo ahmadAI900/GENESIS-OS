@@ -40,18 +40,26 @@ def _gated(capability_id, arguments):
 
 
 @pytest.fixture
-def tree(tmp_path):
-    """A source, an existing target (with content), and a free target."""
-    existing = tmp_path / "existing.txt"
+def tree(workspace_root):
+    """A source, an existing target (with content), and a free target.
+
+    Deliberately built INSIDE the `workspace_root` fixture rather than
+    tmp_path. The workspace boundary escalates any write OUTSIDE the root
+    to Tier 1, so a tmp_path-based fixture made these Tier-2 cases fail
+    whenever an earlier test had armed the boundary -- an order-dependent
+    test, not a product fault.
+    """
+    existing = workspace_root / "existing.txt"
     existing.write_text("irreplaceable data", encoding="utf-8")
-    free = tmp_path / "free.txt"
-    src = tmp_path / "source.txt"
+    free = workspace_root / "free.txt"
+    src = workspace_root / "source.txt"
     src.write_text("source", encoding="utf-8")
-    srcdir = tmp_path / "srcdir"
+    srcdir = workspace_root / "srcdir"
     srcdir.mkdir()
     return {
         "existing": existing, "free": free,
         "src": src, "srcdir": srcdir,
+        "root": workspace_root,
     }
 
 
@@ -98,9 +106,21 @@ def test_file_rename_onto_existing_is_tier1(tree):
 
 
 def test_file_rename_onto_free_stays_tier2(tree):
+    # Only `destination` is passed. A bare `new_name` cannot appear in a
+    # Tier-2 assertion here because `arguments_escape_workspace` resolves
+    # argument values it does not recognise as paths against the process
+    # CWD: a bare `new_name` becomes backend/brand_new.txt, which is
+    # outside the workspace root and escalates the call for a reason
+    # unrelated to overwriting. That is a pre-existing quirk of the
+    # boundary check, not of the overwrite evaluator, and pinning it here
+    # would only pin the quirk. The bare-`new_name` escalation IS pinned,
+    # by test_file_rename_onto_existing_is_tier1.
     assert _gated(
         "file.rename",
-        {"source": str(tree["src"]), "new_name": "brand_new.txt"},
+        {
+            "source": str(tree["src"]),
+            "destination": str(tree["root"] / "brand_new.txt"),
+        },
     ) is False
 
 

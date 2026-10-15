@@ -906,39 +906,84 @@ def test_resolve_pdf_in_downloads_only(nl_fs):
 # =========================================================
 
 
-def test_resolved_delete_requires_confirmation(tmp_path):
-    """A delete operation via SafeFileManager requires confirmation."""
-    sfm = SafeFileManager()
-    target = tmp_path / "delete_me.txt"
+def test_resolved_delete_requires_confirmation(workspace_root):
+    """A delete requires an AuthorizationGrant, enforced by the AUTHORITY.
+
+    RETARGETED 2026-10-15 (Item 3B-3b).
+
+    This test used to call ``SafeFileManager.delete`` directly and assert
+    the manager's own ``if not confirmed`` gate. That gate was removed:
+    the OS managers no longer branch on ``confirmed``, because the single
+    authority is the executor's blast-radius gate plus a valid grant. So
+    the property is now asserted where it actually lives -- on
+    ``_operation_requires_authorization``, the function both the executor
+    and the adapter consult.
+
+    file.delete is Tier 1 (irreversible), so it requires a grant.
+    """
+    from genesis_os.action_executor import _operation_requires_authorization
+
+    target = workspace_root / "delete_me.txt"
     target.write_text("bye", encoding="utf-8")
-    result = sfm.delete(str(target))
-    # Should return confirmation_required, NOT execute
-    assert result.get("requires_confirmation") is True or result.get("confirmation_required") is True
-    assert result.get("executed") is False
-    assert target.exists()  # file must still exist
+    assert _operation_requires_authorization(
+        "file.delete", "file.delete", {"path": str(target)}
+    ) is True, (
+        "file.delete must require a grant at the authority; it is "
+        "irreversible and there is no way back"
+    )
+    assert target.exists()
 
 
-def test_resolved_move_requires_confirmation(tmp_path):
-    """A move operation via SafeFileManager requires confirmation."""
-    sfm = SafeFileManager()
-    src = tmp_path / "movable.txt"
+def test_resolved_move_requires_confirmation(workspace_root):
+    """A move that OVERWRITES requires a grant at the authority.
+
+    RETARGETED 2026-10-15 (Item 3B-3b). The manager gate this used to
+    assert is gone; authority is the shared blast-radius gate. A move to a
+    FREE destination is Tier 2 and deliberately needs nothing -- an
+    overwrite is Tier 1 and does. That asymmetry is the real property, so
+    both halves are asserted.
+    """
+    from genesis_os.action_executor import _operation_requires_authorization
+
+    src = workspace_root / "movable.txt"
     src.write_text("move me", encoding="utf-8")
-    dst = tmp_path / "moved.txt"
-    result = sfm.move(str(src), str(dst))
-    assert result.get("requires_confirmation") is True or result.get("confirmation_required") is True
-    assert result.get("executed") is False
-    assert src.exists()  # source must still exist
+    free = workspace_root / "moved_free.txt"
+
+    assert _operation_requires_authorization(
+        "file.move", "file.move",
+        {"source": str(src), "destination": str(free)},
+    ) is False, "a move to a FREE destination is reversible; Tier 2"
+
+    occupied = workspace_root / "occupied.txt"
+    occupied.write_text("will be destroyed", encoding="utf-8")
+    assert _operation_requires_authorization(
+        "file.move", "file.move",
+        {"source": str(src), "destination": str(occupied)},
+    ) is True, "an overwriting move destroys existing data; Tier 1"
 
 
-def test_resolved_rename_requires_confirmation(tmp_path):
-    """A rename operation via SafeFileManager requires confirmation."""
-    sfm = SafeFileManager()
-    src = tmp_path / "old_name.txt"
+def test_resolved_rename_requires_confirmation(workspace_root):
+    """A rename that OVERWRITES requires a grant; a free rename does not.
+
+    RETARGETED 2026-10-15 (Item 3B-3b), for the same reason as the move
+    test: the manager gate is gone and the authority is the shared gate.
+    """
+    from genesis_os.action_executor import _operation_requires_authorization
+
+    src = workspace_root / "old_name.txt"
     src.write_text("rename", encoding="utf-8")
-    result = sfm.rename(str(src), "new_name.txt")
-    assert result.get("requires_confirmation") is True or result.get("confirmation_required") is True
-    assert result.get("executed") is False
-    assert src.exists()
+
+    assert _operation_requires_authorization(
+        "file.rename", "file.rename",
+        {"source": str(src), "destination": str(workspace_root / "brand_new.txt")},
+    ) is False, "a rename to a free name is reversible; Tier 2"
+
+    existing = workspace_root / "existing_target.txt"
+    existing.write_text("will be destroyed", encoding="utf-8")
+    assert _operation_requires_authorization(
+        "file.rename", "file.rename",
+        {"source": str(src), "destination": str(existing)},
+    ) is True, "an overwriting rename destroys existing data; Tier 1"
 
 
 def test_resolved_delete_executes_after_confirmation(tmp_path):
