@@ -202,12 +202,19 @@ def test_file_move_to_a_free_destination_is_not_gated(workspace_root):
     os_manager.move_file.assert_called_once()
 
 
-def test_file_move_outside_the_workspace_requires_a_grant(tmp_path):
+def test_file_move_outside_the_workspace_requires_a_grant(workspace_root):
     """Bucket (b) counterpart: the same move, outside the root.
 
     Without this pair the retargeted test above would pass vacuously --
     a free destination inside the workspace runs whether or not the
     boundary works at all.
+
+    Item 6C: this now takes the ``workspace_root`` fixture. It relies on
+    the workspace boundary being ARMED for the escalation to fire, and
+    it previously depended on ambient ``GENESIS_WORKSPACE_ROOT`` -- so it
+    failed on any machine (or CI run) where that was unset, including at
+    the baseline commit. The fixture sets the root explicitly for this
+    test, so the outcome no longer depends on the environment.
     """
     os_manager = Mock()
     os_manager.move_file.return_value = {
@@ -216,7 +223,10 @@ def test_file_move_outside_the_workspace_requires_a_grant(tmp_path):
         "destination_exists": True, "source_removed": True,
         "message": "moved",
     }
-    outside = tmp_path / "brand-new-name.docx"
+    # OUTSIDE the workspace root: this is the bucket-(b) case. tmp_path
+    # would also be outside it, but naming the workspace fixture keeps
+    # the pairing with the test above explicit.
+    outside = (workspace_root.parent / "brand-new-name.docx")
     # The target names the SAME path as the destination on purpose. With a
     # relative target the plan carries two paths, the grant covers only
     # `destination`, and the escalation actually comes from the uncovered
@@ -230,7 +240,11 @@ def test_file_move_outside_the_workspace_requires_a_grant(tmp_path):
         confidence=0.99,
     )
     result = ActionExecutor(os_manager).execute(plan)
-    assert result.status == "confirmation_required"
+    assert result.status == "confirmation_required", (
+        "a move outside the workspace root must be gated; got "
+        f"{result.status!r}. If the boundary is not armed this test is "
+        "not exercising anything."
+    )
     assert result.executed is False
     os_manager.move_file.assert_not_called()
 
@@ -463,7 +477,7 @@ def test_downloads_resolves_to_real_windows_folder():
     assert resolution.resolved.value == expected
 
 
-def test_open_my_downloads_folder_end_to_end(tmp_path):
+def test_open_my_downloads_folder_end_to_end(workspace_root):
     """Bucket (c): the target is legitimately OUTSIDE the workspace.
 
     Rewritten rather than retargeted. "open my downloads folder" is a
@@ -481,6 +495,12 @@ def test_open_my_downloads_folder_end_to_end(tmp_path):
     an ordinary directory from a read of something sensitive. The
     two-axis refinement that would let ordinary reads through is a named
     follow-up, not an oversight.
+
+    Item 6C: this now takes the ``workspace_root`` fixture. The gating it
+    asserts comes from the workspace boundary, which only fires when the
+    root is ARMED; it previously depended on ambient
+    ``GENESIS_WORKSPACE_ROOT`` and so failed wherever that was unset,
+    including at the baseline commit. The fixture arms it for this test.
     """
     engine = _build_decision_engine()
     decision = engine.decide("open my downloads folder")
