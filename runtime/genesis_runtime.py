@@ -594,31 +594,31 @@ If an agent reports failure or insufficient evidence,
 be transparent about it.
 """
 
-        try:
+        # Item 8B: synthesis now calls the real AI engine method,
+        # AIEngine.generate_response(prompt) -> str.
+        #
+        # It did not before. This method probed self.ai_engine for
+        # .generate(), then for .chat(); AIEngine defines NEITHER, so
+        # both hasattr() checks were false and control fell straight
+        # through to `return agent_result`. The raw agent payload was
+        # handed to the user where a natural-language answer belonged,
+        # with no synthesis and no error to show for it.
+        generate_response = getattr(
+            self.ai_engine,
+            "generate_response",
+            None
+        )
 
-            if hasattr(
-                self.ai_engine,
-                "generate"
-            ):
+        if callable(generate_response):
 
-                return self.ai_engine.generate(
-                    prompt
+            try:
+                return generate_response(prompt)
+
+            except Exception as error:
+
+                print(
+                    f"[Genesis] Synthesis failed: {error}"
                 )
-
-            if hasattr(
-                self.ai_engine,
-                "chat"
-            ):
-
-                return self.ai_engine.chat(
-                    prompt
-                )
-
-        except Exception as error:
-
-            print(
-                f"[Genesis] Synthesis failed: {error}"
-            )
 
         return agent_result
 
