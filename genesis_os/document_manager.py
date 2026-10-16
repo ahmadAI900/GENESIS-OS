@@ -8,7 +8,7 @@ from .file_intelligence.path_security import PathSecurity
 class DocumentManager:
     VERSION = "3.8.0"
 
-    def create_docx(self, path: Any, title: str, sections: list[dict] | None = None, *, confirmed=False) -> dict:
+    def create_docx(self, path: Any, title: str, sections: list[dict] | None = None) -> dict:
         # `confirmed` is ACCEPTED BUT IGNORED (Item 3B-3b); it is not an
         # authority. Replacing an existing document is Tier 1 at the
         # executor's blast-radius gate (Item 3B-3a) and requires a valid

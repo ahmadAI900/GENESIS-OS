@@ -221,7 +221,6 @@ def test_safe_file_manager_rejects_equal_size_corrupted_copy(tmp_path):
     result = SafeFileManager(manager=manager).copy(
         source,
         destination,
-        confirmed=True,
     )
 
     assert result["verified"] is False
@@ -242,7 +241,6 @@ def test_safe_file_manager_rejects_copy_without_source_removal_for_move(tmp_path
     result = SafeFileManager(manager=manager).move(
         source,
         destination,
-        confirmed=True,
     )
 
     assert result["verified"] is False
@@ -264,7 +262,6 @@ def test_safe_file_manager_rejects_provider_rename_without_move(tmp_path):
     result = SafeFileManager(manager=manager).rename(
         source,
         "renamed.txt",
-        confirmed=True,
     )
 
     assert result["verified"] is False
@@ -284,7 +281,6 @@ def test_safe_file_manager_rejects_provider_delete_without_removal(tmp_path):
 
     result = SafeFileManager(manager=manager).delete(
         target,
-        confirmed=True,
     )
 
     assert result["verified"] is False
@@ -298,7 +294,6 @@ def test_folder_organize_dry_run_never_mutates(tmp_path):
 
     result = FolderManager().organize(
         tmp_path,
-        confirmed=True,
         dry_run=True,
     )
 
@@ -334,7 +329,7 @@ def test_osm_copy_file_positive(tmp_path):
     src = tmp_path / "src.txt"
     src.write_text("copy me", encoding="utf-8")
     dst = tmp_path / "dst.txt"
-    result = osm.copy_file(str(src), str(dst), confirmed=True)
+    result = osm.copy_file(str(src), str(dst))
     assert result["success"] is True
     assert result["verified"] is True
 
@@ -352,7 +347,7 @@ def test_osm_copy_file_negative_provider_lies(tmp_path, monkeypatch):
         return {"success": True, "operation": "file.copy", "source": str(source), "destination": str(dst), "executed": True}
 
     monkeypatch.setattr(SafeFileManager, "copy", _lying_copy)
-    result = osm.copy_file(str(src), str(dst), confirmed=True)
+    result = osm.copy_file(str(src), str(dst))
     assert result["success"] is True
     assert result["verified"] is False
     assert "verification_reason" in result
@@ -363,7 +358,7 @@ def test_osm_move_file_positive(tmp_path):
     src = tmp_path / "movable.txt"
     src.write_text("move me", encoding="utf-8")
     dst = tmp_path / "moved.txt"
-    result = osm.move_file(str(src), str(dst), confirmed=True)
+    result = osm.move_file(str(src), str(dst))
     assert result["success"] is True
     assert result["verified"] is True
 
@@ -378,7 +373,7 @@ def test_osm_move_file_negative_provider_lies(tmp_path, monkeypatch):
         return {"success": True, "operation": "file.move", "source": str(src), "destination": str(dst), "executed": True}
 
     monkeypatch.setattr(SafeFileManager, "move", _lying_move)
-    result = osm.move_file(str(src), str(dst), confirmed=True)
+    result = osm.move_file(str(src), str(dst))
     assert result["success"] is True
     assert result["verified"] is False
 
@@ -387,7 +382,7 @@ def test_osm_rename_file_positive(tmp_path):
     osm = _make_osm()
     src = tmp_path / "old.txt"
     src.write_text("rename", encoding="utf-8")
-    result = osm.rename_file(str(src), "new.txt", confirmed=True)
+    result = osm.rename_file(str(src), "new.txt")
     assert result["success"] is True
     assert result["verified"] is True
 
@@ -401,7 +396,7 @@ def test_osm_rename_file_negative_provider_lies(tmp_path, monkeypatch):
         return {"success": True, "operation": "file.rename", "old_path": str(src), "new_path": str(tmp_path / "new.txt")}
 
     monkeypatch.setattr(SafeFileManager, "rename", _lying_rename)
-    result = osm.rename_file(str(src), "new.txt", confirmed=True)
+    result = osm.rename_file(str(src), "new.txt")
     assert result["success"] is True
     assert result["verified"] is False
 
@@ -410,7 +405,7 @@ def test_osm_delete_file_positive(tmp_path):
     osm = _make_osm()
     target = tmp_path / "delete_me.txt"
     target.write_text("bye", encoding="utf-8")
-    result = osm.delete_file(str(target), confirmed=True)
+    result = osm.delete_file(str(target))
     assert result["success"] is True
     assert result["verified"] is True
 
@@ -424,7 +419,7 @@ def test_osm_delete_file_negative_provider_lies(tmp_path, monkeypatch):
         return {"success": True, "operation": "file.delete", "path": str(path)}
 
     monkeypatch.setattr(SafeFileManager, "delete", _lying_delete)
-    result = osm.delete_file(str(target), confirmed=True)
+    result = osm.delete_file(str(target))
     assert result["success"] is True
     assert result["verified"] is False
 
@@ -991,7 +986,7 @@ def test_resolved_delete_executes_after_confirmation(tmp_path):
     sfm = SafeFileManager()
     target = tmp_path / "confirmed_delete.txt"
     target.write_text("bye", encoding="utf-8")
-    result = sfm.delete(str(target), confirmed=True)
+    result = sfm.delete(str(target))
     assert result.get("executed") is True
     assert not target.exists()
 
@@ -1002,7 +997,7 @@ def test_resolved_copy_does_not_require_confirmation(tmp_path):
     src = tmp_path / "src.txt"
     src.write_text("data", encoding="utf-8")
     dst = tmp_path / "dst.txt"
-    result = sfm.copy(str(src), str(dst), confirmed=True)
+    result = sfm.copy(str(src), str(dst))
     assert result.get("success") is True
     assert dst.exists()
 
@@ -1011,7 +1006,7 @@ def test_resolved_create_folder_no_confirmation(tmp_path):
     """Folder creation does NOT require confirmation."""
     sfm = SafeFileManager()
     folder = tmp_path / "new_folder"
-    result = sfm.create(str(folder / "file.txt"), content="hello", confirmed=True)
+    result = sfm.create(str(folder / "file.txt"), content="hello")
     # create_file creates the parent dir and file
     assert result.get("success") is True
 
@@ -1026,7 +1021,6 @@ def test_safe_file_create_rejects_content_mismatch(tmp_path, monkeypatch):
     result = SafeFileManager().create(
         str(tmp_path / "mismatch.txt"),
         content="expected",
-        confirmed=True,
     )
 
     assert result["success"] is True

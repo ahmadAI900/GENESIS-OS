@@ -22,7 +22,7 @@ class NetworkManager:
         except Exception as exc:
             return {"success": False, "operation": "network.list_wifi", "error": str(exc)}
 
-    def connect_wifi(self, ssid: str, password: str, *, confirmed=False) -> dict:
+    def connect_wifi(self, ssid: str, password: str) -> dict:
         # `confirmed` is ACCEPTED BUT IGNORED (Item 3B-3b); it is not an
         # authority. Connecting to a network is Tier 1 at the executor's
         # blast-radius gate and requires a valid AuthorizationGrant before

@@ -207,10 +207,13 @@ class SafeFileManager:
             return self._failure("file.hash", validation)
         return self.manager.hash(validation["path"], algorithm=algorithm)
 
-    def create(self, path: Any, content: str = "", *, overwrite=False, confirmed=False) -> dict:
-        # `confirmed` is ACCEPTED BUT IGNORED (Item 3B-3b). It is not an
-        # authority. Overwriting an existing file is Tier 1 at the
-        # executor's blast-radius gate (Item 3B-3a) and requires a valid
+    def create(self, path: Any, content: str = "", *, overwrite=False) -> dict:
+        # Item 7C: the vestigial `confirmed=False` parameter is GONE. It
+        # was never an authority (Item 3B-3b removed that channel), so
+        # keeping it only let `confirmed=True` travel silently through
+        # OSManager's **kwargs and suggest a bypass that does not exist.
+        # Overwriting an existing file is Tier 1 at the executor's
+        # blast-radius gate (Item 3B-3a) and requires a valid
         # AuthorizationGrant BEFORE this method is reached; a create onto
         # a free path is Tier 2. The `overwrite` flag still decides
         # whether an existing target is clobbered, but it no longer has to
@@ -236,14 +239,15 @@ class SafeFileManager:
             return {"success": False, "operation": "file.create", "path": str(target),
                     "error": str(exc), "message": "Genesis could not create the file."}
 
-    def copy(self, source: Any, destination: Any, *, confirmed=False) -> dict:
-        return self._mutate("file.copy", source, destination, confirmed, self.manager.copy, overwrite=True)
+    def copy(self, source: Any, destination: Any) -> dict:
+        return self._mutate("file.copy", source, destination, self.manager.copy, overwrite=True)
 
-    def move(self, source: Any, destination: Any, *, confirmed=False) -> dict:
-        return self._mutate("file.move", source, destination, confirmed, self.manager.move, overwrite=True)
+    def move(self, source: Any, destination: Any) -> dict:
+        return self._mutate("file.move", source, destination, self.manager.move, overwrite=True)
 
-    def rename(self, source: Any, new_name: str, *, confirmed=False) -> dict:
-        # `confirmed` accepted but ignored; see create() and Item 3B-3b.
+    def rename(self, source: Any, new_name: str) -> dict:
+        # Item 7C: vestigial `confirmed` parameter removed; it was never
+        # an authority. See create().
         # Renaming ONTO an existing file is Tier 1 at the executor gate;
         # a rename to a free name is Tier 2 and proceeds.
         validation = self._validate(source, existing=True, file=True)
@@ -269,8 +273,9 @@ class SafeFileManager:
             result["post_state_matches"] = verified
         return result
 
-    def delete(self, path: Any, *, confirmed=False) -> dict:
-        # `confirmed` accepted but ignored; see create() and Item 3B-3b.
+    def delete(self, path: Any) -> dict:
+        # Item 7C: vestigial `confirmed` parameter removed; it was never
+        # an authority. See create().
         # file.delete is Tier 1 at the executor gate, so reaching here
         # already required a valid AuthorizationGrant.
         validation = self._validate(path, existing=True, file=True)
@@ -303,8 +308,11 @@ class SafeFileManager:
             digests.append(digest.digest())
         return digests[0] == digests[1]
 
-    def _mutate(self, operation, source, destination, confirmed, fn, *, overwrite=False):
-        # `confirmed` accepted but ignored; see create() and Item 3B-3b.
+    def _mutate(self, operation, source, destination, fn, *, overwrite=False):
+        # Item 7C: the vestigial `confirmed` parameter is removed from
+        # this sink too. It was forwarded faithfully by copy()/move() and
+        # then ignored here, so the whole chain carried a parameter that
+        # never influenced anything. See create().
         # Overwriting an existing destination is Tier 1 at the executor
         # gate (Item 3B-3a); a free destination is Tier 2 and proceeds.
         src = self._validate(source, existing=True, file=True)

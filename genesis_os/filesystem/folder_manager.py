@@ -67,7 +67,7 @@ class FolderManager:
         except OSError as exc:
             return {"success": False, "operation": "folder.create", "path": str(p), "error": str(exc)}
 
-    def rename(self, source: Any, new_name: str, *, confirmed=False) -> dict:
+    def rename(self, source: Any, new_name: str) -> dict:
         # `confirmed` is ACCEPTED BUT IGNORED (Item 3B-3b). It is no longer
         # an authority: authorization comes only from the executor's
         # blast-radius gate plus a valid AuthorizationGrant. A rename onto
@@ -88,7 +88,7 @@ class FolderManager:
         except OSError as exc:
             return {"success": False, "operation": "folder.rename", "error": str(exc)}
 
-    def move(self, source: Any, destination: Any, *, confirmed=False) -> dict:
+    def move(self, source: Any, destination: Any) -> dict:
         # `confirmed` accepted but ignored; see rename() and Item 3B-3b.
         v = self._validate(source, require_existing=True, require_directory=True)
         d = self._validate(destination)
@@ -104,7 +104,7 @@ class FolderManager:
         except OSError as exc:
             return {"success": False, "operation": "folder.move", "error": str(exc)}
 
-    def delete(self, path: Any, *, confirmed=False) -> dict:
+    def delete(self, path: Any) -> dict:
         # `confirmed` accepted but ignored; see rename() and Item 3B-3b.
         # folder.delete is Tier 1 at the executor gate, so reaching this
         # method at all already required a valid AuthorizationGrant.
@@ -122,7 +122,7 @@ class FolderManager:
         except OSError as exc:
             return {"success": False, "operation": "folder.delete", "error": str(exc)}
 
-    def organize(self, path: Any, *, confirmed: bool = False, dry_run: bool = False) -> dict:
+    def organize(self, path: Any, *, dry_run: bool = False) -> dict:
         # `confirmed` accepted but ignored; see rename() and Item 3B-3b.
         v = self._validate(path, require_existing=True, require_directory=True)
         if not v["allowed"]:

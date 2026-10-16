@@ -9,7 +9,7 @@ from .file_intelligence.path_security import PathSecurity
 class SpreadsheetManager:
     VERSION = "3.8.0"
 
-    def sort(self, path: Any, column: str, *, descending=True, output=None, confirmed=False) -> dict:
+    def sort(self, path: Any, column: str, *, descending=True, output=None) -> dict:
         v = PathSecurity.validate(path, require_existing=True, require_file=True)
         if not v["allowed"]:
             return {"success": False, "operation": "spreadsheet.sort", "error": v["reason"]}
