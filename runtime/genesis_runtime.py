@@ -438,40 +438,123 @@ class GenesisRuntime:
         memory_context
     ):
 
-        # This intentionally delegates to the existing
-        # Level 1 conversation/AI system.
-
-        if hasattr(
-            self.conversation,
-            "respond"
-        ):
-
-            response = self.conversation.respond(
-                user_input
-            )
-
-        elif hasattr(
-            self.conversation,
-            "chat"
-        ):
-
-            response = self.conversation.chat(
-                user_input
-            )
-
-        else:
-
-            response = {
-                "message":
-                    "Level 1 conversation pipeline "
-                    "is connected."
-            }
+        # Item 8A: Level 1 conversation now goes through the real L1
+        # brain -- Brain.process_request(text) -> str.
+        #
+        # It did not before. This method probed self.conversation for
+        # .respond() and then for .chat(); ConversationEngine defines
+        # NEITHER, so both hasattr() checks were false on every call and
+        # every conversation-classified request silently returned the
+        # placeholder {"message": "Level 1 conversation pipeline is
+        # connected."} without ever asking the brain anything. Genesis
+        # answered a greeting with a sentence about its own plumbing.
+        #
+        # memory_context is threaded through untouched so recall keeps
+        # flowing into the caller exactly as before.
+        response = self._level_1_brain_answer(
+            user_input
+        )
 
         return {
             "success": True,
             "pipeline": "LEVEL_1",
             "response": response,
             "memory": memory_context,
+        }
+
+    def _level_1_brain_answer(self, user_input):
+        """Ask the wired L1 brain for a real answer.
+
+        Returns the brain's answer as-is (a string). When no usable brain
+        is present, returns an honest dict explaining why instead of a
+        message claiming the pipeline is connected: a missing brain must
+        not take the runtime down, and it must not be dressed up as a
+        working conversation.
+        """
+
+        brain = self.brain
+
+        if brain is None:
+            return self._level_1_unavailable(
+                "no brain is wired into this runtime"
+            )
+
+        process_request = getattr(
+            brain,
+            "process_request",
+            None
+        )
+
+        if not callable(process_request):
+            return self._level_1_unavailable(
+                "the wired brain has no process_request()"
+            )
+
+        try:
+            answer = process_request(user_input)
+
+        except Exception as error:
+            print(
+                f"[Genesis] Level 1 brain failed: {error}"
+            )
+            return self._level_1_unavailable(
+                f"the brain raised {type(error).__name__}"
+            )
+
+        self._record_level_1_turn(user_input, answer)
+
+        return answer
+
+    def _record_level_1_turn(self, user_input, answer):
+        """Record the exchange on the conversation engine, if it can.
+
+        Both recorders are optional and individually guarded. History is
+        a convenience, not the answer: a conversation engine that cannot
+        store the turn must not discard the reply the brain already
+        produced.
+        """
+
+        conversation = self.conversation
+
+        if conversation is None:
+            return
+
+        for method_name, payload in (
+            ("add_user_message", user_input),
+            ("add_assistant_message", answer),
+        ):
+            recorder = getattr(
+                conversation,
+                method_name,
+                None
+            )
+
+            if not callable(recorder):
+                continue
+
+            try:
+                recorder(payload)
+
+            except Exception:
+                # Deliberately swallowed: see the docstring. The answer
+                # has already been produced and is returned regardless.
+                pass
+
+    @staticmethod
+    def _level_1_unavailable(reason):
+        """The degraded L1 answer.
+
+        Kept as a dict so the shape matches what this method returned
+        before Item 8A, which lets existing callers keep reading it
+        without a type change on the failure path.
+        """
+
+        return {
+            "message": (
+                f"Level 1 conversation is unavailable: {reason}."
+            ),
+            "available": False,
+            "reason": reason,
         }
 
     # =========================================================
