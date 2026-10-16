@@ -689,7 +689,22 @@ def application_close_escalation(
     try:
         active, _reason = detector(dict(arguments or {}))
     except Exception:
-        return None
+        # Fail closed (Directive 7B).
+        #
+        # A detector that is REGISTERED and then raises is an error, not
+        # a verdict. The previous `return None` was indistinguishable
+        # from "checked, found nothing", so a crashed detector silently
+        # downgraded application.close to its static tier and let a
+        # close with possible unsaved work through ungated.
+        #
+        # This cannot cause the "prompt on every routine close"
+        # regression that the missing-detector case guards against.
+        # Both unsupported-platform paths RETURN a verdict rather than
+        # raising: the ctypes import failure returns
+        # (False, "user32 unavailable on this platform"), and the
+        # EnumWindows failure path returns (False, reason). Neither
+        # reaches this handler. Only a genuinely unexpected error does.
+        return BlastRadius.IRREVERSIBLE_OR_OUTWARD
     if active:
         return BlastRadius.IRREVERSIBLE_OR_OUTWARD
     return None

@@ -359,7 +359,16 @@ class TestApplicationCloseEvaluator:
             if saved is not None:
                 BR._unsaved_changes_detectors["application.close"] = saved
 
-    def test_throwing_detector_does_not_escalate_blindly(self):
+    def test_throwing_detector_escalates_fail_closed(self):
+        """A REGISTERED detector that raises is an error, not a verdict.
+
+        Directive 7B. This previously asserted the opposite
+        (`test_throwing_detector_does_not_escalate_blindly`): the
+        handler returned None, which the caller cannot distinguish from
+        "checked, found nothing", so a crashed detector silently
+        downgraded application.close to its static tier and allowed a
+        close with possible unsaved work through ungated.
+        """
         from genesis_os import blast_radius as BR
 
         def boom(args):
@@ -368,7 +377,31 @@ class TestApplicationCloseEvaluator:
         BR.register_unsaved_changes_detector("application.close", boom)
         assert resolve_blast_radius(
             "application.close", {}, static_default=REVERSIBLE
-        ) is REVERSIBLE
+        ) is IRREVERSIBLE
+
+    def test_unsupported_platform_verdict_does_not_escalate(self):
+        """No regression on the prompt-on-every-close path.
+
+        The fail-closed fix above must NOT fire when the platform is
+        simply unsupported, because both such paths RETURN a verdict
+        rather than raising: the ctypes import failure yields
+        (False, "user32 unavailable on this platform"). Those must keep
+        the unelevated tier, or every routine close would prompt.
+        """
+        from genesis_os import blast_radius as BR
+
+        saved = BR._unsaved_changes_detectors.get("application.close")
+        try:
+            BR.register_unsaved_changes_detector(
+                "application.close",
+                lambda args: (False, "user32 unavailable on this platform"),
+            )
+            assert resolve_blast_radius(
+                "application.close", {}, static_default=REVERSIBLE
+            ) is REVERSIBLE
+        finally:
+            if saved is not None:
+                BR._unsaved_changes_detectors["application.close"] = saved
 
     def test_adapter_precondition_defers_to_the_evaluator(self):
         """One authority: the adapter's precondition gate must not
