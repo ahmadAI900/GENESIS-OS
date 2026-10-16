@@ -105,11 +105,24 @@ class ScenarioResult:
 class _MockOSManager:
     """A deterministic mock of OSManager.
 
-    Every L3 capability returns a structurally-valid
-    success so the ActionExecutor pipeline (validation,
-    safety, dispatch, normalization, ActionResult) can be
-    exercised end-to-end. Real OS execution is out of scope
-    for this benchmark.
+    Every L3 capability returns a structurally-valid success so the
+    ActionExecutor pipeline (validation, safety, dispatch,
+    normalization, ActionResult) can be exercised end-to-end. Real OS
+    execution is out of scope for this benchmark.
+
+    HONESTY (Item 5B, 2026-10-15)
+    ------------------------------
+    This used to return ``"verified": True``. Nothing was executed, so
+    nothing could be verified: the flag asserted a post-state check that
+    never ran, and the benchmark reported it as a passing verification
+    metric. That directly contradicts the project's own definition in
+    ``benchmark_real_os/__init__.py``: ``MOCKED`` means "execution layer
+    is mocked", and that package "never labels a mocked or simulated OS
+    execution as REAL_OS".
+
+    It now returns ``verified: False`` together with an explicit
+    ``mocked`` / ``verification_type: "mocked"`` marker, so no consumer
+    can read a mock run as a verified one.
     """
 
     def __getattr__(self, name):
@@ -118,7 +131,15 @@ class _MockOSManager:
                 "success": True,
                 "operation": name,
                 "executed": True,
-                "verified": True,
+                # Nothing ran, so nothing is verified. Claiming otherwise
+                # is the defect this class used to carry.
+                "verified": False,
+                "mocked": True,
+                "verification_type": "mocked",
+                "verification_reason": (
+                    "The execution layer is mocked; no OS action ran and "
+                    "no post-state was observed."
+                ),
                 "message": f"Mock execution of {name} succeeded.",
                 "target": (args[0] if args else kwargs.get("path", kwargs.get("target", ""))),
                 "result": {"mock": True, "operation": name, "args": list(args), "kwargs": kwargs},
@@ -156,7 +177,27 @@ class BenchmarkRunner:
         self._executor = None
         self._orchestrator = None
         self._registry = None
+        # Stated on the runner so no report can present a mocked run as a
+        # real one. `benchmark_real_os` defines MOCKED as exactly this
+        # case, and its contract says a mocked run may never be labelled
+        # REAL_OS; this attribute is the architectural counterpart.
+        self.execution_layer = "MOCKED"
+        self.execution_layer_note = (
+            "The OS execution layer is mocked (_MockOSManager). This "
+            "benchmark measures routing and decision quality only. No OS "
+            "action ran and no physical post-state was verified; use "
+            "benchmark_real_os for real-OS validation."
+        )
         self._init_pipeline()
+
+    def execution_layer_declaration(self) -> Dict[str, Any]:
+        """A machine-readable statement of what actually executed."""
+        return {
+            "execution_layer": self.execution_layer,
+            "mocked": self.execution_layer == "MOCKED",
+            "real_os": self.execution_layer == "REAL_OS",
+            "note": self.execution_layer_note,
+        }
 
     def _init_pipeline(self) -> None:
         """Initialise the real decision + execution pipeline
@@ -659,26 +700,37 @@ class BenchmarkRunner:
         )
 
         # 9. Observation
-        obs_passed = exec_passed
+        # NOT scored as passed. The execution layer is mocked, so no
+        # observation of any real post-state was possible. Previously
+        # this inherited `exec_passed` and its detail string cited the
+        # mock's fabricated "verified=True"; both are removed now that
+        # the mock reports the truth.
+        obs_passed = False
         scores.append(
             MetricScore(
                 "observation",
                 obs_passed,
-                "Mock OSManager reports verified=True so observation is recorded."
-                if obs_passed
-                else "Execution did not produce a verifiable result.",
+                "Not verifiable: the execution layer is mocked "
+                "(_MockOSManager), so no real post-state was observed. "
+                "Use benchmark_real_os for physical verification."
+                if level_reached == 3 and not is_compound
+                else "Engine routed to L1/L2 — execution not required for this benchmark.",
             )
         )
 
         # 10. Verification
-        ver_passed = exec_passed
+        # Same reasoning: a mocked run can never satisfy verification.
+        ver_passed = False
         scores.append(
             MetricScore(
                 "verification",
                 ver_passed,
-                "Mock result is verified=True; the executor contract is honoured."
-                if ver_passed
-                else "No verification evidence.",
+                "Not verifiable: the execution layer is mocked "
+                "(_MockOSManager). This benchmark measures routing and "
+                "decision quality, not OS reality — use benchmark_real_os "
+                "for that."
+                if level_reached == 3 and not is_compound
+                else "Engine routed to L1/L2 — execution not required for this benchmark.",
             )
         )
 
