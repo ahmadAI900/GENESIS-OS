@@ -1,12 +1,19 @@
 """
 Genesis OS — Long-Term Memory (Level 1 maturation).
 
-A unified, persistent memory that genuinely knows the user and
-participates in every answer:
+A persistent memory that genuinely knows the user and participates in
+answers.
 
-    conversation
+WHAT ACTUALLY RUNS TODAY
+------------------------
+Facts enter memory only when the user EXPLICITLY asks, via a memory
+command (genesis.py routes these to ``handle_command``):
+
+    "remember I moved to Berlin"
         ↓
-    fact extraction (deterministic + AI)
+    LongTermMemory.handle_command()  ->  _REMEMBER_RE
+        ↓
+    upsert_fact()
         ↓
     long_term_memory.json
         ↓
@@ -15,6 +22,28 @@ participates in every answer:
     injected into Level 1 answers, Level 2 agent tasks,
     and memory commands
 
+Forgetting is equally explicit: "forget my name", "forget everything".
+
+NOT YET WIRED — the passive extraction island
+----------------------------------------------
+This module also contains a complete but UNREACHABLE extraction path:
+
+    learn_from_turn()          -> extract_deterministic()
+                               -> extract_with_ai() -> looks_personal()
+
+None of it is called from anywhere in the product. It would infer and
+store facts from ordinary conversation WITHOUT the user asking, which is
+a different and far more intrusive behaviour than the explicit
+"remember X" path above.
+
+It is retained deliberately (Item 5D / 6A) rather than deleted, so the
+capability is available, but it is NOT part of the running system and
+this docstring previously claimed otherwise. Wiring it is a PRIVACY
+decision, not a bug fix: it must only happen behind an explicit,
+opt-in memory mode. ``test_memory_extraction_island_stays_unwired.py``
+fails if any module outside this file starts calling it, so that
+becoming a conscious act rather than an accident.
+
 Design:
 
     - FACTS are durable key→value knowledge ("user_name",
@@ -22,10 +51,9 @@ Design:
       timestamps and update history.
     - Contradictions UPDATE the fact (the newest user statement
       wins) instead of duplicating.
-    - Extraction is layered: fast deterministic patterns first,
-      then an AI extraction pass for everything else.
-    - Forgetting is explicit: "forget my name", "forget
-      everything".
+    - Extraction, when it is enabled, is layered: fast deterministic
+      patterns first, then an AI extraction pass for everything else.
+      (Currently only the explicit path runs; see above.)
     - Nothing here fabricates: if nothing is known, Genesis
       says so.
 """
@@ -443,6 +471,20 @@ JSON:"""
         Extract knowledge from one conversation turn.
         Deterministic extraction always runs; AI extraction
         supplements it when available.
+
+        UNREACHABLE FROM THE PRODUCT (Item 6A, 2026-10-15).
+        Nothing outside this module calls this method, or
+        extract_deterministic()/extract_with_ai()/looks_personal(),
+        which only it calls. Facts reach memory today solely through the
+        explicit "remember X" path: handle_command -> upsert_fact.
+
+        Kept, not deleted, so the capability exists. Wiring it is a
+        PRIVACY decision: it would store facts the user never asked
+        Genesis to remember. If it is ever wired, it must be behind an
+        explicit, opt-in memory mode --
+        test_memory_extraction_island_stays_unwired.py fails if any
+        module outside this file starts calling the island, so that
+        change has to be deliberate.
         """
 
         results = {

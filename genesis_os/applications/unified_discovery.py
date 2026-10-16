@@ -1,4 +1,4 @@
-﻿"""
+"""
 Genesis OS â€” Unified Application Discovery
 
 LEVEL 3.2.3C

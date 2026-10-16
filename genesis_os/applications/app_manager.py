@@ -1,4 +1,4 @@
-﻿"""
+"""
 Genesis OS â€” Application Manager
 
 LEVEL 3.2

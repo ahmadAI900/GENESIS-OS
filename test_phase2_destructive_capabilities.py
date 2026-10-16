@@ -1,4 +1,4 @@
-﻿"""
+"""
 Genesis OS - Phase 2 destructive-capability regression tests.
 
 Scope (per the user's session-B prompt):
