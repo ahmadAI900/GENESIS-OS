@@ -258,49 +258,38 @@ class ActionPlan(BaseModel):
     # SUPPORTED OPERATIONS
     # =========================================================
     #
-    # Kept as a class-level frozenset so the historical
-    # ``ActionPlan.APPLICATION_OPERATIONS`` constant remains
-    # a stable public surface for any code that still imports
-    # it directly.
-
-    APPLICATION_OPERATIONS: ClassVar[FrozenSet[str]] = frozenset({
-        "application.open", "application.close", "application.inspect",
-        "application.list", "application.focus", "application.inspect_window_content",
-        "file.inspect", "file.read", "file.search", "file.hash", "file.open",
-        "file.create", "file.copy", "file.move", "file.rename", "file.delete",
-        "file.watch",
-        "folder.inspect", "folder.create", "folder.rename", "folder.move", "folder.delete", "folder.open", "folder.organize",
-        "browser.open_url", "browser.search", "browser.click", "browser.type", "browser.scroll",
-        "browser.find", "browser.extract", "browser.select", "browser.wait", "browser.upload",
-        "browser.open_tab", "browser.close_tab", "browser.switch_tab", "browser.get_tabs",
-        "browser.screenshot", "browser.download", "browser.verify", "browser.get_title", "browser.get_url",
-        "system.status", "system.open_settings",
-        "network.list_wifi", "network.connect_wifi",
-        "spreadsheet.sort", "spreadsheet.inspect", "spreadsheet.read", "spreadsheet.filter",
-        "spreadsheet.calculate", "spreadsheet.rank", "spreadsheet.group_by", "spreadsheet.aggregate",
-        "spreadsheet.compare", "spreadsheet.add_column", "spreadsheet.update_cell", "spreadsheet.create_from_dicts",
-        "document.create", "document.read", "document.search", "document.edit", "document.transform",
-        "document.verify", "document.summarize", "document.compare", "document.create_docx",
-        "document.create_csv", "document.create_json", "document.create_markdown",
-        "gui.type_text", "gui.paste_text", "gui.focus_window", "gui.inspect_window",
-        "gui.click", "gui.double_click", "gui.select", "gui.scroll", "gui.keyboard_action",
-        "gui.read_visible_text", "gui.hotkey", "gui.drag", "gui.wait_for_state",
-        "media.play_pause", "media.next", "media.previous", "media.stop",
-        "volume.up", "volume.down", "volume.mute_toggle", "volume.set", "volume.get",
-        "display.brightness_set", "display.brightness_get",
-        "hardware.battery", "hardware.stats", "hardware.storage",
-        "process.list", "process.inspect",
-        "screen.capture", "clipboard.copy", "clipboard.paste",
-        "notes.create", "notes.list", "math.evaluate",
-        "time.world_clock", "weather.current",
-        "window.minimize_all", "window.restore", "window.show_desktop",
-        "package.search", "package.install", "package.uninstall",
-        "cleanup.recycle_bin_query", "cleanup.empty_recycle_bin",
-        "workstation.lock", "web.research", "web.weather",
-        "data.inspect", "data.transform",
-    })
-
-    APPLICATION_OPERATIONS = CAPABILITIES
+    # Item 5C (2026-10-15): this used to be a hand-authored
+    # `frozenset({...})` of 121 operation strings that was
+    # IMMEDIATELY overwritten on the next line by
+    # `APPLICATION_OPERATIONS = CAPABILITIES`. The literal could
+    # therefore never be observed by anything -- not by
+    # `validate()`, not by a caller importing the constant.
+    #
+    # INTENT DETERMINED FROM USAGE, and the literal was the wrong
+    # half. Three call sites describe this attribute as a STRICT
+    # application-only subset and then deliberately work around it
+    # to reach the full set:
+    #
+    #   workflow_planner.py:12  _full_supported_operations()
+    #   agents/compound_task_router.py:289  'we deliberately do NOT
+    #       call action_plan.validate() here with the strict
+    #       APPLICATION_OPERATIONS default'
+    #   action_plan.py validate() docstring: 'the planner and the
+    #       executor pass the full SUPPORTED_OPERATIONS set'
+    #
+    # So the FULL set is the real contract; the literal was stale
+    # (it is missing 20 registered capabilities such as
+    # document.create_txt, document.read_intel and
+    # browser.get_page_state). Restoring it would have REJECTED
+    # those 20 capabilities in the four `validate()` call sites
+    # that pass no allow-list. The literal is therefore DELETED
+    # rather than restored, and the alias becomes the single
+    # definition -- one source of truth, no dead code.
+    #
+    # The attribute itself is kept, because it is a documented
+    # public surface that external code and the workarounds above
+    # reference by name.
+    APPLICATION_OPERATIONS: ClassVar[FrozenSet[str]] = CAPABILITIES
 
     # =========================================================
     # OPERATIONS THAT RESOLVE THEIR TARGET AT RUNTIME
