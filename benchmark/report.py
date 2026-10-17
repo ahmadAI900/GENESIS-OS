@@ -221,8 +221,57 @@ def render_text_report(agg: Dict[str, Any]) -> str:
 # =========================================================
 
 
+# ---------------------------------------------------------------
+# SCOPE (Item 11C, T3)
+# ---------------------------------------------------------------
+# These numbers are generated against a MOCKED OSManager, and the file
+# used to say nothing about that. A reader who opened the JSON saw
+#
+#     "total": 500, "passed": 500, "pass_rate": 1.0
+#     "by_metric": { "execution": {"passed": 500}, ... }
+#
+# which reads as proof that Genesis executed 500 real OS operations. It
+# did not: benchmark/runner.py drives a _MockOSManager and mocked
+# agents precisely so the run is reproducible and needs no network or
+# API key. Every "execution" metric above is a check against that mock.
+#
+# So the scope is emitted INTO the file, by render_json_report, on every
+# regeneration. That placement is the whole point: labelling a checked-
+# in JSON by hand would be undone by the next `python -m benchmark`,
+# which is exactly the failure this fixes.
+BENCHMARK_SCOPE = {
+    "what_this_is": (
+        "A deterministic, offline benchmark of Genesis's UNDERSTANDING and "
+        "ROUTING pipeline: does the system classify the request, pick the "
+        "right level, mode and intent, and select the right capability."
+    ),
+    "what_this_is_not": (
+        "NOT evidence of OS execution. benchmark/runner.py drives a "
+        "_MockOSManager and mocked agents so the run is reproducible and "
+        "needs no network, API key or real desktop. A passing 'execution' "
+        "metric means the pipeline routed the operation and the mocked "
+        "provider accepted it -- not that a file was created, an app was "
+        "launched or anything outside the test harness happened."
+    ),
+    "os_operations_executed": "none - the OS layer is mocked",
+    "external_dependencies": "none - no network, no API key",
+    "simulated_scenarios": (
+        "The top-level 'simulated_only' count is scenarios the benchmark "
+        "itself marks as simulated, which is NOT the same as the whole "
+        "run being mocked; see os_operations_executed."
+    ),
+    "acceptance_evidence": False,
+    "how_to_regenerate": "python -m benchmark (writes benchmark/BENCHMARK_RESULTS.json)",
+    "scope_label_version": 1,
+}
+
+
 def render_json_report(agg: Dict[str, Any]) -> str:
-    return json.dumps(agg, indent=2, default=str)
+    # Scope first so it is the first thing anyone sees, and emitted by
+    # the renderer so it can never drift away from the numbers.
+    payload = {"scope": BENCHMARK_SCOPE}
+    payload.update(agg)
+    return json.dumps(payload, indent=2, default=str)
 
 
 # =========================================================
@@ -237,10 +286,15 @@ def main() -> int:
     text = render_text_report(agg)
     print(text)
 
+    # Item 11C: the report is written NEXT TO THIS MODULE, inside the
+    # repository, so it can be version-controlled and reviewed. It used
+    # to be written two levels up, at <repo-parent>/BENCHMARK_RESULTS.json,
+    # which is OUTSIDE the git repo and had never been committed -- so
+    # the file asserting a bare 100% was both untracked and unfalsifiable.
     json_path = os.path.join(
-        os.path.dirname(__file__), "..", "..", "BENCHMARK_RESULTS.json"
+        os.path.dirname(os.path.abspath(__file__)),
+        "BENCHMARK_RESULTS.json",
     )
-    json_path = os.path.abspath(json_path)
     with open(json_path, "w", encoding="utf-8") as fh:
         fh.write(render_json_report(agg))
     print(f"\nJSON report written to: {json_path}")

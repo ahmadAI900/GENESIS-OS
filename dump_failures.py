@@ -1,7 +1,22 @@
+"""Read benchmark/BENCHMARK_RESULTS.json and print each failure.
+
+Item 11C: the path was hardcoded to an absolute location OUTSIDE the
+repository, including this machine's username. That made the script
+non-portable and pointed it at the untracked copy rather than the
+versioned one.
+"""
 import json
-import sys
-with open('C:/Users/Muhammad/Desktop/gemini_cli/BENCHMARK_RESULTS.json') as f:
-    d = json.load(f)
+import pathlib
+
+RESULTS = (
+    pathlib.Path(__file__).resolve().parent
+    / "benchmark"
+    / "BENCHMARK_RESULTS.json"
+)
+
+with open(RESULTS, encoding="utf-8") as fh:
+    d = json.load(fh)
+
 for f in d['failures']:
     print("[" + f['scenario_id'] + "] " + f['category'])
     print("  request: " + repr(f['user_request']))
