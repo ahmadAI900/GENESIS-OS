@@ -49,18 +49,45 @@ WORKSPACE_ROOT_ENV = "GENESIS_WORKSPACE_ROOT"
 # Argument names that can carry a filesystem target. Generic: any
 # capability whose arguments include one of these is checked. Matching
 # the existing canonicaliser in approval_store keeps the two in step.
+#
+# DELIBERATELY NOT INCLUDED: `sheet1` / `sheet2`.
+#
+# The directive for Item 9D named all three of other_path, sheet1 and
+# sheet2 as "the live schema's second-file targets". Only one of them
+# is. The executor dispatches
+#
+#     sheet_compare(path, p["sheet1"], p["other_path"], p["sheet2"])
+#                                       ^^^^^^^^^^^^ a FILE
+#     doc_compare(path, p["other_path"])
+#
+# so sheet1 and sheet2 are WORKSHEET NAMES, not paths. Scanning them
+# would resolve a sheet called "Sheet1" to "<cwd>/Sheet1", which is
+# outside any scratch workspace, and so escalate EVERY
+# spreadsheet.compare to Tier 1 regardless of where its files live --
+# the exact false escalation this module already warns about for
+# `target` and for UI element names (see _CATEGORY_SCOPED_KEYS). The
+# real second-file key is `other_path`, and it is the one added.
 _PATH_KEYS = (
-    "path", "file_path", "folder", "directory", "source", "destination",
-    "output", "output_path", "save_path", "target_path",
-    # Added by the registry key-coverage audit:
-    #   path1/path2 - document.compare, document.compare_intel,
-    #                spreadsheet.compare. Without these, comparing an
-    #                in-workspace file against an outside one was not
-    #                gated at all.
-    #   new_name   - file.rename, folder.rename.
-    #   location   - filesystem.search.
-    "path1", "path2", "new_name", "location",
-)
+        "path", "file_path", "folder", "directory", "source", "destination",
+        "output", "output_path", "save_path", "target_path",
+        # Added by the registry key-coverage audit:
+        #   path1/path2 - document.compare, document.compare_intel,
+        #                spreadsheet.compare. Without these, comparing an
+        #                in-workspace file against an outside one was not
+        #                gated at all.
+        #   new_name   - file.rename, folder.rename.
+        #   location   - filesystem.search.
+        "path1", "path2", "new_name", "location",
+        # Added by Item 9D (S2): other_path - the SECOND file of a
+        # two-document operation, read by action_executor.py:2084
+        # (document.compare) and :2125 (spreadsheet.compare). Measured
+        # before this: with the first file inside the workspace and
+        # other_path outside it, arguments_escape_workspace returned
+        # None -- the outside file was not gated at all, so a
+        # multi-file compare could read across the boundary while an
+        # equivalent single-file read was refused.
+        "other_path",
+    )
 
 # Keys that are only filesystem paths for SOME capabilities. `target`
 # means a file for document.*/spreadsheet.*, but a UI element name for
