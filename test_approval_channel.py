@@ -128,20 +128,77 @@ def test_only_the_approval_channel_calls_approve():
     )
 
 
+# Modules permitted to import the approval channel at all.
+#
+# Directive 9A wired the channel into the product confirm path, so it is
+# no longer unreachable code. That necessarily narrows the invariant
+# below, and the narrowing is deliberate and narrow:
+#
+#   * STILL FORBIDDEN: every capability, adapter, executor and runtime
+#     module. Those are the model-facing layers, and nothing in them may
+#     hold a handle to the object that turns a human decision into an
+#     authorising grant.
+#   * ALLOWED: the top-level entry point only, because that is where a
+#     human is actually present, and only via an import INSIDE a
+#     function (see the next test).
+#
+# Before Directive 9A this check spanned every product module, which was
+# only satisfiable precisely because nothing imported the channel at all.
+ENTRY_POINTS_ALLOWED_TO_PROMPT = {"genesis.py"}
+
+
+def _import_lines(path):
+    """Every import-looking line in a file, with its indentation."""
+    text = path.read_text(encoding="utf-8", errors="replace")
+    return [
+        (line, len(line) - len(line.lstrip()))
+        for line in text.splitlines()
+        if line.strip().startswith(("import ", "from "))
+    ]
+
+
 def test_approval_channel_is_not_importable_from_a_capability():
-    """No capability/adapter module may import the channel."""
+    """No capability/adapter/executor/runtime module may import it."""
     offenders = []
     for path in _product_sources():
         if path.name == "approval_channel.py":
             continue
-        text = path.read_text(encoding="utf-8", errors="replace")
-        if "approval_channel" in text and "import" in text:
-            for line in text.splitlines():
-                stripped = line.strip()
-                if stripped.startswith(("import ", "from ")) and \
-                        "approval_channel" in stripped:
-                    offenders.append(f"{path.relative_to(BATHER if False else BACKEND)}")
-    assert not offenders, f"approval_channel imported by: {offenders}"
+        rel = path.relative_to(BACKEND).as_posix()
+        if rel in ENTRY_POINTS_ALLOWED_TO_PROMPT:
+            continue
+        for line, _indent in _import_lines(path):
+            if "approval_channel" in line.strip():
+                offenders.append(rel)
+                break
+    assert not offenders, (
+        "approval_channel must not be imported by a model-facing module: "
+        f"{offenders}"
+    )
+
+
+def test_the_entry_point_holds_the_channel_only_inside_a_function():
+    """Importing the entry point must not leave the channel in reach.
+
+    The entry point is the one place allowed to prompt a human, but only
+    at the moment it prompts. A module-level import would leave the
+    authorising object sitting in a process global for the lifetime of
+    the program, which is a step towards any other module reaching it.
+    """
+    offenders = []
+    for rel in sorted(ENTRY_POINTS_ALLOWED_TO_PROMPT):
+        path = BACKEND / rel
+        assert path.is_file(), (
+            f"{rel} moved; update ENTRY_POINTS_ALLOWED_TO_PROMPT"
+        )
+        for line, indent in _import_lines(path):
+            if "approval_channel" not in line.strip():
+                continue
+            if indent == 0:
+                offenders.append(f"{rel}: module-level -> {line.strip()}")
+    assert not offenders, (
+        "the approval channel must be imported inside a function, never "
+        f"at module level: {offenders}"
+    )
 
 
 def test_a_model_supplied_flag_cannot_approve():

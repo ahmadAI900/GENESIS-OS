@@ -52,6 +52,7 @@ GenesisOS does not create a competing keyword router.
 # LEVEL 1
 # =========================================================
 import re
+import sys
 from dataclasses import replace as dataclass_replace
 from pathlib import Path
 from genesis_os.action_plan import ActionPlan
@@ -1350,6 +1351,142 @@ class GenesisOS:
         return updated
 
     # =====================================================
+    # HUMAN APPROVAL SEAM (Directive 9A)
+    # =====================================================
+    #
+    # SEAM TRACE, recorded before any edit.
+    #
+    #   genesis.py _ActionPlan.from_decision()  builds a plan
+    #     -> stored in self._pending_llm_action["plan"]
+    #     -> _execute_pending_action() pops it, records the user's
+    #        "yes" as `source`, and then DISCARDS the plan: it calls
+    #        _handle_level3_request(task, confirmed_decision), which
+    #        re-derives everything from text + classification.
+    #     -> _handle_level3_request -> run_level3
+    #     -> run_level3 builds a FRESH ActionPlan (line ~1465) and
+    #        resolves its semantic target (line ~1489)
+    #     -> genesis_runtime.execute_audited(plan=plan)
+    #     -> GenesisRuntime.execute_audited -> executor.execute(plan)
+    #     -> action_executor.execute reads
+    #            getattr(plan, "authorization")            (line ~801)
+    #            getattr(plan, "authorization_arguments")  (line ~802)
+    #
+    # The ONLY writer of those two fields in the entire codebase is
+    # action_plan.attach_authorization(plan, grant, arguments), which
+    # returns a NEW plan via model_copy. Before Directive 9A it had ZERO
+    # product callers -- only tests -- so both fields were always None
+    # and every Tier 1 operation returned confirmation_required forever.
+    #
+    # WHY THE SEAM IS HERE AND NOT IN _execute_pending_action:
+    # _execute_pending_action throws the plan away, so attaching a grant
+    # to it would authorise an object that is never executed. The only
+    # point where the plan actually executed is run_level3, after the
+    # target has been resolved and before execute_audited. Placing it
+    # here also covers the direct Level 3 path, not just the pending
+    # confirm path, so there is exactly ONE place that can open the gate.
+    #
+    # NO CONTRACT CHANGE WAS NEEDED. attach_authorization already exists
+    # and already returns a plan; execute_audited already accepts any
+    # plan. The executor, adapter and ActionPlan are all untouched.
+
+    def _authorize_plan_for_execution(self, plan):
+        """Return ``(plan_to_execute, denial_message_or_None)``.
+
+        Asks the real human-approval channel for the operations the
+        executor will gate, and attaches a genuine AuthorizationGrant to
+        the plan when -- and only when -- a human approved exactly these
+        arguments on a real TTY.
+
+        Nothing here is reachable by the model: the token, the grant and
+        the approval id stay inside the channel, and none of them is
+        placed in the returned plan's model-visible `parameters`.
+        """
+
+        # Same predicate the executor gates on. Imported from the
+        # executor deliberately rather than reimplemented, so this seam
+        # can never drift from the gate it is satisfying: if it disagreed,
+        # we would prompt for operations that are not gated, or stay
+        # silent for ones that are.
+        from genesis_os.action_executor import (
+            _operation_requires_authorization,
+        )
+
+        if not _operation_requires_authorization(
+            plan.operation,
+            getattr(plan, "capability_id", None),
+            plan.parameters,
+        ):
+            # Tier 2. Not gated, so do not interrupt the human for it.
+            return plan, None
+
+        from genesis_os.action_plan import attach_authorization
+        from genesis_os.approval_channel import (
+            ApprovalChannel,
+            build_request,
+        )
+
+        arguments = dict(plan.parameters or {})
+
+        try:
+            request = build_request(
+                plan.operation,
+                arguments,
+                plan_target=plan.target,
+            )
+        except Exception as error:
+            print(
+                "[Genesis OS] Could not prepare the approval "
+                f"request: {error}"
+            )
+            return None, (
+                "Genesis could not prepare a safe approval request for "
+                "that action, so it was not performed."
+            )
+
+        # Reads the REPL's real stdin. With no TTY this denies by
+        # default (approval_channel property 4), so a batch or piped run
+        # can never approve anything.
+        channel = ApprovalChannel(
+            stdin=sys.stdin,
+            stdout=sys.stdout,
+        )
+
+        decision = channel.request_approval(request)
+
+        if not decision.get("approved"):
+            note = decision.get("note") or "no decision recorded"
+            print(
+                "[Genesis OS] Not approved: " + str(note)
+            )
+            return None, (
+                "Not performed: the approval was not granted "
+                f"({note})."
+            )
+
+        try:
+            grant = channel.mint_grant(request)
+        except Exception as error:
+            print(
+                "[Genesis OS] Could not issue the approval grant: "
+                f"{error}"
+            )
+            return None, (
+                "Not performed: the approval could not be turned into a "
+                "valid authorization grant."
+            )
+
+        # The grant rides the plan's trusted channel, never
+        # plan.parameters, and `arguments` is the exact dict that was
+        # hashed into the request the human saw.
+        authorized_plan = attach_authorization(
+            plan,
+            grant,
+            arguments=arguments,
+        )
+
+        return authorized_plan, None
+
+    # =====================================================
     # LEVEL 3 — OS EXECUTION
     # =====================================================
 
@@ -1492,6 +1629,22 @@ class GenesisOS:
         )
         if plan is None:
             return "Genesis could not resolve a safe filesystem target."
+
+    # =========================================================
+    # HUMAN APPROVAL (Directive 9A)
+    # =========================================================
+    #
+    # Last point before execution, and the only one where the plan
+    # object actually reaches the executor. Tier 2 plans pass through
+    # untouched; a gated plan is offered to the human channel and comes
+    # back carrying a real grant, or does not come back at all.
+
+        plan, denial = (
+            self._authorize_plan_for_execution(plan)
+        )
+
+        if plan is None:
+            return denial
 
     # =========================================================
     # EXPLAIN PLAN
