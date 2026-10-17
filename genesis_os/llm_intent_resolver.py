@@ -1759,33 +1759,6 @@ class LLMIntentResolver:
             **shared,
         )
 
-        """
-        Compact capability index: domain -> ids only.
-
-        No descriptions, no boundary notes, no risk tags. This is
-        stage one of a two-stage selection and exists because the
-        full enriched catalog is too expensive to send on every
-        request. MEASURED on the target host (CPU-only, 2 cores, no
-        GPU, qwen2.5:7b): prefill runs at ~10 tokens/sec, so the
-        5,480-token enriched prompt took 508 SECONDS per call and a
-        40-item corpus would need ~5.7 hours. The same host does
-        this index in roughly a tenth of that.
-        """
-
-        from .capability_registry import CapabilityRegistry
-
-        by_domain: Dict[str, List[str]] = {}
-        for capability in CapabilityRegistry.all():
-            domain = capability.capability_id.split(".", 1)[0]
-            by_domain.setdefault(domain, []).append(
-                capability.capability_id
-            )
-
-        return "\n".join(
-            f"{domain}: {', '.join(sorted(ids))}"
-            for domain, ids in sorted(by_domain.items())
-        )
-
     # Per-domain vocabulary derived from the live registry: the
     # capability ids and descriptions of that domain's capabilities.
     #
