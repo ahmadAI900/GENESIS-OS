@@ -22,6 +22,8 @@ from genesis_os.genesis_config import (
     was_loaded,
 )
 from genesis_os.workspace_boundary import (
+    BOUNDARY_DISABLED,
+    BOUNDARY_STATE_ENV,
     WORKSPACE_ROOT_ENV,
     BoundaryConfigurationError,
     boundary_banner_text,
@@ -85,13 +87,22 @@ def _fresh_preset(prelude=""):
     return json.loads(lines[-1])
 
 
-def test_importing_the_executor_does_not_arm_the_boundary():
-    """The defect: arming must not be a side effect of unrelated imports."""
-    result = _fresh(
+def test_importing_the_executor_does_not_change_the_boundary_root():
+    """The defect: arming must not be a side effect of unrelated imports.
+
+    Item 10A changed what "armed" means, so the old assertion
+    (`enforced is False` on import) can no longer hold: the boundary is
+    armed by default now. The property underneath it is still worth
+    keeping, so it is restated as what it was actually about -- importing
+    the executor must not move the root.
+    """
+    bare = _fresh(UNSET[1])
+    imported = _fresh(
         "from genesis_os.action_executor import ActionExecutor\n" + UNSET[1]
     )
-    assert result["enforced"] is False, (
-        "constructing an executor armed the boundary; arming must be explicit"
+    assert imported["root"] == bare["root"], (
+        "importing the executor changed the workspace root; arming must "
+        "not be a side effect of an unrelated import"
     )
 
 
@@ -112,22 +123,29 @@ def _write_temp_dotenv(tmp_path):
     return dotenv, workspace
 
 
-def test_dotenv_alone_does_not_arm_the_boundary(tmp_path):
-    """`.env` declaring a root must not arm anything implicitly.
+def test_dotenv_alone_does_not_set_the_boundary_root(tmp_path):
+    """`.env` declaring a root must not take effect implicitly.
 
     Runs on any clean checkout: the test creates its OWN `.env` and points
     the fresh process at it. The file exists and declares a root, but the
-    subprocess never calls ``load_genesis_config``, so the boundary must
-    stay unarmed -- arming is explicit, not a side effect of a file being
-    present on disk.
+    subprocess never calls ``load_genesis_config``.
+
+    Item 10A: the old assertion here was `enforced is False`, which can
+    no longer hold -- an unconfigured boundary is ARMED with a default
+    root. The property underneath is unchanged and stronger when stated
+    properly: the root in force must be the DEFAULT one, NOT the root
+    this throwaway `.env` declares. If it were the declared root, the
+    file had been read implicitly.
     """
-    dotenv, _workspace = _write_temp_dotenv(tmp_path)
-    # UNSET clears any inherited GENESIS_*; GENESIS_TEST_DOTENV tells the
-    # probe where the throwaway file is, but nothing loads it.
+    dotenv, declared = _write_temp_dotenv(tmp_path)
     result = _fresh(UNSET[1], dotenv_path=dotenv)
-    assert result["enforced"] is False, (
-        "a `.env` file was present and declared a root, but nothing called "
-        "load_genesis_config(); the boundary must stay unarmed"
+    declared_normalised = str(declared).replace("\\", "/").rstrip("/")
+    actual_normalised = (
+        str(result["root"]).replace("\\", "/").rstrip("/")
+    )
+    assert actual_normalised != declared_normalised, (
+        "the root from an unloaded .env took effect; loading must be "
+        f"explicit. declared={declared_normalised} actual={actual_normalised}"
     )
 
 
@@ -220,30 +238,50 @@ def test_loader_does_not_touch_unrelated_variables(tmp_path, monkeypatch):
 # ---------------------------------------------------------------------------
 # Banner.
 # ---------------------------------------------------------------------------
-def test_banner_reports_inactive_when_unset(monkeypatch):
+def test_banner_reports_armed_with_a_default_root_when_unset(monkeypatch):
+    """Item 10A: unset is no longer reported as inactive.
+
+    It used to read exactly
+    "Workspace boundary: INACTIVE (GENESIS_WORKSPACE_ROOT not set)" --
+    i.e. a missing variable rendered as a security control being off.
+    """
     monkeypatch.delenv(WORKSPACE_ROOT_ENV, raising=False)
     text = boundary_banner_text()
-    assert text == (
-        "Workspace boundary: INACTIVE (GENESIS_WORKSPACE_ROOT not set)"
-    )
+    assert text.startswith("Workspace boundary: ARMED (default root="), text
+    assert "INACTIVE" not in text, text
+    assert boundary_is_enforced() is True
 
 
-def test_banner_reports_active_with_root(monkeypatch, tmp_path):
+def test_banner_reports_armed_with_root(monkeypatch, tmp_path):
     root = tmp_path / "ws"
     root.mkdir()
     monkeypatch.setenv(WORKSPACE_ROOT_ENV, str(root))
     text = boundary_banner_text()
-    assert text.startswith("Workspace boundary: ACTIVE (root=")
+    assert text.startswith("Workspace boundary: ARMED (root="), text
+    assert "default root" not in text, text
     assert str(root) in text
 
 
+def test_banner_reports_disabled_only_when_asked(monkeypatch):
+    """Disabling requires the explicit opt-out, matched exactly."""
+    monkeypatch.delenv(WORKSPACE_ROOT_ENV, raising=False)
+    monkeypatch.delenv(BOUNDARY_STATE_ENV, raising=False)
+    assert "DISABLED" not in boundary_banner_text()
+
+    monkeypatch.setenv(BOUNDARY_STATE_ENV, BOUNDARY_DISABLED)
+    text = boundary_banner_text()
+    assert "DISABLED" in text, text
+    assert boundary_is_enforced() is False
+
+
 @pytest.mark.parametrize("broken", ["", "   ", "Z:\\" + "x" * 6000])
-def test_banner_never_claims_inactive_when_failing_closed(monkeypatch, broken):
-    """Reporting INACTIVE would misrepresent a system that refuses work."""
+def test_banner_never_claims_disabled_when_failing_closed(monkeypatch, broken):
+    """Reporting DISABLED would misrepresent a system that refuses work."""
+    monkeypatch.delenv(BOUNDARY_STATE_ENV, raising=False)
     monkeypatch.setenv(WORKSPACE_ROOT_ENV, broken)
     text = boundary_banner_text()
-    assert not text.startswith("Workspace boundary: INACTIVE"), text
-    assert "ACTIVE" in text
+    assert not text.startswith("Workspace boundary: DISABLED"), text
+    assert "ARMED" in text
     assert boundary_is_enforced() is True
 
 

@@ -234,17 +234,24 @@ MUTATIONS: tuple = (
             "        classification\n"
             "    ):\n"
             "        import os as _os\n"
-            "        _os.environ.pop('GENESIS_WORKSPACE_ROOT', None)\n"
+            "        _os.environ['GENESIS_WORKSPACE_BOUNDARY'] = 'disabled'\n"
         ),
         expect_matches=1,
         caught_by=(
             "test_run_level3_does_not_create_a_file_outside_the_workspace",
         ),
         why=(
-            "Disarms the boundary for this call by removing the env key "
-            "the executor reads. The old harness's pattern for this one "
-            "was a raw string containing \\r\\n escapes, which is why it "
-            "was the mutation that silently matched nothing."
+            "Disarms the boundary for this call using the EXPLICIT opt-out. "
+            "Item 10A changed how this mutation has to be written: it used "
+            "to pop GENESIS_WORKSPACE_ROOT, which was correct while unset "
+            "meant inactive. Now unset means ARMED with a default root, so "
+            "that pop is a no-op -- it does not disarm anything -- and the "
+            "harness correctly reported the mutation MISSED, because no "
+            "test went red. The mutation now sets "
+            "GENESIS_WORKSPACE_BOUNDARY=disabled, which is the only way to "
+            "turn the boundary off under the current contract. The earlier "
+            "version also used a raw string containing \\r\\n escapes, "
+            "which was why it once silently matched nothing."
         ),
     ),
 )

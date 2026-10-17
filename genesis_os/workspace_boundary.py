@@ -46,6 +46,59 @@ __all__ = [
 
 WORKSPACE_ROOT_ENV = "GENESIS_WORKSPACE_ROOT"
 
+# Item 10A (S1): the boundary is ARMED BY DEFAULT. Disarming now requires
+# naming the decision explicitly, so a MISSING variable can no longer
+# silently turn a security control off. Matched EXACTLY ("disabled");
+# anything else -- including a typo like "DISABLED", "off", "false" or "0"
+# -- leaves the boundary armed, because a control that a typo disarms is
+# not a control.
+BOUNDARY_STATE_ENV = "GENESIS_WORKSPACE_BOUNDARY"
+BOUNDARY_DISABLED = "disabled"
+
+# Used when GENESIS_WORKSPACE_ROOT is absent. Chosen to match the repo's
+# OWN convention rather than invent one: .env in this repository already
+# points at <parent-of-backend>/.genesis_workspace, and its comment
+# records why -- "deliberately NOT backend\ (secrets, sealed corpora,
+# safety code) and NOT system temp (writable by other processes)".
+#
+# That rules out both alternatives named in the directive:
+#   * the user's HOME would be PERMISSIVE -- almost nothing lives outside
+#     it, so the boundary would gate nearly nothing while reporting
+#     itself armed. That is the same failure as being off, with a
+#     reassuring banner over it.
+#   * the backend tree itself is what .env explicitly rejects, because
+#     Genesis's own secrets and safety code live there.
+DEFAULT_WORKSPACE_DIRNAME = ".genesis_workspace"
+
+
+def default_workspace_root() -> Path:
+    """The root used when GENESIS_WORKSPACE_ROOT is not set.
+
+    The root is the SIBLING of the backend tree, i.e.
+    <parent-of-backend>/.genesis_workspace, which is exactly what this
+    repository's own .env already points at. Using two parents (rather
+    than three) would place it at backend/.genesis_workspace, which is
+    the placement .env explicitly rejects.
+
+    Created on demand. This is Genesis's own scratch workspace, not
+    user data, so creating it is safe; refusing to would turn a first
+    run into a configuration error for a directory the product owns.
+    A failure to create it raises BoundaryConfigurationError, so an
+    unusable default still fails CLOSED and loudly.
+    """
+    root = (
+        Path(__file__).resolve().parent.parent.parent
+        / DEFAULT_WORKSPACE_DIRNAME
+    )
+    try:
+        root.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        raise BoundaryConfigurationError(
+            f"{WORKSPACE_ROOT_ENV} is not set and the default workspace "
+            f"root {root} could not be created: {exc}. Failing closed."
+        ) from exc
+    return root.resolve()
+
 # Argument names that can carry a filesystem target. Generic: any
 # capability whose arguments include one of these is checked. Matching
 # the existing canonicaliser in approval_store keeps the two in step.
@@ -125,22 +178,36 @@ class UnresolvablePathError(ValueError):
 
 
 class BoundaryConfigurationError(RuntimeError):
-    """GENESIS_WORKSPACE_ROOT is set but unusable.
+    """The workspace boundary is ARMED but its root is unusable.
 
-    Distinct from the root being unset. Unset is the deliberate
-    off-switch; set-but-broken must not silently disable the
-    boundary while an operator believes it is armed.
+    Distinct from the boundary being explicitly disabled. A root that is
+    set-but-broken, or a default root that cannot be created, must not
+    silently disable the boundary while an operator believes it is armed
+    -- so it raises instead of returning None.
     """
 
 
 def workspace_root() -> Optional[Path]:
-    """The configured workspace root, or None when unset.
+    """The active workspace root, or None ONLY when explicitly disabled.
 
-    Unset is the deliberate off-switch and is the only way to
-    return None. A root that is present but unusable raises
-    BoundaryConfigurationError rather than returning None, because
-    None would disable the boundary silently while the operator
-    believed it was armed.
+    Item 10A (S1) changed the default. This used to document "unset is
+    the deliberate off-switch", which meant a MISSING variable silently
+    disabled the boundary: every caller read None as "not escaping", so
+    with no .env present Genesis ran with the boundary INACTIVE and
+    nothing said so.
+
+    Now:
+
+      * UNSET           -> ARMED with the default root (see
+                          default_workspace_root). The boundary is on
+                          unless someone says otherwise.
+      * EXPLICIT        -> the configured root, and a broken one still
+                          raises BoundaryConfigurationError.
+      * GENESIS_WORKSPACE_BOUNDARY=disabled (exact) -> None, i.e. off,
+                          but only when a human spelled that out.
+
+    The asymmetry is the point. Turning a security control OFF is now
+    harder than leaving it on.
 
     STRICTER SINCE 2026-10-14 (audit D-12). Two more cases fail closed
     instead of being accepted:
@@ -157,9 +224,15 @@ def workspace_root() -> Optional[Path]:
 
     Neither case is speculative: both were observed on this machine.
     """
+    if (
+        os.environ.get(BOUNDARY_STATE_ENV, "").strip()
+        == BOUNDARY_DISABLED
+    ):
+        return None
+
     raw = os.environ.get(WORKSPACE_ROOT_ENV)
     if raw is None:
-        return None
+        return default_workspace_root()
     text = raw.strip()
     if not text:
         raise BoundaryConfigurationError(
@@ -198,26 +271,49 @@ def boundary_banner_text() -> str:
     This makes the armed/disarmed state loud and testable rather than a
     property you discover by reading a constructor.
 
-    ``Workspace boundary: ACTIVE (root=<path>)``
-    ``Workspace boundary: INACTIVE (GENESIS_WORKSPACE_ROOT not set)``
+    Item 10A added the "armed with a DEFAULT root" wording, because
+    "ACTIVE (root=...)" is now not the only way to be armed, and an
+    operator who never configured anything must still be able to tell
+    which root they are getting:
 
-    A root that is set but unusable is reported as ACTIVE-with-problem
-    rather than INACTIVE, because it really does refuse work: reporting
-    INACTIVE would misrepresent a system that is failing closed.
+      Workspace boundary: ARMED (root=<path>)
+      Workspace boundary: ARMED (default root=<path>; no GENESIS_WORKSPACE_ROOT set)
+      Workspace boundary: DISABLED (GENESIS_WORKSPACE_BOUNDARY=disabled)
+      Workspace boundary: ARMED (root UNUSABLE - ...; failing closed)
+
+    A root that is armed but unusable is reported as such rather than
+    DISABLED, because it really does refuse work: reporting DISABLED
+    would misrepresent a system that is failing closed.
     """
+    explicit_disable = (
+        os.environ.get(BOUNDARY_STATE_ENV, "").strip()
+        == BOUNDARY_DISABLED
+    )
     try:
         root = workspace_root()
     except BoundaryConfigurationError as exc:
         return (
-            "Workspace boundary: ACTIVE (root UNUSABLE - "
+            "Workspace boundary: ARMED (root UNUSABLE - "
             f"{exc}; failing closed)"
         )
     if root is None:
         return (
-            "Workspace boundary: INACTIVE "
-            "(GENESIS_WORKSPACE_ROOT not set)"
+            "Workspace boundary: DISABLED "
+            f"({BOUNDARY_STATE_ENV}={BOUNDARY_DISABLED})"
         )
-    return f"Workspace boundary: ACTIVE (root={root})"
+    if explicit_disable:
+        # Unreachable while the opt-out is honoured, but stated so the
+        # banner can never read ARMED while the env says disabled.
+        return (
+            "Workspace boundary: DISABLED "
+            f"({BOUNDARY_STATE_ENV}={BOUNDARY_DISABLED})"
+        )
+    if os.environ.get(WORKSPACE_ROOT_ENV) is None:
+        return (
+            "Workspace boundary: ARMED "
+            f"(default root={root}; no {WORKSPACE_ROOT_ENV} set)"
+        )
+    return f"Workspace boundary: ARMED (root={root})"
 
 
 # Genesis's own foundations. Reading or writing inside the backend tree
@@ -412,9 +508,14 @@ def arguments_escape_workspace(
 ) -> Optional[str]:
     """Return a reason string when any target argument leaves the root.
 
-    Returns None when the call is inside the boundary, when the
-    boundary is not configured, or when the capability has no path-like
+    Returns None when the call is inside the boundary, when the boundary
+    has been EXPLICITLY disabled, or when the capability has no path-like
     argument at all.
+
+    Item 10A: "not configured" is no longer one of the None cases. An
+    unset GENESIS_WORKSPACE_ROOT now means ARMED with a default root, so
+    this function only returns None for a call that genuinely stays
+    inside. It used to return None whenever the variable was missing.
 
     Fails closed: a broken configuration, or a path-bearing value that
     could not be parsed, is reported as an escape rather than skipped.

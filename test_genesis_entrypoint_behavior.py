@@ -302,30 +302,41 @@ def test_run_level3_does_not_create_a_file_outside_the_workspace(
 # show_startup / the boundary banner
 # =====================================================================
 
-def test_show_startup_reports_boundary_inactive_by_default(
+def test_show_startup_reports_boundary_armed_by_default(
         genesis_runtime, monkeypatch, capsys):
     """`announce_boundary_state` LOADS .env explicitly before printing.
 
-    So clearing os.environ is not enough to see the unarmed path -- the
-    startup banner would re-arm itself from the checked-in .env. The
-    only honest way to exercise INACTIVE is to make the .env invisible
-    to the loader, which is exactly what the function's own docstring
-    says the split exists to allow.
+    So clearing os.environ is not enough to see the unconfigured path --
+    the startup banner would re-arm itself from the checked-in .env. The
+    only honest way to exercise it is to make the .env invisible to the
+    loader, which is exactly what the function's own docstring says the
+    split exists to allow.
+
+    Item 10A: this used to assert "Workspace boundary: INACTIVE". Unset
+    no longer means off -- it means ARMED with a default root. An
+    operator with no configuration at all must be told which root they
+    are actually getting, not that their boundary is off.
     """
-    from genesis_os.workspace_boundary import WORKSPACE_ROOT_ENV
+    from genesis_os.workspace_boundary import (
+        BOUNDARY_STATE_ENV,
+        WORKSPACE_ROOT_ENV,
+    )
     import genesis_os.genesis_config as config
 
     monkeypatch.delenv(WORKSPACE_ROOT_ENV, raising=False)
+    monkeypatch.delenv(BOUNDARY_STATE_ENV, raising=False)
     monkeypatch.setattr(config, "default_dotenv_path", lambda: None)
     monkeypatch.setattr(config, "load_genesis_config",
                         lambda *a, **k: {"source": "test", "loaded": {}})
 
     genesis_runtime.show_startup()
     out = capsys.readouterr().out
-    assert "Workspace boundary: INACTIVE" in out, out[-2000:]
+    assert "Workspace boundary: ARMED" in out, out[-2000:]
+    assert "INACTIVE" not in out, out[-2000:]
+    assert "default root" in out, out[-2000:]
 
 
-def test_show_startup_reports_boundary_active_when_armed(
+def test_show_startup_reports_boundary_armed_when_armed(
         genesis_runtime, monkeypatch, tmp_path, capsys):
     import genesis_os.genesis_config as config
     monkeypatch.setattr(config, "default_dotenv_path", lambda: None)
@@ -336,7 +347,25 @@ def test_show_startup_reports_boundary_active_when_armed(
 
     genesis_runtime.show_startup()
     out = capsys.readouterr().out
-    assert "Workspace boundary: ACTIVE" in out, out[-2000:]
+    assert "Workspace boundary: ARMED" in out, out[-2000:]
+
+
+def test_show_startup_reports_boundary_disabled_when_opted_out(
+        genesis_runtime, monkeypatch, capsys):
+    """The only way to report DISABLED is to spell the opt-out out."""
+    import genesis_os.genesis_config as config
+    monkeypatch.setattr(config, "default_dotenv_path", lambda: None)
+    monkeypatch.setattr(config, "load_genesis_config",
+                        lambda *a, **k: {"source": "test", "loaded": {}})
+    from genesis_os.workspace_boundary import (
+        BOUNDARY_DISABLED,
+        BOUNDARY_STATE_ENV,
+    )
+    monkeypatch.setenv(BOUNDARY_STATE_ENV, BOUNDARY_DISABLED)
+
+    genesis_runtime.show_startup()
+    out = capsys.readouterr().out
+    assert "Workspace boundary: DISABLED" in out, out[-2000:]
 
 
 # =====================================================================

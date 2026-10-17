@@ -74,9 +74,12 @@ def test_baseline_ran_and_was_green_in_the_same_harness(harness_run):
     out = harness_run["output"]
     assert "BASELINE (no mutation, real tree)" in out
     assert "baseline is green." in out
-    # 13 tests ran. Assert the count so a silently-empty baseline fails.
-    assert "ran=13" in out, (
-        "the baseline did not run the 13 entry-point behavioural tests")
+# 14 tests ran. Assert the count so a silently-empty baseline fails.
+    # It was 13 until Item 10A added
+    # test_show_startup_reports_boundary_disabled_when_opted_out alongside
+    # the two boundary-banner tests it rewrote.
+    assert "ran=14" in out, (
+        "the baseline did not run the 14 entry-point behavioural tests")
 
 
 @pytest.mark.parametrize("name", sorted(mm.MUTATIONS_BY_NAME))

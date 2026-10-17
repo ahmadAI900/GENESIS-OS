@@ -112,9 +112,42 @@ def test_unresolvable_root_is_enforced_not_disarmed(monkeypatch):
     assert boundary_is_enforced() is True
 
 
-def test_unset_root_is_the_off_switch(monkeypatch):
+def test_unset_root_is_armed_not_the_off_switch(monkeypatch):
+    """Item 10A inverted this test, deliberately.
+
+    It used to be called `test_unset_root_is_the_off_switch` and assert
+
+        boundary_is_enforced() is False
+        arguments_escape_workspace({"path": "C:/anywhere/x"}) is None
+
+    which is precisely the fail-open 10A removes: a MISSING variable
+    rendered as a security control being off, and every out-of-workspace
+    path reading as "not escaping". Nobody chose that -- the variable was
+    simply absent on a fresh clone or in a scrubbed CI environment, and
+    nothing said so.
+
+    Disarming now requires naming it: GENESIS_WORKSPACE_BOUNDARY=disabled.
+    See test_workspace_boundary_secure_default.py for the full contract.
+    """
     monkeypatch.delenv(WORKSPACE_ROOT_ENV, raising=False)
+    monkeypatch.delenv("GENESIS_WORKSPACE_BOUNDARY", raising=False)
+
+    assert boundary_is_enforced() is True, (
+        "an unset GENESIS_WORKSPACE_ROOT must leave the boundary ARMED"
+    )
+    assert workspace_root() is not None
+    assert arguments_escape_workspace({"path": "C:/anywhere/x"}), (
+        "an out-of-workspace path was not gated because the root was "
+        "merely unconfigured"
+    )
+
+
+def test_only_the_explicit_opt_out_disarms_the_boundary(monkeypatch):
+    monkeypatch.delenv(WORKSPACE_ROOT_ENV, raising=False)
+    monkeypatch.setenv("GENESIS_WORKSPACE_BOUNDARY", "disabled")
+
     assert boundary_is_enforced() is False
+    assert workspace_root() is None
     assert arguments_escape_workspace({"path": "C:/anywhere/x"}) is None
 
 
