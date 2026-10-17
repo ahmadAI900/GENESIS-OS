@@ -4871,8 +4871,19 @@ class AgentFrameworkAdapter:
         ``EnumWindows`` + ``GetWindowTextW``).  On non-Windows
         platforms or when user32 is unavailable the check
         returns ``(False, "platform not supported")`` so the
-        call is allowed to proceed (false negatives are
-        caught by the executor's safety policy further down).
+        call is allowed to proceed.
+
+        CORRECTION (Item 10B, S11). This used to assert that these
+        false negatives are rescued further down the executor path by an
+        execution-safety backstop. THAT WAS FALSE.
+        ``ExecutionSafety.check()`` is a deny-list plus a
+        capability lookup; it never inspects windows, documents
+        or unsaved state, so there is no downstream safety net and a
+        false negative here is a false negative full stop. The trade-off
+        is deliberate and is the one 7B drew the line at: a MISSING
+        platform capability stays quiet, while a REGISTERED detector
+        that RAISES now escalates, because a check that failed is not a
+        verdict of "nothing unsaved".
 
         AUTHORITY (ledger item, F5 classification): this method no
         longer decides anything on its own. It delegates to

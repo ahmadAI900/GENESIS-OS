@@ -345,9 +345,21 @@ class TestApplicationCloseEvaluator:
         ) is REVERSIBLE
 
     def test_missing_detector_does_not_escalate_blindly(self):
-        """A missing platform detector must not prompt on every routine
-        close. Matches the precondition's documented behaviour: false
-        negatives are caught by the executor's safety policy."""
+        """A MISSING platform detector must not prompt on every routine
+        close.
+
+        Item 10B (S11): this docstring used to justify that by
+        pointing at a downstream execution-safety backstop for false
+        negatives. That was FALSE -- ExecutionSafety.check() is a
+        deny-list plus a capability lookup and never inspects unsaved
+        state. The behaviour below is still correct, but it rests on a
+        product trade-off (do not prompt on an unsupported platform), not
+        on a backstop that does not exist.
+
+        Note this covers the MISSING-detector case only. A REGISTERED
+        detector that raises escalates, by
+        test_throwing_detector_escalates_fail_closed.
+        """
         from genesis_os import blast_radius as BR
 
         saved = BR._unsaved_changes_detectors.pop("application.close", None)

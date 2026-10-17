@@ -655,10 +655,27 @@ def _overwrite_escalation_for(operation: str) -> DynamicEvaluator:
 # resolve_blast_radius, so the precondition gate and the tier can never
 # disagree.
 #
-# A missing or throwing detector yields NO escalation, matching the
-# precondition's existing documented behaviour ("false negatives are
-# caught by the executor's safety policy further down"). Escalating
-# blindly would prompt on every routine close.
+# A MISSING detector yields no escalation, so the precondition can never
+# prompt on every routine close. That distinction matters, so it is
+# spelled out precisely, because the two cases are NOT the same:
+#
+#   * MISSING detector (detector is None) -> no escalation. The platform
+#     genuinely cannot answer, e.g. application.close on a box with no
+#     user32. Prompting on every close there would make the product
+#     unusable, so it stays quiet.
+#
+#   * REGISTERED detector that RAISES -> escalation, since Item 7B. A
+#     check that was asked and failed is not a verdict of "nothing
+#     unsaved", so it fails closed to IRREVERSIBLE_OR_OUTWARD.
+#
+# CORRECTION (Item 10B, S11). This comment used to justify the
+# no-escalation case by saying "false negatives are caught by the
+# executor's safety policy further down". THAT WAS FALSE.
+# ExecutionSafety.check() is a deny-list plus a capability lookup; it
+# never inspects windows, documents or unsaved state. There is no such
+# downstream safety net. The justification for the missing-detector case
+# stands on its own -- do not prompt on an unsupported platform -- but it
+# is a product trade-off, not a backstop.
 
 _unsaved_changes_detectors: Dict[str, Callable[..., Any]] = {}
 
