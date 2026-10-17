@@ -482,7 +482,10 @@ APPROVAL_REQUIRED_CAPABILITIES: FrozenSet[str] = frozenset(
 )
 
 
-def requires_approval_token(capability_id: str) -> bool:
+def requires_approval_token(
+    capability_id: str,
+    arguments: Optional[Mapping[str, Any]] = None,
+) -> bool:
     """Return True when ``capability_id`` needs an approval token.
 
     Driven by ``blast_radius`` (reversibility), NOT by ``risk_level``.
@@ -511,8 +514,28 @@ def requires_approval_token(capability_id: str) -> bool:
             resolve_blast_radius,
         )
 
+        # Item 9B: resolve with the REAL arguments.
+        #
+        # This used to pass `{}`, so the tier was computed as though the
+        # capability were being called with no arguments at all. The
+        # executor resolves with the real ones
+        # (action_executor._operation_requires_authorization passes
+        # plan.parameters), and the two disagreed whenever escalation is
+        # argument-dependent -- the workspace-boundary check being the
+        # common case. Reproduced: for file.move to a destination outside
+        # the workspace, this returned False while the executor returned
+        # True. The adapter therefore forwarded a call the executor would
+        # always refuse, and since the refusal carries no route to a grant,
+        # that legitimate call was blocked forever.
+        #
+        # Omitting `arguments` entirely still resolves as before, so any
+        # existing caller that genuinely has no arguments keeps its
+        # current answer.
         return (
-            resolve_blast_radius(capability_id, {})
+            resolve_blast_radius(
+                capability_id,
+                dict(arguments or {}),
+            )
             is BlastRadius.IRREVERSIBLE_OR_OUTWARD
         )
     except Exception:
@@ -4585,7 +4608,7 @@ class AgentFrameworkAdapter:
         # application.close (only when the unsaved-changes
         # precondition is active — safe/transient closes still
         # flow through so closing Calculator never prompts).
-        if requires_approval_token(capability_id):
+        if requires_approval_token(capability_id, arguments):
             needs_token = True
             precondition_reason = ""
             if capability_id == "application.close":

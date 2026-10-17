@@ -1512,10 +1512,12 @@ def test_document_capability_reaches_real_executor(
 
 @pytest.mark.parametrize("capability_id,arguments", _SHEET_CASES)
 def test_spreadsheet_capability_reaches_real_executor(
-    capability_id, arguments, expanded_adapter, expanded_osm, expanded_tools
+    capability_id, arguments, expanded_adapter, expanded_osm, expanded_tools,
+    workspace_root,
 ):
     tool = _tool_by_canonical(expanded_tools, capability_id)
-    parsed = _invoke(tool, _confirmed_args(capability_id, arguments))
+    parsed = _invoke(tool, _confirmed_args(
+        capability_id, _retarget_into_workspace(arguments, workspace_root)))
     assert (
         parsed.get("metadata", {}).get("executor_version") == "3.6.0"
     ), parsed
