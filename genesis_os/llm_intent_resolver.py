@@ -119,6 +119,20 @@ class LLMCircuitBreaker:
             self._tripped_at = 0.0
 
 
+def _record_probe_error(probe: Optional[Dict[str, int]]) -> None:
+    """Item 11A: one backend call failed (raised, or returned junk)."""
+    if probe is None:
+        return
+    probe["errors"] = probe.get("errors", 0) + 1
+
+
+def _record_probe_reply(probe: Optional[Dict[str, int]]) -> None:
+    """Item 11A: the provider actually responded."""
+    if probe is None:
+        return
+    probe["replies"] = probe.get("replies", 0) + 1
+
+
 class LLMIntentResolver:
 
     VERSION = "3.10.0"
@@ -2111,6 +2125,7 @@ class LLMIntentResolver:
         text: str,
         deadline: float,
         prior_turn: Optional[str] = None,
+        probe: Optional[Dict[str, int]] = None,
     ) -> List[str]:
         """
         Stage one: which few capabilities could this possibly be?
@@ -2121,6 +2136,14 @@ class LLMIntentResolver:
 
         ITEM 4: ``prior_turn`` adds the labelled prior-turn section.
         When None the prompt is byte-identical to before.
+
+        Item 11A: ``probe`` is an out-parameter counting PROVIDER
+        outcomes -- how many backend calls raised or returned junk, and
+        how many actually replied. It exists because an empty list is
+        ambiguous on its own: a dead provider and a healthy model
+        correctly answering "this is not a computer request" both
+        produce [], and only one of those is a failure. An empty
+        shortlist must never trip the breaker on its own.
         """
 
         catalog = self._shortlist_catalog()
@@ -2149,9 +2172,12 @@ class LLMIntentResolver:
                     prompt, mode=mode
                 )
             except Exception:
+                _record_probe_error(probe)
                 continue
             if not isinstance(raw, str):
+                _record_probe_error(probe)
                 continue
+            _record_probe_reply(probe)
             parsed = (
                 self._extract_json_preferring_valid_operation(raw)
             )
@@ -2183,6 +2209,7 @@ class LLMIntentResolver:
         candidates: Sequence[str],
         deadline: float,
         prior_turn: Optional[str] = None,
+        probe: Optional[Dict[str, int]] = None,
     ) -> Optional[Dict[str, Any]]:
         """
         Stage two: pick exactly one from the shortlist, with full
@@ -2190,6 +2217,9 @@ class LLMIntentResolver:
 
         ITEM 4: ``prior_turn`` adds the labelled prior-turn section.
         When None the prompt is byte-identical to before.
+
+        Item 11A: ``probe`` records PROVIDER outcomes for the breaker;
+        see _shortlist for why None is not itself a failure.
         """
 
         catalog = self._detail_catalog(candidates)
@@ -2222,9 +2252,12 @@ class LLMIntentResolver:
                     prompt, mode=mode
                 )
             except Exception:
+                _record_probe_error(probe)
                 continue
             if not isinstance(raw, str):
+                _record_probe_error(probe)
                 continue
+            _record_probe_reply(probe)
             parsed = (
                 self._extract_json_preferring_valid_operation(raw)
             )
@@ -2245,9 +2278,65 @@ class LLMIntentResolver:
         and the same one-shot repair as the single-stage path.
 
         ITEM 4: ``prior_turn`` is threaded to both stages.
+
+        ITEM 11A (R1): this is the DEFAULT path -- the single-stage
+        prompt is only used when GENESIS_LLM_SINGLE_STAGE is set. It used
+        to return here from ``resolve()`` WITHOUT ever touching the
+        circuit breaker, so the breaker was checked (resolve() calls
+        allow_request) but never updated. A provider that had been dead
+        for hours was therefore retried on every single request, and the
+        breaker could never open on the path that almost all traffic
+        takes.
+
+        The outcome is recorded in a ``finally`` so every exit is
+        covered, including the many early returns in the body and any
+        exception. Recording is driven by what the PROVIDER did, not by
+        whether the request succeeded: a healthy model that correctly
+        answers "this is not a computer request" records SUCCESS, and
+        only a round where nothing replied at all records FAILURE.
         """
 
-        candidates = self._shortlist(text, deadline, prior_turn=prior_turn)
+        probe: Dict[str, int] = {}
+        try:
+            return self._resolve_two_stage_body(
+                text, deadline,
+                prior_turn=prior_turn,
+                probe=probe,
+            )
+        finally:
+            self._record_two_stage_outcome(probe)
+
+    def _record_two_stage_outcome(
+        self,
+        probe: Dict[str, int],
+    ) -> None:
+        """Feed the two-stage result into the SAME breaker the
+        single-stage path uses -- same object, same thresholds.
+
+        Item 11A. Precedence matters: if any backend call replied, the
+        provider is reachable and that is a success for breaker purposes,
+        even when the reply was a well-formed decline. Only a round in
+        which NOTHING replied counts against the circuit.
+        """
+
+        if probe.get("replies", 0) > 0:
+            self._circuit_breaker.record_success()
+        elif probe.get("errors", 0) > 0:
+            self._circuit_breaker.record_failure()
+
+    def _resolve_two_stage_body(
+        self,
+        text: str,
+        deadline: float,
+        prior_turn: Optional[str] = None,
+        probe: Optional[Dict[str, int]] = None,
+    ) -> Optional[Dict[str, Any]]:
+
+        candidates = self._shortlist(
+            text, deadline,
+            prior_turn=prior_turn,
+            probe=probe,
+        )
         if not candidates:
             return None
 
@@ -2256,7 +2345,9 @@ class LLMIntentResolver:
             parsed = {"operation": candidates[0], "parameters": {}}
         else:
             parsed = self._decide_from_shortlist(
-                text, candidates, deadline, prior_turn=prior_turn
+                text, candidates, deadline,
+                prior_turn=prior_turn,
+                probe=probe,
             )
             if parsed is None:
                 # Second stage declined or timed out. The
