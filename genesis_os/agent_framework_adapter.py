@@ -4795,9 +4795,30 @@ class AgentFrameworkAdapter:
         # HIL approval queue (Phase 2/13 groundwork, honest
         # programmatic HIL): every confirmation_required bounce
         # auto-creates a traceable pending request so a human UI
-        # (or test harness) can approve it out-of-band.  The
-        # approval_id is a hint only — the executor is still NOT
-        # called on this path.
+        # (or test harness) can approve it out-of-band.
+        #
+        # Item 9C: the queue still happens, but its `approval_id` is NO
+        # LONGER placed in the model-facing metadata. This result is
+        # handed straight back to the model, so anything in `metadata`
+        # is a handle the model can read and echo.
+        #
+        # Measured before removing it: the exposure was NOT exploitable.
+        # A token fabricated from the pending id
+        # (`HUMAN-APPROVE:file.delete:<approval_id>`) and a nonce
+        # invented outright both passed `is_valid_approval_token` --
+        # which is a pure FORMAT check -- but both were then refused by
+        # ApprovalStore.consume_token, because the record is `pending`,
+        # not `approved`, and an invented nonce matches no record at
+        # all. So this is hardening, not a live bypass fix.
+        #
+        # It still had to go. A handle that confers no authority today
+        # is one refactor away from conferring some, and per Item 9A the
+        # only real route to authority is now the human-approval
+        # channel, which mints from a human's typed decision and does
+        # not read this id at all. Handing the model a queue ticket
+        # invites exactly the "re-invoke with the token I was given"
+        # pattern the message above describes, when no such token can
+        # be obtained this way.
         try:
             from .approval_store import ApprovalStore
 
@@ -4805,10 +4826,9 @@ class AgentFrameworkAdapter:
                 args_snapshot = dict(arguments)
             except Exception:
                 args_snapshot = {}
-            queued = ApprovalStore.get_default().request(
+            ApprovalStore.get_default().request(
                 capability_id, args_snapshot
             )
-            metadata["approval_id"] = queued["approval_id"]
         except Exception:
             pass
 
