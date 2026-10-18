@@ -174,6 +174,22 @@ class DisplayController:
         )
 
         return {
+            # Item 13D (C7): `success` and `verified` answer DIFFERENT
+            # questions and are deliberately not the same field.
+            #
+            #   success             the call was dispatched and ran
+            #   verified            the readback confirmed the level
+            #   trustworthy_success may Genesis tell the user it worked
+            #
+            # This mirrors ActionResult.trustworthy_success, whose
+            # docstring states the rule: "A raw execution attempt is NOT
+            # enough... Genesis should only expose trustworthy success
+            # when the desired final state is known and verified."
+            #
+            # Before this, a caller that read only `success` saw green
+            # for a brightness change the hardware never confirmed. The
+            # message already said so, but messages are optional and
+            # booleans are not.
             "success": True,
             "operation": "display.brightness_set",
             "before": current,
@@ -181,6 +197,9 @@ class DisplayController:
             "after": after.get("brightness_percent"),
             "executed": True,
             "verified": verified,
+            # Item 13D: consumers must read THIS, not `success`, to
+            # decide whether to tell the user the change took effect.
+            "trustworthy_success": verified,
             "verification_type": "display_readback",
             "message": f"Brightness set to {level}%." if verified else (
                 "Brightness was set but the readback did not confirm it yet."

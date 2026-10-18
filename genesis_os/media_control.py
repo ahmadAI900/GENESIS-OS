@@ -400,6 +400,12 @@ class MediaController:
         )
 
         return {
+            # Item 13D (C7): same separation as display_control, and the
+            # same rule as ActionResult.trustworthy_success -- "a raw
+            # execution attempt is NOT enough". `success` says the call
+            # was dispatched; `verified` says the endpoint confirmed the
+            # level; `trustworthy_success` is the one a consumer must
+            # read to decide whether to tell the user it worked.
             "success": True,
             "operation": "volume.set",
             "before": before.get("volume_percent") if isinstance(before, dict) else None,
@@ -407,6 +413,7 @@ class MediaController:
             "after": after.get("volume_percent") if isinstance(after, dict) else None,
             "executed": True,
             "verified": applied,
+            "trustworthy_success": applied,
             "verification_type": "audio_endpoint_readback",
             "message": f"Volume set to {level}%." if applied else (
                 "Volume was set but the readback did not confirm it."
