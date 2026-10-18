@@ -50,7 +50,15 @@ class ProcessManager:
                 "success": False,
                 "operation": "process.list",
                 "error": completed.stderr.strip() or "tasklist failed.",
-                "executed": True,
+                # Item 14A (C8): executed=False.
+                #
+                # NUANCE WORTH NAMING: the subprocess DID spawn here,
+                # so under a narrower reading of `executed` ("the
+                # command was launched") this would be True. It is False
+                # because `executed` means the LISTING was carried out,
+                # and a non-zero tasklist produced no inventory. The
+                # success path now agrees with that reading.
+                "executed": False,
                 "verified": False,
             }
 
@@ -81,7 +89,10 @@ class ProcessManager:
                 "success": False,
                 "operation": "process.list",
                 "error": f"Unable to parse process inventory: {exc}",
-                "executed": True,
+                # Item 14A (C8): executed=False -- same reasoning as the
+                # returncode path: tasklist ran, but the listing it was
+                # supposed to produce was never assembled.
+                "executed": False,
                 "verified": False,
             }
 
@@ -91,7 +102,15 @@ class ProcessManager:
             "name": name,
             "processes": rows,
             "count": len(rows),
-            "executed": False,
+            # Item 14A (C8): executed=True.
+            #
+            # This said False on the SUCCESS path, which is
+            # backwards. By the time we are here `tasklist` has run and
+            # its CSV output has been parsed into `rows` -- the listing
+            # definitely happened. `executed` is how a caller tells "we
+            # actually did the thing" from "we declined to", and here
+            # we did.
+            "executed": True,
             "verified": True,
             "post_state_matches": True,
             "verification_type": "process_table_query",
