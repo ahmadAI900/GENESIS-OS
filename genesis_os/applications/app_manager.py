@@ -594,32 +594,7 @@ class ApplicationManager:
             file_argument = str(file_argument)
 
         # -----------------------------------------------------
-        # WINDOWS URI APPLICATION
-        # -----------------------------------------------------
-
-        uri = self.resolve_uri(
-            target
-        )
-
-        if uri:
-
-            if file_argument:
-                return {
-                    "success": False,
-                    "operation": "application.open",
-                    "application": target,
-                    "resolved_uri": uri,
-                    "error": "File arguments are not supported for URI applications.",
-                    "verified": False,
-                }
-
-            return self._open_uri(
-                target,
-                uri
-            )
-
-        # -----------------------------------------------------
-        # EXECUTABLE
+        # EXECUTABLE (preferred; the URI path below is fallback)
         # -----------------------------------------------------
 
         executable = (
@@ -629,6 +604,42 @@ class ApplicationManager:
         )
 
         if executable is None:
+            # -------------------------------------------------
+            # WINDOWS URI APPLICATION -- LAST RESORT (Item 14D)
+            # -------------------------------------------------
+            #
+            # This block used to sit at the TOP of `open()`, so any
+            # name present in the URI alias table went to
+            # explorer.exe before the executable resolver was ever
+            # consulted. A direct executable launch is the mechanism
+            # that can be VERIFIED (this manager polls tasklist for the
+            # process and reports `verified=True`); the URI path can
+            # only ever report `dispatched` with `verified=False`. So
+            # preferring the URI route threw away the stronger,
+            # observable guarantee for every name that had both.
+            #
+            # It is now reached only when no executable could be
+            # resolved, which is what "last resort" has to mean if it
+            # is to mean anything.
+            uri = self.resolve_uri(
+                target
+            )
+
+            if uri:
+                if file_argument:
+                    return {
+                        "success": False,
+                        "operation": "application.open",
+                        "application": target,
+                        "resolved_uri": uri,
+                        "error": "File arguments are not supported for URI applications.",
+                        "verified": False,
+                    }
+
+                return self._open_uri(
+                    target,
+                    uri
+                )
 
             return {
                 "success": False,
@@ -780,9 +791,33 @@ class ApplicationManager:
                 ),
             }
 
+        # DEFENCE IN DEPTH (Item 14D). `open()` only ever passes the
+        # pair it got from `resolve_uri(target)`, so this re-check is
+        # redundant on the current call path -- and it is here
+        # precisely because that is a fact about the CALLER, not a
+        # fact about this method. `_open_uri` hands its argument to
+        # `explorer.exe`, which dispatches whatever URI scheme it is
+        # given.
+        #
+        # The check is deliberately the STRICTER of the two available
+        # forms: not merely "this URI is somewhere in the table" but
+        # "this URI is the one registered FOR THIS APPLICATION". A
+        # value-only check would still accept
+        # _open_uri("settings", "ms-settings:display") -- a URI from
+        # the allowlist, but bound to a different alias.
+        if uri != self.resolve_uri(application):
+            return {
+                "success": False,
+                "operation": "application.open",
+                "application": application,
+                "resolved_uri": uri,
+                "error": "Refused: the URI is not the one registered for this application.",
+                "verified": False,
+            }
+
         try:
-        # The URI comes from Genesis' internal
-        # allowlisted URI registry.
+            # The URI comes from Genesis' internal
+            # allowlisted URI registry (see the check above).
             subprocess.Popen(
                 [
                     "explorer.exe",
@@ -797,20 +832,20 @@ class ApplicationManager:
         except Exception as error:
 
             return {
-            "success": False,
-            "operation": "application.open",
-            "application": application,
-            "resolved_uri": uri,
-            "error": str(error),
-            "message": (
-                f"Failed to open {application}."
-            ),
-        }
+                "success": False,
+                "operation": "application.open",
+                "application": application,
+                "resolved_uri": uri,
+                "error": str(error),
+                "message": (
+                    f"Failed to open {application}."
+                ),
+            }
 
         # Dispatch was accepted by Windows. The visible UI was
         # NOT independently inspected; an asynchronous Settings
         # page or URI handler may have refused the request or
-        # never shown a window. Be honest: only ``dispatched``
+        # never show a window. Be honest: only ``dispatched``
         # was observed. ``verified`` remains False so the
         # executor does not claim trustworthy success.
         return {
@@ -819,20 +854,17 @@ class ApplicationManager:
             "application": application,
             "resolved_uri": uri,
             "application_type": "windows_uri",
-
             "executed": True,
-
-    # Windows accepted the launch request (dispatch confirmed).
-    # This does NOT mean the visible UI was independently
-    # inspected; UI verification requires polling for the
-    # target process/window which the URI dispatch path does
-    # not perform. ``verified`` is therefore left False so the
-    # executor's post-state observation is the sole source of
-    # truth for ``application_running=True``.
+            # Windows accepted the launch request (dispatch confirmed).
+            # This does NOT mean the visible UI was independently
+            # inspected; UI verification requires polling for the
+            # target process/window which the URI dispatch path does
+            # not perform. ``verified`` is therefore left False so the
+            # executor's post-state observation is the sole source of
+            # truth for ``application_running=True``.
             "verified": False,
             "verification_type": "dispatch_confirmed_not_inspected",
             "dispatched": True,
-
             "message": (
                 f"{application} launch request dispatched "
                 f"to Windows; UI state not independently "
