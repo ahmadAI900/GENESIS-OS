@@ -750,27 +750,38 @@ class BrowserManager:
         """Search the web."""
         if not isinstance(query, str) or not query.strip():
             return {"success": False, "operation": "browser.search", "error": "Search query is required."}
-        if "open_url" in self.__dict__:
-            domains = {
-                "google": "https://www.google.com/search?q=",
-                "bing": "https://www.bing.com/search?q=",
-                "duckduckgo": "https://duckduckgo.com/?q=",
-                "youtube": "https://www.youtube.com/results?search_query=",
-            }
-            base = domains.get(
-                str(engine).lower(),
-                domains["google"],
-            )
-            result = self.open_url(
-                base + quote_plus(query.strip()),
-                session_id=session_id,
-            )
-        else:
-            result = self._dispatch_with_fallback(
-                "search",
-                lambda p: p.search(query, engine),
-                session_id,
-            )
+        # Item 13A (C4): the `if "open_url" in self.__dict__` branch that
+        # used to sit here is DELETED, not repaired.
+        #
+        # It was unreachable on every instance. `self.__dict__` holds
+        # INSTANCE attributes; `open_url` is a method on the class, so it
+        # can never appear there. The guard was therefore always False
+        # and the dispatch below always ran.
+        #
+        # It was also testing the wrong thing twice over. The capability
+        # it wanted -- "can this manager open a URL?" -- is ALWAYS true,
+        # since open_url is defined right here, so a capability check
+        # would have been pointless. And what the condition actually
+        # responded to was the presence of an unrelated instance
+        # attribute: setting a stray `mgr.open_url = something` was
+        # enough to flip it on, with no bearing on whether any browser
+        # existed.
+        #
+        # Deleting rather than repairing is safe because the branch was a
+        # FOURTH copy of search logic. Every provider already owns one:
+        #   WebBrowserProvider.search()    (this file, line ~166)
+        #   PlaywrightBrowserProvider.search()  (browser_playwright.py:301)
+        #   SeleniumBrowserProvider.search()   (browser_selenium.py:189)
+        # Each builds its engine URL with the same domain table the dead
+        # branch did. The branch also bypassed _dispatch_with_fallback,
+        # so had it ever run it would have SKIPPED provider selection and
+        # provider fallback -- strictly worse than the path that is
+        # actually taken.
+        result = self._dispatch_with_fallback(
+            "search",
+            lambda p: p.search(query, engine),
+            session_id,
+        )
         if isinstance(result, dict):
             result.setdefault("query", query.strip())
             result.setdefault("engine", engine)
