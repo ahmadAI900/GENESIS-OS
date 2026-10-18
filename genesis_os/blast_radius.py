@@ -540,6 +540,19 @@ _OVERWRITE_DESTINATION_KEYS: Dict[str, Tuple[str, ...]] = {
     "file.copy":        ("destination",),
     "file.create":      ("path",),
     "document.create_docx": ("path", "output_path", "destination"),
+    # ---- Item 15A (S12) --------------------------------------------
+    # `document.transform` writes to ``output_path``. It MUST NOT be
+    # listed as ``path``: that is the SOURCE, which always exists, so
+    # every transform would escalate as a self-overwrite even when
+    # writing to a free destination.
+    "document.transform": ("output_path",),
+    # The non-docx creators all take a single ``path`` and all open it
+    # with mode "w", which truncates whatever was there.
+    "document.create_txt":      ("path",),
+    "document.create_csv":      ("path",),
+    "document.create_json":     ("path",),
+    "document.create_markdown": ("path",),
+    "document.create_pdf":      ("path",),
 }
 
 # Operations whose destination arrives as a BARE ``new_name``, which must
@@ -743,6 +756,21 @@ def _register_builtin_evaluators() -> None:
         # existing file but had no evaluator, so overwriting through
         # them was ungated at the authority.
         "file.copy", "file.create", "document.create_docx",
+        # Added 2026-10-18 (Item 15A, S12): the SAME defect, still open.
+        # `document.create_docx` was registered above; its five non-docx
+        # siblings were not, and neither was `document.transform`. All
+        # six open their destination with mode "w", so writing onto an
+        # existing file destroyed it while the authority resolved
+        # REVERSIBLE_LOCAL and no grant was ever requested. Measured
+        # before the fix: all six resolved REVERSIBLE_LOCAL against an
+        # existing in-workspace target, while `document.create_docx`
+        # correctly escalated.
+        "document.transform",
+        "document.create_txt",
+        "document.create_csv",
+        "document.create_json",
+        "document.create_markdown",
+        "document.create_pdf",
     ):
         register_dynamic_evaluator(
             capability_id,
