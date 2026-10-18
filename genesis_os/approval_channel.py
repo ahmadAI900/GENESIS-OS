@@ -42,6 +42,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import threading
 import time
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -492,29 +493,88 @@ class ApprovalChannel:
         if stream is None:
             return None
         if self.timeout:
-            try:
-                import select
-
-                ready, _, _ = select.select([stream], [], [], self.timeout)
-                if not ready:
-                    raise TimeoutError("human decision timed out")
-            except TimeoutError:
-                raise
-            except (ImportError, ValueError, OSError, TypeError):
-                # Cannot bound the read. A stream we cannot select() on
-                # is not something we can prove is interactive, and a
-                # blocking read with no timeout could hang forever.
-                #
-                # This used to catch only (ImportError, ValueError,
-                # OSError), so a stdin without fileno() -- a StringIO, a
-                # socket wrapper -- raised TypeError straight out of
-                # request_approval. That is a crash, not a denial, and
-                # property 4 requires denial. Failing closed here.
-                raise TimeoutError(
-                    "cannot verify that the approval stream is "
-                    "interactive; denying by default"
-                )
+            return self._read_line_bounded(stream, self.timeout)
         line = stream.readline()
+        if line == "":
+            raise EOFError("human decision stream closed")
+        return line
+
+    # ---------------------------------------------------------------
+    # Item 15B (S13): the approval channel was DEAD on Windows.
+    # ---------------------------------------------------------------
+    #
+    # The bounded read used select.select([stream], [], [], timeout).
+    # On Windows, select() supports SOCKETS ONLY -- passing a file
+    # handle raises OSError [WinError 10093] ("WSAStartup has not been
+    # called"). That is not an edge case: it is every console on the
+    # platform. Measured on a real Windows console with isatty() True:
+    #
+    #     select.select([sys.stdin], [], [], 1.0)
+    #     -> OSError: [WinError 10093]
+    #
+    # The old handler caught that OSError and raised TimeoutError, which
+    # request_approval maps to `denied`. So on Windows a human could
+    # NEVER approve anything: a genuine interactive console produced
+    # exactly the same result as a closed pipe, and every Tier 1 action
+    # was unapprovable by construction. The system was safe and
+    # completely inert -- the failure was invisible precisely because
+    # it looked like correct fail-closed behaviour.
+    #
+    # A reader thread with join(timeout) bounds the wait on every
+    # platform, including win32, and works with an INJECTED stream --
+    # which msvcrt console polling would not, since msvcrt can only
+    # reach the process's real console.
+    #
+    # HONEST LIMIT, not papered over: if the join times out, the worker
+    # is still blocked inside readline() and is abandoned (daemon; it
+    # dies with the process). Nothing unblocks it. The practical
+    # consequence is that a keystroke typed after a timeout may be
+    # swallowed by that zombie thread instead of reaching the next
+    # prompt. That is a fairness wart, not a safety one -- we have
+    # already DENIED, so no operation proceeds on the abandoned read.
+    #
+    # Fail-closed is preserved where it matters:
+    #   * a stream that is not a TTY is denied earlier, by
+    #     _interactive() (property 4), which runs before this;
+    #   * no answer within the timeout is a denial;
+    #   * a read that raises is a denial, never an approval;
+    #   * EOF is a denial.
+    def _read_line_bounded(
+        self, stream: Any, timeout: float
+    ) -> str:
+        box: Dict[str, Any] = {}
+
+        def _worker() -> None:
+            try:
+                box["line"] = stream.readline()
+            except BaseException as exc:  # noqa: BLE001
+                # Captured, not raised: this runs off the main thread,
+                # so an escaping exception would only kill the worker
+                # and leave join() to guess. The caller decides.
+                box["error"] = exc
+
+        worker = threading.Thread(
+            target=_worker,
+            daemon=True,
+            name="genesis-approval-read",
+        )
+        worker.start()
+        worker.join(timeout)
+
+        if worker.is_alive():
+            raise TimeoutError("human decision timed out")
+
+        error = box.get("error")
+        if error is not None:
+            if isinstance(error, EOFError):
+                raise error
+            # Anything else went wrong reading a stream we believed was
+            # interactive. Deny; never treat a broken read as consent.
+            raise TimeoutError(
+                f"approval read failed: {error}"
+            )
+
+        line = box.get("line", "")
         if line == "":
             raise EOFError("human decision stream closed")
         return line
