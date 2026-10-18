@@ -67,7 +67,14 @@ class SeleniumBrowserProvider(BrowserProvider):
     def __init__(self):
         self._driver = None
         self._lock = threading.RLock()
+        # Item 15C (C13): why the provider is unavailable, when it is.
+        # Never advertised available while carrying a startup failure.
+        self.unavailable_reason: Optional[str] = None
         self._available = self._check_availability()
+        if not self._available:
+            self.unavailable_reason = self.unavailable_reason or (
+                "selenium or a chromedriver binary is not present"
+            )
 
     def _check_availability(self) -> bool:
         """Verify the ``selenium`` Python package imports AND a
@@ -103,6 +110,17 @@ class SeleniumBrowserProvider(BrowserProvider):
     def available(self) -> bool:
         return self._available
 
+    def _mark_unavailable(self, reason: str) -> None:
+        """Record a proven startup failure and stop advertising.
+
+        Item 15C (C13): the point of the item. A provider that has
+        been shown not to start must not keep reporting
+        `available=True`; that is how a provider that could never work
+        sat in the rotation looking healthy for so long.
+        """
+        self._available = False
+        self.unavailable_reason = reason
+
     # Item 13B (C5): real driver-level timeouts.
     #
     # Same reasoning as the Playwright provider: the manager dispatches
@@ -128,11 +146,32 @@ class SeleniumBrowserProvider(BrowserProvider):
         network IO with no thread affinity, so it is safe to run in a
         worker and abandon; a download we gave up on is not a driver, so
         nothing is left half-attached to the caller.
+
+        Item 15C (C13): the provider could never start AT ALL, while
+        advertising itself available.
+
+        `webdriver.Chrome` was called with `service_timeout=...`.
+        Selenium 4.48's signature is `(options, service, keep_alive)` --
+        there is no such parameter, so EVERY call raised
+
+            TypeError: WebDriver.__init__() got an unexpected
+                       keyword argument 'service_timeout'
+
+        before a browser was ever launched. The availability probe does
+        not create a driver (it only imports selenium and looks for a
+        chromedriver binary), so it returned True and the provider
+        advertised itself as usable. The per-call try/except in every
+        provider method then swallowed the TypeError into a generic
+        "provider failed" result. The provider was permanently,
+        silently non-functional and reported itself healthy.
+
+        The kwarg is gone. The startup it was trying to bound is now
+        bounded properly by `_create_driver`, and a creation that fails
+        marks the provider UNAVAILABLE rather than leaving a provider
+        that claims to work.
         """
         if self._driver is None:
-            from selenium import webdriver
             from selenium.webdriver.chrome.options import Options
-            from selenium.webdriver.chrome.service import Service
 
             options = Options()
             options.add_argument("--no-sandbox")
@@ -142,11 +181,8 @@ class SeleniumBrowserProvider(BrowserProvider):
 
             driver_path = self._bounded_driver_download()
 
-            self._driver = webdriver.Chrome(
-                service=Service(driver_path),
-                options=options,
-                service_timeout=self.DRIVER_STARTUP_TIMEOUT_S,
-            )
+            self._driver = self._create_driver(driver_path, options)
+
             # Item 13B (C5): bound the remote end from the start, so a
             # page that never finishes loading cannot hold a call open
             # indefinitely. These raise WebDriverTimeoutException, which
@@ -161,6 +197,84 @@ class SeleniumBrowserProvider(BrowserProvider):
                 # to certify a late result.
                 pass
         return self._driver
+
+    # ---------------------------------------------------------------
+    # Item 15C (C13): driver CREATION, bounded.
+    # ---------------------------------------------------------------
+    #
+    # Separate method so it is one seam: a test can substitute a fake
+    # driver factory and exercise the whole availability contract
+    # without a browser being installed.
+    #
+    # THREAD AFFINITY, checked rather than assumed. Item 13B's comment
+    # says WebDriver is "bound to its creating thread". That is true of
+    # Playwright's sync API; for Selenium it is not the reason the
+    # manager dispatches in-process, and creating the driver in a worker
+    # and using it from the caller is safe -- Selenium holds no
+    # thread-local state (verified: zero modules under selenium/ use
+    # threading.local) and its RemoteConnection talks HTTP through a
+    # thread-safe urllib3 PoolManager. Concurrent use of one driver from
+    # two threads is still not supported, and never happens here --
+    # every provider method is already serialised behind `self._lock`.
+    #
+    # If the join times out, the worker is abandoned (daemon). Chrome may
+    # still be starting up in the background; we simply stop waiting and
+    # report the driver as unavailable rather than handing back something
+    # that may never be usable.
+    def _create_driver(self, driver_path: str, options: Any):
+        from selenium import webdriver
+        from selenium.webdriver.chrome.service import Service
+
+        return self._bounded_chrome_call(
+            webdriver.Chrome,
+            Service,
+            driver_path,
+            options,
+        )
+
+    def _bounded_chrome_call(
+        self,
+        chrome_factory: Any,
+        service_cls: Any,
+        driver_path: str,
+        options: Any,
+    ):
+        box: Dict[str, Any] = {}
+
+        def _worker() -> None:
+            try:
+                box["driver"] = chrome_factory(
+                    service=service_cls(driver_path),
+                    options=options,
+                )
+            except BaseException as exc:  # noqa: BLE001
+                box["error"] = exc
+
+        worker = threading.Thread(
+            target=_worker,
+            daemon=True,
+            name="selenium-driver-start",
+        )
+        worker.start()
+        worker.join(self.DRIVER_STARTUP_TIMEOUT_S)
+
+        if worker.is_alive():
+            raise TimeoutError(
+                f"webdriver.Chrome did not return within "
+                f"{self.DRIVER_STARTUP_TIMEOUT_S}s; treating the "
+                f"driver as unavailable rather than hanging"
+            )
+
+        error = box.get("error")
+        if error is not None:
+            raise error
+
+        driver = box.get("driver")
+        if driver is None:
+            raise RuntimeError(
+                "webdriver.Chrome returned without a driver"
+            )
+        return driver
 
     def _bounded_driver_download(self) -> str:
         """Return a chromedriver path, giving up after a fixed budget.
@@ -192,9 +306,26 @@ class SeleniumBrowserProvider(BrowserProvider):
             executor.shutdown(wait=False, cancel_futures=True)
  
     def _ensure_driver(self):
-        """Ensure driver is initialized."""
+        """Ensure driver is initialized.
+
+        Item 15C (C13): a driver that cannot be created makes the
+        provider UNAVAILABLE, permanently, instead of leaving it
+        advertising `available=True` while every call fails inside a
+        swallowed exception.
+
+        The availability probe only checks that selenium imports and a
+        chromedriver binary exists. Neither proves that
+        `webdriver.Chrome(...)` will return a driver -- and for years it
+        could not, because of an invalid kwarg. So a probe pass is a
+        NECESSARY condition, not a sufficient one, and only an actual
+        creation establishes it.
+        """
         if self._driver is None:
-            self._get_driver()
+            try:
+                self._get_driver()
+            except BaseException as exc:
+                self._mark_unavailable(f"driver creation failed: {exc}")
+                raise
 
     def _is_driver_alive(self) -> bool:
         if self._driver is None:
