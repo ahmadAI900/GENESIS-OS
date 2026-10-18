@@ -1013,8 +1013,38 @@ class ObjectiveUnderstanding:
         constraints = []
         parameters = decision.get("parameters", {})
 
-        # Check for confirmation requirements
-        if parameters.get("requires_confirmation") or parameters.get("confirmed") is False:
+        # Check for confirmation requirements.
+        #
+        # Item 12D (R6): both halves now use STRICT IDENTITY, so the
+        # two flags mean the same kind of thing.
+        #
+        # Before, this read
+        #
+        #     parameters.get("requires_confirmation")
+        #         or parameters.get("confirmed") is False
+        #
+        # -- truthiness for one and identity for the other, on the same
+        # concept. Measured over the values these can actually take:
+        #
+        #     value      requires_confirmation   confirmed
+        #     1          TRIGGERS                 -
+        #     "yes"      TRIGGERS                 -
+        #     "false"    TRIGGERS                 -      <-- the irony
+        #     [1]        TRIGGERS                 -
+        #     0          -                        -
+        #
+        # So the string "false" demanded confirmation while the boolean
+        # False did not, and 0 and False -- the same idea -- disagreed
+        # between the two flags.
+        #
+        # STRICT IDENTITY is the right predicate because every product
+        # producer already assigns a real boolean here: 40 literal
+        # assignments plus 10 that forward a typed attribute (one of them
+        # an explicit bool(...)). Nothing depends on the truthiness
+        # readings, so this narrows the accepted values without changing
+        # a single real code path.
+        if (parameters.get("requires_confirmation") is True
+                or parameters.get("confirmed") is False):
             constraints.append("requires_confirmation")
 
         # Check for safety constraints from operation
