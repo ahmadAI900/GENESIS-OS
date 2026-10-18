@@ -20,6 +20,43 @@ import ctypes
 from ctypes import wintypes
 
 
+# Item 14B (C9): name the HRESULT instead of inlining a bare decimal.
+#
+# "The Recycle Bin was already empty" is reported as
+# HRESULT_FROM_WIN32(ERROR_DIR_NOT_EMPTY) -- 0x80070091, which is
+# -2147024751 when interpreted as a signed 32-bit value.
+#
+# This used to be tested as:
+#
+#     already_empty = result == -2147024879 or result == 0x80070091 % (
+#         1 << 32
+#     ) - (1 << 32)
+#
+# Two separate things were wrong with that line, and it is worth being
+# precise about which was which:
+#
+#   1. The FIRST literal is the wrong constant. -2147024879 is
+#      0x80070011 = ERROR_NOT_SAME_DEVICE -- "the move/delete crossed a
+#      volume boundary". It is a completely different failure and was
+#      never the empty-bin code.
+#
+#   2. The SECOND literal is CORRECT -- but only by luck of operator
+#      precedence. `%` and `-` bind tighter than `==`, so it does
+#      evaluate to `result == ((0x80070091 % (1 << 32)) - (1 << 32))`,
+#      which is the right code. It was typeset across three lines with
+#      the arithmetic dangling off the end of a comparison, which
+#      invited exactly the kind of "helpful" re-parenthesisation that
+#      would have silently broken it. Explicit parentheses and a name
+#      remove both the fragility and the invitation.
+#
+# Only the documented code is kept. ERROR_NOT_SAME_DEVICE is dropped
+# rather than carried along "just in case": nothing indicated it was
+# intended, and treating an unrelated failure as "already empty" would
+# report success -- and set verified=True -- for an operation that
+# actually failed.
+ERROR_DIR_NOT_EMPTY_HRESULT = 0x80070091 - (1 << 32)  # == -2147024751
+
+
 class CleanupManager:
 
     VERSION = "3.12.0"
@@ -127,10 +164,9 @@ class CleanupManager:
                 "verified": False,
             }
 
-        # 0 = success; 0x80070091 = bin was already empty.
-        already_empty = result == -2147024879 or result == 0x80070091 % (
-            1 << 32
-        ) - (1 << 32)
+        # Item 14B (C9): 0 = success; ERROR_DIR_NOT_EMPTY = already
+        # empty. Both operands now use the named HRESULT above.
+        already_empty = result == ERROR_DIR_NOT_EMPTY_HRESULT
 
         success = result == 0 or already_empty
 
