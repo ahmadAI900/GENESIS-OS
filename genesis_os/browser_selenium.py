@@ -98,30 +98,98 @@ class SeleniumBrowserProvider(BrowserProvider):
             return False
         _store_probe_result(1 if result.value else 0, "definitive")
         return bool(_probe_cache)
- 
+
     @property
     def available(self) -> bool:
         return self._available
- 
+
+    # Item 13B (C5): real driver-level timeouts.
+    #
+    # Same reasoning as the Playwright provider: the manager dispatches
+    # Selenium in-process because WebDriver is bound to its creating
+    # thread, so the bound has to live in the driver. These are genuine
+    # WebDriver timeouts -- the remote end raises on them rather than
+    # the local wrapper wishing it could.
+    PAGE_LOAD_TIMEOUT_S = 30
+    SCRIPT_TIMEOUT_S = 30
+    IMPLICIT_WAIT_S = 0  # explicit waits only; never mix with implicit
+    DRIVER_STARTUP_TIMEOUT_S = 60
+    DRIVER_DOWNLOAD_TIMEOUT_S = 120
+
     def _get_driver(self):
-        """Get or create the WebDriver instance."""
+        """Get or create the WebDriver instance.
+
+        Item 13B (C5): every unbounded step is now bounded.
+
+        `ChromeDriverManager().install()` DOWNLOADS chromedriver over the
+        network on a cache miss. Unbounded, that is the single easiest
+        way for driver creation to hang forever -- on a captive portal,
+        a proxy that stalls, or a machine with no route out. It is pure
+        network IO with no thread affinity, so it is safe to run in a
+        worker and abandon; a download we gave up on is not a driver, so
+        nothing is left half-attached to the caller.
+        """
         if self._driver is None:
             from selenium import webdriver
             from selenium.webdriver.chrome.options import Options
             from selenium.webdriver.chrome.service import Service
-            from webdriver_manager.chrome import ChromeDriverManager
- 
+
             options = Options()
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--disable-gpu")
             # Uncomment for headless: options.add_argument("--headless")
- 
+
+            driver_path = self._bounded_driver_download()
+
             self._driver = webdriver.Chrome(
-                service=Service(ChromeDriverManager().install()),
-                options=options
+                service=Service(driver_path),
+                options=options,
+                service_timeout=self.DRIVER_STARTUP_TIMEOUT_S,
             )
+            # Item 13B (C5): bound the remote end from the start, so a
+            # page that never finishes loading cannot hold a call open
+            # indefinitely. These raise WebDriverTimeoutException, which
+            # the providers already handle as a provider failure.
+            try:
+                self._driver.set_page_load_timeout(self.PAGE_LOAD_TIMEOUT_S)
+                self._driver.set_script_timeout(self.SCRIPT_TIMEOUT_S)
+                self._driver.implicitly_wait(self.IMPLICIT_WAIT_S)
+            except Exception:
+                # A remote that rejects these is still usable; the
+                # manager-level overrun check (Item 13B) still refuses
+                # to certify a late result.
+                pass
         return self._driver
+
+    def _bounded_driver_download(self) -> str:
+        """Return a chromedriver path, giving up after a fixed budget.
+
+        Raises on timeout rather than returning a path we do not have,
+        so a stalled download surfaces as driver-creation failure instead
+        of an unbounded block.
+        """
+        from concurrent.futures import (
+            ThreadPoolExecutor,
+            TimeoutError as FuturesTimeoutError,
+        )
+
+        from webdriver_manager.chrome import ChromeDriverManager
+
+        executor = ThreadPoolExecutor(max_workers=1)
+        try:
+            future = executor.submit(
+                ChromeDriverManager().install
+            )
+            return future.result(timeout=self.DRIVER_DOWNLOAD_TIMEOUT_S)
+        except FuturesTimeoutError as exc:
+            raise TimeoutError(
+                f"chromedriver download did not finish within "
+                f"{self.DRIVER_DOWNLOAD_TIMEOUT_S}s; the driver is not "
+                f"available rather than the caller hanging"
+            ) from exc
+        finally:
+            executor.shutdown(wait=False, cancel_futures=True)
  
     def _ensure_driver(self):
         """Ensure driver is initialized."""

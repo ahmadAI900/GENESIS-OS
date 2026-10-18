@@ -78,6 +78,23 @@ class PlaywrightBrowserProvider(BrowserProvider):
 
     name = "playwright"
 
+    # Item 13B (C5): real driver-level timeouts.
+    #
+    # The manager cannot interrupt a Playwright call -- the sync API is
+    # bound to the thread that created it, which is exactly why this
+    # provider is treated as thread-unsafe and dispatched in-process. So
+    # the wall clock has to be bounded HERE, by the driver, instead of by
+    # a wrapper that hopes to give up.
+    #
+    # These are genuine Playwright timeouts: `launch` bounds browser
+    # startup, and set_default_timeout / set_default_navigation_timeout
+    # make every subsequent action and navigation give up on its own.
+    # A driver that respects them raises TimeoutError, which the manager
+    # sees as a provider error rather than a silent hang.
+    LAUNCH_TIMEOUT_MS = 30_000
+    DEFAULT_TIMEOUT_MS = 15_000
+    NAVIGATION_TIMEOUT_MS = 30_000
+
     def __init__(self):
         self._browser = None
         self._context = None
@@ -159,10 +176,23 @@ class PlaywrightBrowserProvider(BrowserProvider):
         try:
             from playwright.sync_api import sync_playwright
             self._playwright = sync_playwright().start()
+            # Item 13B (C5): bound browser startup, and make the context
+            # itself carry default action and navigation timeouts so no
+            # later call relies on remembering to pass one.
             self._browser = self._playwright.chromium.launch(
                 headless=self._resolve_headless(),
+                timeout=self.LAUNCH_TIMEOUT_MS,
             )
             self._context = self._browser.new_context()
+            try:
+                self._context.set_default_timeout(self.DEFAULT_TIMEOUT_MS)
+                self._context.set_default_navigation_timeout(
+                    self.NAVIGATION_TIMEOUT_MS
+                )
+            except Exception:
+                # Older Playwright builds may lack these; the explicit
+                # per-call timeouts below still apply.
+                pass
             self._page = self._context.new_page()
         except Exception:
             # Mark unavailable so manager falls back.
@@ -267,7 +297,15 @@ class PlaywrightBrowserProvider(BrowserProvider):
         with self._lock:
             try:
                 page = self._get_page()
-                page.goto(url, wait_until="networkidle")
+                # Item 13B (C5): explicit navigation timeout.
+                # `wait_until="networkidle"` on a page that keeps a
+                # websocket or long-poll open NEVER settles, so without
+                # an explicit bound this call can wait indefinitely.
+                page.goto(
+                    url,
+                    wait_until="networkidle",
+                    timeout=self.NAVIGATION_TIMEOUT_MS,
+                )
                 actual_url = str(page.url)
                 verified = bool(
                     actual_url
@@ -517,7 +555,12 @@ class PlaywrightBrowserProvider(BrowserProvider):
             try:
                 new_page = self._context.new_page()
                 if url:
-                    new_page.goto(url, wait_until="networkidle")
+                    # Item 13B (C5): same explicit navigation bound.
+                    new_page.goto(
+                        url,
+                        wait_until="networkidle",
+                        timeout=self.NAVIGATION_TIMEOUT_MS,
+                    )
                 self._page = new_page
                 actual_url = str(new_page.url)
                 actual_title = str(new_page.title())
@@ -690,7 +733,17 @@ class PlaywrightBrowserProvider(BrowserProvider):
                 destination = Path(save_path)
                 destination.parent.mkdir(parents=True, exist_ok=True)
                 with page.expect_download(timeout=30000) as download_info:
-                    page.goto(url, wait_until="commit")
+                    # Item 13B (C5): explicit bound.
+                    # `expect_download(timeout=...)` bounds the
+                    # DOWNLOAD, not this goto. `wait_until="commit"`
+                    # returns once the response starts, which is what a
+                    # download wants, but a connection that never
+                    # commits would still block here indefinitely.
+                    page.goto(
+                        url,
+                        wait_until="commit",
+                        timeout=self.NAVIGATION_TIMEOUT_MS,
+                    )
                 download = download_info.value
                 download.save_as(str(destination))
                 exists = destination.is_file() and destination.stat().st_size > 0

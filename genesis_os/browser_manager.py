@@ -489,14 +489,25 @@ class BrowserManager:
             start = _time.monotonic()
             result = None
             try:
-                # Thread-unsafe providers (Playwright/Selenium) are bound
-                # to the creating thread and cannot be dispatched to a
-                # worker thread, so a hard kill is not possible.  This
-                # time.monotonic() check provides a best-effort hard
-                # timeout: if the limit is already exceeded before the
-                # call, raise FuturesTimeoutError immediately.
-                if _time.monotonic() - start > timeout:
-                    raise FuturesTimeoutError(timeout)
+                # Item 13B (C5): there is deliberately NO pre-call
+                # deadline check here any more.
+                #
+                # The previous
+                #
+                #     if _time.monotonic() - start > timeout:
+                #         raise FuturesTimeoutError(timeout)
+                #
+                # ran BEFORE `fn()`, so `start` was microseconds old and
+                # the condition was never true. It looked like a hard
+                # timeout and enforced nothing.
+                #
+                # Real enforcement is now where it can actually bite:
+                # the providers set driver-level timeouts at creation
+                # (Playwright set_default_timeout /
+                # set_default_navigation_timeout and an explicit goto
+                # timeout; Selenium page-load and script timeouts, and a
+                # bounded ChromeDriverManager download). A driver that
+                # respects those raises on its own.
                 result = fn()
             finally:
                 elapsed = _time.monotonic() - start
@@ -506,12 +517,35 @@ class BrowserManager:
                         result.setdefault("_dispatch_mode", "in_process")
                     except Exception:
                         pass
-            # Best-effort timeout note: no hard kill possible on the
-            # calling thread, so record overrun honestly instead of
-            # pretending a timeout was enforced.
-            if elapsed > timeout and isinstance(result, dict):
+            # Item 13B (C5): an overrun now FAILS the operation.
+            #
+            # It used to set `_timeout_overrun` and return the result
+            # unchanged, so a call that blew its deadline by 10x was
+            # handed back as success=True to any caller that trusted the
+            # flag. The overrun flag is kept, because it is honest
+            # information, but it no longer rides on a success.
+            #
+            # What we still cannot do is KILL the call: the provider is
+            # running on this thread because Playwright and Selenium are
+            # bound to their creating thread. So this is not a hard
+            # timeout and is not described as one -- it is a refusal to
+            # certify a result we know missed its deadline. The driver
+            # level timeouts are what bound the wall clock; this is what
+            # stops a late result being reported as a good one.
+            if isinstance(result, dict) and elapsed > timeout:
                 result.setdefault("_timeout_overrun", True)
                 result.setdefault("_timeout_s", timeout)
+                result["success"] = False
+                result["verified"] = False
+                result["error"] = (
+                    f"{provider_name or 'provider'} call took "
+                    f"{round(elapsed, 3)}s against a {timeout}s budget. "
+                    f"The driver could not be interrupted mid-call, so "
+                    f"this operation is reported as FAILED rather than "
+                    f"successful-but-late."
+                )
+                result.setdefault("operation", "browser.dispatch")
+                result.setdefault("executed", False)
             return result
 
         with ThreadPoolExecutor(max_workers=1) as executor:
