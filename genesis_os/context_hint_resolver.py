@@ -1426,19 +1426,6 @@ class ContextHintResolver:
                 self._resolutions_succeeded += 1
                 return resolution
 
-        self._resolutions_attempted += 1
-
-        for resolver in (
-            _settings_resolution,
-            _browser_resolution,
-            _browser_action_resolution,
-            _file_manager_resolution,
-            _app_create_document_resolution,
-        ):
-            resolution = resolver(hint, fragment, current_decision)
-            if resolution is not None and resolution.resolved:
-                self._resolutions_succeeded += 1
-                return resolution
 
         # Standalone (no-prior-context) settings sub-page
         # resolution: when the 1st clause produced no L3
