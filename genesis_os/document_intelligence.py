@@ -138,6 +138,14 @@ class DocumentResult:
     message: str = ""
     data: Any = None
     error: Optional[str] = None
+    # Item 13C (C6): did the CONTENT actually change?
+    #
+    # None means the operation does not claim to have verified anything
+    # (reads, inspections, comparisons). True/False mean it read the
+    # result back and compared it. Writes must not leave this None:
+    # "the file exists and is non-empty" is evidence the write happened,
+    # not evidence the replacement landed.
+    verified: Optional[bool] = None
 
 
 class DocumentIntelligence:
@@ -1001,6 +1009,40 @@ class DocumentIntelligence:
     # DOCX STRUCTURE-PRESERVING EDIT
     # ------------------------------------------------------------------
 
+    def _verify_docx_replacement(
+        self,
+        dest: str,
+        find_text: str,
+        replace_text: str,
+    ) -> Optional[bool]:
+        """Item 13C (C6): did the replacement actually LAND?
+
+        Reopens the saved file and reads the text back. Returns
+        True/False on a comparison, or None when the file could not be
+        read back at all -- which the caller must treat as NOT verified.
+
+        The test is deliberately tolerant of the case where the
+        replacement text still contains the search text ("draft" ->
+        "draft-final"): we accept either the new text being present or
+        the old text being gone. A deletion (empty replacement) can only
+        satisfy the second.
+        """
+
+        if not HAS_DOCX:
+            return None
+        try:
+            doc = DocxDocument(dest)
+            text = "\n".join(
+                p.text for p in DocumentIntelligence._iter_docx_paragraphs(doc)
+            )
+        except Exception:
+            return None
+
+        gone = find_text not in text
+        if replace_text:
+            return (replace_text in text) or gone
+        return gone
+
     def _edit_docx(
         self,
         abs_path: str,
@@ -1050,18 +1092,35 @@ class DocumentIntelligence:
         dest = self._resolve_output(abs_path, output, "edited")
         doc.save(dest)
 
+        # Item 13C (C6): read the saved document back and check the
+        # replacement is in it. Previously this returned success=True
+        # with no `verified` field at all -- python-docx writing the file
+        # was treated as proof the replacement had landed.
+        verified = self._verify_docx_replacement(
+            dest, find_text, replace_text
+        )
+        if verified is None:
+            verified = False
+
         return DocumentResult(
             success=True,
             operation="edit",
             path=dest,
             format=fmt,
-            message=f"Document edited: {occurrences} occurrence(s) replaced",
+            message=(
+                f"Document edited: {occurrences} occurrence(s) replaced"
+                if verified else
+                f"Document written, but reading it back did NOT confirm "
+                f"the replacement ({occurrences} occurrence(s) attempted)"
+            ),
             data={
                 "find_text": find_text,
                 "replace_text": replace_text,
                 "occurrences": occurrences,
                 "output_path": dest,
+                "verified": verified,
             },
+            verified=verified,
         )
 
     @staticmethod

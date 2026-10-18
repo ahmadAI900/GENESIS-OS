@@ -65,6 +65,14 @@ class SpreadsheetResult:
     message: str
     data: Any
     error: Optional[str]
+    # Item 13C (C6): did the CONTENT actually change?
+    #
+    # None means the operation does not claim to have verified anything
+    # (reads, inspections). True/False mean it did read the result back
+    # and compared it. Writes must not leave this None -- a write that
+    # has not been read back has NOT been verified, and saying nothing
+    # lets `success` stand in for proof.
+    verified: Optional[bool] = None
 
 
 class SpreadsheetIntelligence:
@@ -806,6 +814,61 @@ class SpreadsheetIntelligence:
         except Exception as e:
             return SpreadsheetResult(False, "add_column", None, "Add column failed", None, str(e))
 
+    def _read_back_cell(
+        self,
+        dest: str,
+        ext: str,
+        sheet_name: Optional[str],
+        row: int,
+        column: str,
+        value: Any,
+    ) -> Optional[bool]:
+        """Read the written cell back and compare it to what we wrote.
+
+        Item 13C (C6). Returns True/False on a comparison, or None when
+        the read-back could not be performed at all -- in which case the
+        caller must report verified=False rather than assume success.
+
+        CSV is compared as strings, because a CSV round trip renders
+        every value as text: an integer 42 written then read comes back
+        as "42". Comparing the raw types would make every legitimate
+        numeric write look like a failure.
+        """
+
+        try:
+            if ext == ".csv":
+                headers, rows = self._read_csv(dest)
+                if column not in headers:
+                    return False
+                col_idx = headers.index(column)
+                data_row_idx = row - 2
+                if data_row_idx < 0 or data_row_idx >= len(rows):
+                    return False
+                return str(rows[data_row_idx][col_idx]) == str(value)
+
+            if ext == ".xlsx":
+                if not HAS_OPENPYXL:
+                    return None
+                wb = load_workbook(dest)
+                try:
+                    ws = wb[sheet_name] if sheet_name else wb.active
+                    headers_row = [
+                        str(c.value) if c.value is not None else ""
+                        for c in ws[1]
+                    ]
+                    if column not in headers_row:
+                        return False
+                    col_idx = headers_row.index(column) + 1
+                    actual = ws.cell(row=row, column=col_idx).value
+                finally:
+                    wb.close()
+                return actual == value or str(actual) == str(value)
+
+            return None
+        except Exception:
+            # We could not read it back. That is NOT verification.
+            return None
+
     def update_cell(
         self,
         path: str,
@@ -832,7 +895,14 @@ class SpreadsheetIntelligence:
                 rows[data_row_idx][col_idx] = value
                 dest = self._resolve_output(path, output, "updated")
                 self._write_csv(dest, headers, rows)
-                return SpreadsheetResult(True, "update_cell", dest, f"Cell ({row}, '{column}') updated", {"output": dest, "row": row, "column": column, "value": value}, None)
+                # Item 13C (C6): read the cell back instead of assuming
+                # the write landed.
+                verified = self._read_back_cell(
+                    dest, ext, sheet_name, row, column, value
+                )
+                if verified is None:
+                    verified = False
+                return SpreadsheetResult(True, "update_cell", dest, (f"Cell ({row}, '{column}') updated" if verified else f"Cell ({row}, '{column}') was written but could NOT be verified by reading it back"), {"output": dest, "row": row, "column": column, "value": value}, None, verified)
 
             if ext == ".xlsx":
                 if not HAS_OPENPYXL:
@@ -848,7 +918,13 @@ class SpreadsheetIntelligence:
                 dest = self._resolve_output(path, output, "updated")
                 wb.save(dest)
                 wb.close()
-                return SpreadsheetResult(True, "update_cell", dest, f"Cell ({row}, '{column}') updated", {"output": dest, "row": row, "column": column, "value": value}, None)
+                # Item 13C (C6): read the cell back.
+                verified = self._read_back_cell(
+                    dest, ext, sheet_name, row, column, value
+                )
+                if verified is None:
+                    verified = False
+                return SpreadsheetResult(True, "update_cell", dest, (f"Cell ({row}, '{column}') updated" if verified else f"Cell ({row}, '{column}') was written but could NOT be verified by reading it back"), {"output": dest, "row": row, "column": column, "value": value}, None, verified)
 
             return SpreadsheetResult(False, "update_cell", None, f"Unsupported format: {ext}", None, "UnsupportedFormat")
         except Exception as e:
