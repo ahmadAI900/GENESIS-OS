@@ -55,9 +55,19 @@ class AgentOrchestrator:
 
         plan = self.selector.create_plan(task)
 
+        # Item 12C (R5): count the STEPS, not the dict.
+        #
+        # This logged len(plan). IntelligentTaskSelector.create_plan
+        # returns {'task': ..., 'steps': [...], 'agent_count': N} --
+        # three keys -- so len(plan) was 3 for EVERY plan regardless of
+        # how many steps it held. A 1-step plan and a 7-step plan both
+        # reported "created 3 step(s)".
+        #
+        # create_plan() above already did this correctly with
+        # len(plan['steps']), which is what made the omission obvious.
         print(
             f"[Orchestrator] Intelligent selector "
-            f"created {len(plan)} step(s)."
+            f"created {len(plan['steps'])} step(s)."
         )
 
         return plan
