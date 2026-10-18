@@ -741,34 +741,51 @@ class ActionExecutor:
         # so the dead call has been removed rather than resurrected.
         #
         # =========================================================
-        # BLAST-RADIUS GATE — BUILT, PROVEN, BUT NOT ENABLED
+        # BLAST-RADIUS GATE — HISTORY (this gate IS enabled; see below)
         # =========================================================
-        # Reverted to inert after it regressed 31 tests. The defect is
-        # real and understood: ActionPlan.operation for browser
+        # CORRECTED (Item 14G, S10). This block previously described the gate
+        # below as built and proven but NOT enabled, and went on to tell
+        # the reader that `confirmed: true` remained the live executor
+        # gate and that this branch should not be read as protection.
+        # Every clause of that was stale, and it sat directly above the
+        # live branch, so it read as the description of it. A reader
+        # auditing the Tier 1 path would have been told the executor's
+        # grant gate is inert -- the opposite of the truth. The code
+        # underneath never changed; only the description did.
+        #
+        # The accurate history, kept because it explains why the gate
+        # is shaped the way it is:
+        #
+        # The blast-radius gate was originally built and then reverted
+        # to inert, because ActionPlan.operation for browser
         # capabilities is the BARE VERB ("wait", "click", "screenshot",
         # "select", "download", "verify"), not "browser.wait". Those
         # verbs match no registered capability's operation field, so the
-        # deny-by-default fallback in resolve_operation_blast_radius
-        # gated 31 legitimate Tier 2 capabilities.
+        # deny-by-default fallback in the resolver gated 31 legitimate
+        # Tier 2 browser capabilities.
         #
-        # The fix is NOT to weaken deny-by-default -- that would reopen
-        # the exact coverage gap Step 0 closed. The fix is to resolve
-        # the capability from the plan (the adapter knows the
-        # capability_id; the executor only receives the operation), or
-        # to register the bare browser verbs as operation aliases. Both
-        # are design decisions with security consequences and belong in
-        # their own reviewed session, not at the tail of this one.
+        # It was NOT fixed by weakening deny-by-default -- that would
+        # have reopened the exact coverage gap that fallback closed. It
+        # was fixed by having the adapter carry `capability_id` on the
+        # plan and having the resolver take the most restrictive of
+        # (operation, capability_id), so a missing or wrong
+        # capability_id can only make a plan MORE gated. That is
+        # fail-safe by construction, which is why the gate is on now.
         #
-        # Left in place, inert and documented, so the reasoning is not
-        # lost. The AuthorizationGrant channel itself is complete and
-        # proven end-to-end (see the Step 1b notes): it is only the
-        # executor-side switch that is not thrown.
+        # WHAT IS TRUE RIGHT NOW, in this file:
         #
-        # UNTIL THIS GATE IS ENABLED, `confirmed: true` REMAINS THE
-        # LIVE EXECUTOR GATE. Tier 1 is still protected because the
-        # adapter's own token gate blocks before dispatch, and the
-        # trusted-channel proof showed `confirmed=True` alone is
-        # rejected there. Do not read this branch as protection.
+        #   * The blast-radius gate below is LIVE and is the executor's
+        #     Tier 1 gate.
+        #   * It reads blast_radius ONLY -- never risk_level, which
+        #     answers "how scary" rather than "can it be taken back"
+        #     and disagrees with blast radius on 57 capabilities by
+        #     design.
+        #   * `confirmed: true` is NOT an executor gate and must not be
+        #     read as one. It is not evidence of anything.
+        #   * The AuthorizationGrant channel is proven end to end and
+        #     the executor-side switch IS thrown.
+        #
+        # =========================================================
 
         # =========================================================
         # BLAST-RADIUS AUTHORIZATION GATE (ENABLED)
