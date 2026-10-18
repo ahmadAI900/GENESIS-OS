@@ -1,4 +1,4 @@
-﻿"""Item 14E (S8): `Capability.to_dict()` dropped the safety field.
+"""Item 14E (S8): `Capability.to_dict()` dropped the safety field.
 
 `to_dict()` is the "stable public serialization contract". It carried
 `risk_level` but omitted `blast_radius` and `blast_radius_reason` --
