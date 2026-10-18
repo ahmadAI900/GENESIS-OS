@@ -241,7 +241,8 @@ class FilesystemMonitor:
         if self._watchdog_available:
             self._start_watchdog(path, callback, recursive, event_types, watcher_id)
         else:
-            self._start_polling(path, callback, event_types, watcher_id)
+            # Item 14C (C10): recursive was dropped here.
+            self._start_polling(path, callback, event_types, watcher_id, recursive)
 
         return watcher_id
 
@@ -333,7 +334,11 @@ class FilesystemMonitor:
             with self._lock:
                 self._watchers[watcher_id] = observer
         except Exception:
-            self._start_polling(path, callback, event_types, watcher_id)
+            # Item 14C (C10): the watchdog path can fail AFTER the
+            # caller asked for a recursive watch (e.g. the import or
+            # observer.schedule raises). Falling back to polling must
+            # not quietly drop `recursive` on the floor.
+            self._start_polling(path, callback, event_types, watcher_id, recursive)
 
     def _start_polling(
         self,
@@ -341,10 +346,17 @@ class FilesystemMonitor:
         callback: Callable[[FilesystemEvent], None],
         event_types: Optional[List[str]],
         watcher_id: str,
+        recursive: bool = False,
     ) -> None:
-        """Start a polling-based watcher (fallback)."""
+        """Start a polling-based watcher (fallback).
+
+        Item 14C (C10): `recursive` is threaded through to the snapshot
+        so the polling fallback covers the same tree the caller asked
+        for. It defaults to False so any existing direct caller keeps
+        the old single-level behaviour rather than changing shape.
+        """
         stop_event = threading.Event()
-        snapshot = self._snapshot_path(path)
+        snapshot = self._snapshot_path(path, recursive)
 
         def _poll():
             while not stop_event.is_set():
@@ -352,7 +364,7 @@ class FilesystemMonitor:
                 if stop_event.is_set():
                     break
                 try:
-                    current = self._snapshot_path(path)
+                    current = self._snapshot_path(path, recursive)
                     self._detect_changes(snapshot, current, callback, event_types)
                     snapshot.clear()
                     snapshot.update(current)
@@ -364,18 +376,51 @@ class FilesystemMonitor:
         with self._lock:
             self._watchers[watcher_id] = (t, stop_event)
 
-    def _snapshot_path(self, path: str) -> Dict[str, float]:
-        """Take a snapshot of file modification times."""
-        snapshot = {}
+    def _snapshot_path(
+        self, path: str, recursive: bool = False
+    ) -> Dict[str, float]:
+        """Take a snapshot of file modification times.
+
+        Item 14C (C10): `recursive` is honoured here. It used to be a
+        parameter of `watch()` that silently did nothing whenever the
+        polling fallback was in play -- `_start_polling` was called
+        without it, so a recursive watch on a host without watchdog
+        quietly watched only the top level and reported nothing about
+        subdirectories. Failing silently was the worst option: the
+        caller asked for subtree coverage and got none, with no
+        indication either way.
+
+        DELIBERATE CHOICE: the recursive walk snapshots the SAME KIND
+        of entry the single-level `os.scandir` path always did --
+        directories as well as files -- just at every level. The
+        original code did not filter `os.scandir` results by type, so
+        excluding directories under a walk would have made
+        `recursive=True` behave by a different rule than
+        `recursive=False` rather than being a strict superset of it.
+        A recursive watch therefore still reports an ancestor
+        directory's mtime bump when something beneath it changes, which
+        is exactly what a single-level watch already did for top-level
+        directories.
+        """
+        snapshot: Dict[str, float] = {}
         try:
             if os.path.isfile(path):
                 snapshot[path] = os.path.getmtime(path)
             elif os.path.isdir(path):
-                for entry in os.scandir(path):
-                    try:
-                        snapshot[entry.path] = entry.stat().st_mtime
-                    except (OSError, PermissionError):
-                        pass
+                if recursive:
+                    for dirpath, dirnames, filenames in os.walk(path):
+                        for name in dirnames + filenames:
+                            full = os.path.join(dirpath, name)
+                            try:
+                                snapshot[full] = os.stat(full).st_mtime
+                            except (OSError, PermissionError):
+                                pass
+                else:
+                    for entry in os.scandir(path):
+                        try:
+                            snapshot[entry.path] = entry.stat().st_mtime
+                        except (OSError, PermissionError):
+                            pass
         except (OSError, PermissionError):
             pass
         return snapshot
