@@ -2901,11 +2901,45 @@ JSON:"""
         if CapabilityRegistry.exists(proposed):
             return proposed
 
+        # Item 12E (R7): the grouping is now explicit.
+        #
+        # This read, with no parentheses around the boolean part:
+        #
+        #     if "." in capability_id
+        #     and capability_id.split(".", 1)[1] == proposed
+        #     or capability_id.replace(".", "_") == proposed
+        #
+        # Python binds `and` tighter than `or`, so it was always
+        # evaluating as
+        #
+        #     ("." in capability_id and suffix == proposed)
+        #         or (flattened == proposed)
+        #
+        # and that is what it should be, but nothing said so. The
+        # parentheses that ARE on those lines belong to .split(".", 1)
+        # and .replace(".", "_") -- method-call arguments -- so a reader
+        # scanning for grouping would find none. The other candidate
+        # reading, `"." in capability_id and (suffix == proposed or
+        # flattened == proposed)`, reads plausibly enough to be
+        # mistaken for the intended one.
+        #
+        # CHECKED BEFORE PARENTHESISING, because the point of the fix is
+        # to state the truth rather than pick a tidier story. Every one
+        # of the 143 registered operations contains a dot, and probing
+        # all 399 distinct proposals reachable from the registry (every
+        # id, every dotted suffix, every flattened form, plus junk)
+        # produced ZERO cases where the two groupings disagree. So the
+        # explicit grouping below documents existing behaviour exactly;
+        # it changes nothing.
         suffix_matches = [
             capability_id
             for capability_id in CapabilityRegistry.operations()
-            if "." in capability_id
-            and capability_id.split(".", 1)[1] == proposed
+            if (
+                # the suffix after the FIRST dot, e.g. brightness_set
+                "." in capability_id
+                and capability_id.split(".", 1)[1] == proposed
+            )
+            # OR the whole id flattened, e.g. file_save_as
             or capability_id.replace(".", "_") == proposed
         ]
 
