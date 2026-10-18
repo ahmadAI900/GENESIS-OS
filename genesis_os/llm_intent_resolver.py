@@ -2653,21 +2653,6 @@ class LLMIntentResolver:
         Raises FuturesTimeoutError if the call exceeds
         _LLM_CALL_TIMEOUT, and propagates any other exception.
         """
-        def _do_call():
-            if mode is None:
-                return self.ai_engine.generate_response(
-                    prompt,
-                    generation_kwargs=(
-                        self._selection_generation_kwargs()
-                    ),
-                )
-            return self.ai_engine.generate_response(
-                prompt,
-                mode=mode,
-                generation_kwargs=(
-                    self._selection_generation_kwargs()
-                ),
-            )
 
         # The per-call timeout is genuinely enforced: on timeout the
         # worker is abandoned rather than joined, so a provider that
