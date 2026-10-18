@@ -597,53 +597,70 @@ class ActionPlan(BaseModel):
     # modification.
 
     def __init__(self, /, *args: Any, **kwargs: Any) -> None:
-        if not args:
-            # AuthorizationGrant is validated by isinstance, not
-            # coerced. Anything JSON-shaped is refused rather than
-            # silently accepted, which is what makes this channel
-            # structurally un-forgeable rather than merely
-            # un-populated.
-            grant = kwargs.get("authorization")
-            if grant is not None and not _is_authorization_grant(grant):
+        # Item 14F (S9). The positional-argument support below and the
+        # AuthorizationGrant guard used to be two independent pieces of
+        # __init__, and only ONE of them ran the guard: the check lived
+        # inside `if not args:`, so supplying a single positional
+        # argument -- the historical `ActionPlan("op", "target")` form
+        # this override exists to support -- skipped it entirely.
+        #
+        # That made the trusted adapter->executor channel forgeable from
+        # any call site that happened to use positional syntax:
+        #
+        #     ActionPlan("file.delete", "C:/x", authorization={"forged": True})
+        #
+        # passed a dict straight into the field the keyword path
+        # refuses, because the dictionary never had to survive an
+        # isinstance check. The two paths have to agree, so positional
+        # binding happens FIRST and the guard then runs once, below,
+        # over whatever the merged keyword mapping contains.
+
+        if args:
+            positional_fields = (
+                "operation",
+                "target",
+                "application",
+                "task",
+                "confidence",
+                "parameters",
+                "reason",
+                "source",
+                "version",
+            )
+            if len(args) > len(positional_fields):
                 raise TypeError(
-                    "ActionPlan.authorization must be an "
-                    "AuthorizationGrant issued by "
-                    "issue_authorization_grant(). JSON-shaped values "
-                    "(dict, str, bool) are refused: this field is the "
-                    "trusted adapter->executor channel and cannot be "
-                    "populated from model input."
+                    "ActionPlan.__init__ takes at most "
+                    f"{len(positional_fields)} positional "
+                    "arguments but "
+                    f"{len(args)} were given."
                 )
-            super().__init__(**kwargs)
-            return
 
-        positional_fields = (
-            "operation",
-            "target",
-            "application",
-            "task",
-            "confidence",
-            "parameters",
-            "reason",
-            "source",
-            "version",
-        )
-        if len(args) > len(positional_fields):
+            bound = dict(zip(positional_fields, args))
+            overlapping = set(bound).intersection(kwargs)
+            if overlapping:
+                raise TypeError(
+                    "ActionPlan got both positional and keyword "
+                    f"arguments for fields: {sorted(overlapping)}"
+                )
+            kwargs = {**bound, **kwargs}
+
+        # AuthorizationGrant is validated by isinstance, not
+        # coerced. Anything JSON-shaped is refused rather than
+        # silently accepted, which is what makes this channel
+        # structurally un-forgeable rather than merely
+        # un-populated.
+        grant = kwargs.get("authorization")
+        if grant is not None and not _is_authorization_grant(grant):
             raise TypeError(
-                "ActionPlan.__init__ takes at most "
-                f"{len(positional_fields)} positional "
-                "arguments but "
-                f"{len(args)} were given."
+                "ActionPlan.authorization must be an "
+                "AuthorizationGrant issued by "
+                "issue_authorization_grant(). JSON-shaped values "
+                "(dict, str, bool) are refused: this field is the "
+                "trusted adapter->executor channel and cannot be "
+                "populated from model input."
             )
 
-        bound = dict(zip(positional_fields, args))
-        overlapping = set(bound).intersection(kwargs)
-        if overlapping:
-            raise TypeError(
-                "ActionPlan got both positional and keyword "
-                f"arguments for fields: {sorted(overlapping)}"
-            )
-        merged = {**bound, **kwargs}
-        super().__init__(**merged)
+        super().__init__(**kwargs)
 
     # =========================================================
     # VALIDATION
