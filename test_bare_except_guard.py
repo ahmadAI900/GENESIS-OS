@@ -29,7 +29,15 @@ BACKEND = pathlib.Path(__file__).resolve().parent
 BUDGET = {
     "genesis_os/action_executor.py": 12,
     "genesis_os/agent_framework_adapter.py": 12,
-    "genesis_os/approval_channel.py": 3,
+    # Directive 7A (2026-10-16). Raised 3 -> 4 on 2026-10-18 for
+    # Directive 15B (S13): the Windows approval fix reads stdin on a
+    # worker thread, and the worker must CAPTURE a readline() failure
+    # rather than let it kill the thread, so that the caller can report
+    # WHY it denied instead of a bare EOF. Deliberate, typed `Exception`
+    # (not bare, not BaseException), and it cannot turn a failure into
+    # an ALLOW -- every path out of that handler denies. See
+    # BARE_EXCEPT_INVENTORY.md.
+    "genesis_os/approval_channel.py": 4,
     "genesis_os/approval_store.py": 1,
     "genesis_os/authorization_grant.py": 1,
     "genesis_os/blast_radius.py": 7,

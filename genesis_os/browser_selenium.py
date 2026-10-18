@@ -247,7 +247,12 @@ class SeleniumBrowserProvider(BrowserProvider):
                     service=service_cls(driver_path),
                     options=options,
                 )
-            except BaseException as exc:  # noqa: BLE001
+            except Exception as exc:
+                # Captured, not raised: this runs off the main thread.
+                # `Exception`, not `BaseException` -- a KeyboardInterrupt
+                # belongs to the main thread and must not be swallowed
+                # here. If the worker dies without setting `driver`,
+                # the None check below raises, so nothing is invented.
                 box["error"] = exc
 
         worker = threading.Thread(
@@ -323,7 +328,11 @@ class SeleniumBrowserProvider(BrowserProvider):
         if self._driver is None:
             try:
                 self._get_driver()
-            except BaseException as exc:
+            except Exception as exc:
+                # `Exception`, not `BaseException`: a Ctrl-C during
+                # driver startup is the user interrupting, not evidence
+                # that this provider is broken, and must not permanently
+                # mark it unavailable.
                 self._mark_unavailable(f"driver creation failed: {exc}")
                 raise
 

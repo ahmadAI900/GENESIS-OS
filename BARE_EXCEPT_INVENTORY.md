@@ -38,13 +38,13 @@ and fails if any of them increases.
 | --- | ---: | ---: |
 | `genesis_os\action_executor.py` | 12 | 0 |
 | `genesis_os\agent_framework_adapter.py` | 12 | 0 |
-| `genesis_os\approval_channel.py` | 3 | 0 |
+| `genesis_os\approval_channel.py` | 4 | 0 |
 | `genesis_os\approval_store.py` | 1 | 0 |
 | `genesis_os\authorization_grant.py` | 1 | 0 |
 | `genesis_os\blast_radius.py` | 7 | 0 |
 | `genesis_os\security_model.py` | 2 | 0 |
 | `genesis_os\unified_executor.py` | 3 | 0 |
-| **Total** | **41** | **0** |
+| **Total** | **42** | **0** |
 
 ## All modules with broad handlers, most first
 
@@ -93,7 +93,7 @@ and fails if any of them increases.
 | `agents\document_agent.py` | 4 | 0 |
 | `genesis_os\content_verifier.py` | 4 | 0 |
 | `benchmark_real_os\evidence.py` | 3 | 0 |
-| `genesis_os\approval_channel.py` | 3 | 0 |
+| `genesis_os\approval_channel.py` | 4 | 0 |
 | `genesis_os\autonomous_audit.py` | 3 | 0 |
 | `genesis_os\capture_manager.py` | 3 | 0 |
 | `genesis_os\clipboard_manager.py` | 3 | 0 |
@@ -163,3 +163,18 @@ and fails if any of them increases.
 | `tools\tiering_rules.py` | 1 | 0 |
 | `tools\verify\verify_browser_event_phase.py` | 1 | 0 |
 | `tools\verify_all.py` | 1 | 0 |
+## Budget changes
+
+- **2026-10-18, Directive 15B (S13).** `genesis_os\approval_channel.py`
+  raised **3 -> 4**. The Windows approval fix reads stdin on a worker
+  thread; the worker must *capture* a `readline()` failure rather than
+  let it kill the thread, so the caller can report WHY it denied instead
+  of a bare EOF. The handler is a typed `except Exception` -- not
+  bare, not `BaseException` -- and it cannot turn a failure into an
+  ALLOW: every path out of that handler denies. A `BaseException`
+  variant was written first and rejected, because a `KeyboardInterrupt`
+  belongs to the main thread and must not be swallowed by a reader
+  worker.
+
+  The budget still exists and still fails; this is one recorded,
+  justified addition, not a relaxation. See `test_bare_except_guard.py`.

@@ -547,10 +547,16 @@ class ApprovalChannel:
         def _worker() -> None:
             try:
                 box["line"] = stream.readline()
-            except BaseException as exc:  # noqa: BLE001
+            except Exception as exc:
                 # Captured, not raised: this runs off the main thread,
                 # so an escaping exception would only kill the worker
                 # and leave join() to guess. The caller decides.
+                #
+                # `Exception`, not `BaseException`: a KeyboardInterrupt
+                # belongs to the MAIN thread and must not be swallowed
+                # here, and if the worker somehow dies without setting
+                # `line` the empty-string branch below raises EOFError,
+                # which denies -- so nothing escapes as consent.
                 box["error"] = exc
 
         worker = threading.Thread(
