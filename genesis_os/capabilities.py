@@ -433,6 +433,24 @@ class CapabilityDescriptor(Capability):
             "failure_modes": list(self.failure_modes),
             "verification_provider": self.verification_provider,
             "risk_level": self.risk_level,
+            # Item 14E (S8). `blast_radius` and its mandatory
+            # `blast_radius_reason` were the only two safety-classifying
+            # fields dropped by this serializer. Every consumer that
+            # received a serialized capability -- including the executor,
+            # which embeds `capability.to_dict()` into plan metadata --
+            # got `risk_level` and nothing telling it whether the
+            # operation could be undone. Downstream, "is this
+            # reversible?" simply had no answer to read.
+            #
+            # Serialized as the enum VALUE, matching how `category` and
+            # `availability` are already handled, so no internal Python
+            # object escapes (the docstring's whole contract).
+            "blast_radius": getattr(
+                self.blast_radius,
+                "value",
+                str(self.blast_radius),
+            ),
+            "blast_radius_reason": self.blast_radius_reason,
             "multiple_providers": list(self.multiple_providers),
             "side_effects": list(self.side_effects),
         }
