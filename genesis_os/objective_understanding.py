@@ -193,11 +193,6 @@ class ObjectiveUnderstanding:
 
     VERSION = "3.8.2"
 
-    _BOUNDARY_RE = re.compile(
-        r"\s*(?:;|\b(?:then|and then|after that|next)\b)\s*",
-        re.IGNORECASE,
-    )
-
     # =================================================================
     # TIER 1 — CLOSED VERB LIST (Level 3.8)
     # =================================================================
@@ -330,6 +325,45 @@ class ObjectiveUnderstanding:
         rf"^(?:please\s+|genesis[,:]?\s+|could you\s+|can you\s+|"
         rf"would you\s+|kindly\s+)?"
         rf"(?:{_ACTION_VERB_PATTERN})\b",
+        re.IGNORECASE,
+    )
+
+    # =================================================================
+    # ITEM 16A (R8): "next" is NOT a clause boundary on its own.
+    # =================================================================
+    #
+    # This used to be
+    #
+    #     r"\s*(?:;|\b(?:then|and then|after that|next)\b)\s*"
+    #
+    # A bare \bnext\b matches wherever the word appears, so every
+    # "the next <noun>" was torn in half. Measured against the
+    # original:
+    #
+    #     "play the next song"     -> ["play the", "song"]
+    #     "go to the next slide"   -> ["go to the", "slide"]
+    #     "open the next folder"   -> ["open the", "folder"]
+    #     "download the next report" -> ["download the", "report"]
+    #     "the next step is to open Chrome"
+    #                             -> ["the", "step is to open Chrome"]
+    #
+    # "next" in English is overwhelmingly an ORDINAL DETERMINER ("the
+    # next one"), not a conjunction. Treating it as a connector
+    # invented a second objective step that the user never asked for,
+    # out of a single instruction.
+    #
+    # The fix mirrors the stricter splitter in
+    # agents/workflow_decision.py::_L3_VERB_SPLIT, which requires the
+    # boundary word to be FOLLOWED BY A VERB before it is allowed to
+    # split. "next" alone is not a boundary; "next open" is, because a
+    # clause has started.
+    #
+    # This is why the regex is declared HERE rather than beside the
+    # other class constants: it needs _ACTION_VERB_PATTERN, which is
+    # built from the Tier 1 and Tier 2 verb lists further down.
+    _BOUNDARY_RE = re.compile(
+        rf"\s*(?:;|\b(?:then|and then|after that)\b|"
+        rf"\bnext\s+(?={_ACTION_VERB_PATTERN}\b))\s*",
         re.IGNORECASE,
     )
 
