@@ -284,8 +284,13 @@ def test_security_agent_measures_password_deterministically():
 
     analysis = result["metadata"].get("password_analysis")
 
-    if analysis is None:
-        pytest.skip("regex did not match; ensure gate text present")
+    # ITEM 19C: this is a verification gate -- if the deterministic
+    # regex/entropy analysis stops producing a verdict, the test must
+    # FAIL, not skip (a skip turned a broken analysis path green).
+    assert analysis is not None, (
+        "password_analysis missing: the security agent did not run its "
+        "deterministic regex/entropy analysis for a fixed known input"
+    )
 
     assert analysis["verdict"] in {"Weak", "Moderate", "Strong"}
     assert isinstance(analysis["charset_entropy_bits"], float)
