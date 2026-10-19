@@ -569,6 +569,8 @@ class DocumentIntelligence:
 
             with open(abs_path, "w", encoding="utf-8") as f:
                 f.write(content)
+            # Item 16D (C18): read it back.
+            verified = self._verify_written_text(abs_path, content)
 
             return DocumentResult(
                 success=True,
@@ -577,6 +579,7 @@ class DocumentIntelligence:
                 format=DocumentFormat.TXT,
                 message="TXT file created successfully",
                 data={"size": len(content.encode("utf-8"))},
+            verified=verified,
             )
         except Exception as exc:
             return DocumentResult(
@@ -599,6 +602,8 @@ class DocumentIntelligence:
                 writer = csv.writer(f)
                 writer.writerow(headers)
                 writer.writerows(rows)
+            # Item 16D (C18): read it back.
+            verified = self._verify_written_csv(abs_path, headers, rows)
 
             return DocumentResult(
                 success=True,
@@ -607,6 +612,7 @@ class DocumentIntelligence:
                 format=DocumentFormat.CSV,
                 message="CSV file created successfully",
                 data={"headers": headers, "row_count": len(rows)},
+            verified=verified,
             )
         except Exception as exc:
             return DocumentResult(
@@ -625,6 +631,8 @@ class DocumentIntelligence:
 
             with open(abs_path, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, default=str)
+            # Item 16D (C18): read it back.
+            verified = self._verify_written_json(abs_path, data)
 
             return DocumentResult(
                 success=True,
@@ -633,6 +641,7 @@ class DocumentIntelligence:
                 format=DocumentFormat.JSON,
                 message="JSON file created successfully",
                 data={"size": os.path.getsize(abs_path)},
+            verified=verified,
             )
         except Exception as exc:
             return DocumentResult(
@@ -651,6 +660,8 @@ class DocumentIntelligence:
 
             with open(abs_path, "w", encoding="utf-8") as f:
                 f.write(content)
+            # Item 16D (C18): read it back.
+            verified = self._verify_written_text(abs_path, content)
 
             return DocumentResult(
                 success=True,
@@ -659,6 +670,7 @@ class DocumentIntelligence:
                 format=DocumentFormat.MARKDOWN,
                 message="Markdown file created successfully",
                 data={"size": len(content.encode("utf-8"))},
+            verified=verified,
             )
         except Exception as exc:
             return DocumentResult(
@@ -982,6 +994,10 @@ class DocumentIntelligence:
             dest = self._resolve_output(abs_path, output, "edited")
             with open(dest, "w", encoding="utf-8", newline="") as f:
                 f.write(edited_text)
+            # Item 16D (C18): read it back. Item 13C did this
+            # for .docx only; the text formats were still
+            # returning an unclaimed verified=None.
+            verified = self._verify_written_text(dest, edited_text)
 
             return DocumentResult(
                 success=True,
@@ -995,6 +1011,7 @@ class DocumentIntelligence:
                     "occurrences": occurrences,
                     "output_path": dest,
                 },
+            verified=verified,
             )
         except Exception as exc:
             return DocumentResult(
@@ -1008,6 +1025,140 @@ class DocumentIntelligence:
     # ------------------------------------------------------------------
     # DOCX STRUCTURE-PRESERVING EDIT
     # ------------------------------------------------------------------
+
+    # =================================================================
+    # ITEM 16D (C18): WRITE VERIFICATION -- read the artifact back
+    # =================================================================
+    #
+    # Same contract Item 13C defined for SpreadsheetResult and Item
+    # 16C applied to it:
+    #
+    #   verified=None  claims nothing about verification
+    #   verified=True  written content read back and matched
+    #   verified=False read back and did NOT match, or could not be
+    #                 read back -- which is NOT verification
+    #
+    # create_txt, create_csv, create_json, create_markdown, edit (text
+    # formats) and transform all returned success=True with
+    # verified=None: they never looked at what they had written. On a
+    # full disk, a locked file or a silently failing write, `success`
+    # only means "the call did not raise".
+    #
+    # create_pdf is deliberately NOT in this set. It is excluded by the
+    # directive and for a good reason: verifying a PDF means checking
+    # rendered content rather than bytes, and a byte comparison against
+    # the generator would be theatre. It keeps reporting no claim rather
+    # than gaining a check that looks meaningful and is not.
+    @staticmethod
+    def _verify_written_text(path: str, expected: str) -> bool:
+        """Read a text artifact back and compare it exactly."""
+        try:
+            with open(path, "r", encoding="utf-8") as handle:
+                return handle.read() == expected
+        except Exception:
+            # An unreadable artifact is not a verified one.
+            return False
+
+    @staticmethod
+    def _verify_written_json(path: str, expected: Any) -> bool:
+        """Read JSON back and compare PARSED values, not text."""
+        try:
+            with open(path, "r", encoding="utf-8") as handle:
+                return json.load(handle) == expected
+        except Exception:
+            return False
+
+    @staticmethod
+    def _verify_written_csv(
+        path: str, headers: List[Any], rows: List[List[Any]]
+    ) -> bool:
+        """Read a CSV back and compare parsed cells.
+
+        Parsed rather than raw text, so quoting and line-ending
+        differences are not mistaken for a content mismatch. Cells are
+        compared as strings because that is what the csv module
+        round-trips them to.
+        """
+
+        def _text(value: Any) -> str:
+            return "" if value is None else str(value).strip()
+
+        try:
+            with open(path, "r", newline="", encoding="utf-8") as handle:
+                parsed = list(csv.reader(handle))
+        except Exception:
+            return False
+
+        if not parsed:
+            return not headers and not rows
+
+        actual_headers = parsed[0]
+        actual_rows = parsed[1:]
+
+        if [_text(h) for h in actual_headers] != [
+            _text(h) for h in headers
+        ]:
+            return False
+        if len(actual_rows) != len(rows):
+            return False
+
+        for expected_row, actual_row in zip(rows, actual_rows):
+            width = max(len(expected_row), len(actual_row))
+            padded_expected = list(expected_row) + [None] * (
+                width - len(expected_row)
+            )
+            padded_actual = list(actual_row) + [None] * (
+                width - len(actual_row)
+            )
+            if [_text(c) for c in padded_actual] != [
+                _text(c) for c in padded_expected
+            ]:
+                return False
+        return True
+
+    @staticmethod
+    def _verify_written_docx_text(path: str, expected_lines: List[str]) -> bool:
+        """Read a .docx back and confirm its body holds these lines."""
+        if not HAS_DOCX:
+            return False
+        try:
+            document = DocxDocument(path)
+            actual = [
+                p.text
+                for p in DocumentIntelligence._iter_docx_paragraphs(document)
+            ]
+        except Exception:
+            return False
+        return actual == list(expected_lines)
+
+    def _verify_transform_output(
+        self, path: str, out_fmt: "DocumentFormat", text: str
+    ) -> bool:
+        """Item 16D (C18): did the transformed file hold what we wrote?
+
+        transform branches on the target format and writes a DIFFERENT
+        byte sequence for each -- raw text for txt/code/markdown/csv, an
+        HTML wrapper for html, a JSON envelope for json, one paragraph
+        per source line for docx. Verifying against `text` alone would
+        have reported False for three of those five, so each format
+        gets the expectation it actually wrote.
+        """
+        try:
+            if out_fmt == DocumentFormat.HTML:
+                return self._verify_written_text(
+                    path, f"<html><body><pre>{text}</pre></body></html>"
+                )
+            if out_fmt == DocumentFormat.JSON:
+                return self._verify_written_json(path, {"content": text})
+            if out_fmt == DocumentFormat.DOCX:
+                return self._verify_written_docx_text(
+                    path, text.split("\n")
+                )
+            # TXT, CODE, MARKDOWN, CSV and the fallback branch all
+            # write `text` verbatim.
+            return self._verify_written_text(path, text)
+        except Exception:
+            return False
 
     def _verify_docx_replacement(
         self,
@@ -1916,6 +2067,13 @@ class DocumentIntelligence:
                 with open(abs_output, "w", encoding="utf-8") as f:
                     f.write(text)
 
+            # Item 16D (C18): read the output back. The
+            # expectation depends on the output format, because
+            # transform does not always write `text` verbatim.
+            verified = self._verify_transform_output(
+                abs_output, out_fmt, text
+            )
+
             return DocumentResult(
                 success=True,
                 operation="transform",
@@ -1931,6 +2089,7 @@ class DocumentIntelligence:
                     "output_exists": os.path.isfile(abs_output) and os.path.getsize(abs_output) > 0,
                     "original_preserved": self._file_digest(abs_path) == source_hash,
                 },
+            verified=verified,
             )
         except Exception as exc:
             return DocumentResult(
