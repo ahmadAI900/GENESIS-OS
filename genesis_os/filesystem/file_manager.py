@@ -559,30 +559,52 @@ class FileManager:
                 data_only=True,
             )
 
-            sheets = {}
+            try:
 
-            for worksheet in workbook.worksheets:
+                sheets = {}
 
-                rows = []
+                for worksheet in workbook.worksheets:
 
-                for row in worksheet.iter_rows(
-                    values_only=True
-                ):
+                    rows = []
 
-                    rows.append(
-                        list(row)
-                    )
+                    for row in worksheet.iter_rows(
+                        values_only=True
+                    ):
 
-                sheets[
-                    worksheet.title
-                ] = rows
+                        rows.append(
+                            list(row)
+                        )
 
-            return {
-                "success": True,
-                "operation": "file.extract_xlsx",
-                "path": str(path),
-                "sheets": sheets,
-            }
+                    sheets[
+                        worksheet.title
+                    ] = rows
+
+                return {
+                    "success": True,
+                    "operation": "file.extract_xlsx",
+                    "path": str(path),
+                    "sheets": sheets,
+                }
+
+            finally:
+
+                # Item 17D (C21): a read_only workbook keeps the
+                # .zip archive handle open until close(). This
+                # function never closed it -- the success path and
+                # the error path both leaked one file handle per
+                # extracted xlsx (on Windows, a handle that pins the
+                # file open). Close is best-effort and swallows its
+                # own errors: a failing close must not discard an
+                # extraction that already succeeded, and no claim is
+                # made about close() itself -- only that it was
+                # attempted on every path.
+                try:
+
+                    workbook.close()
+
+                except Exception:
+
+                    pass
 
         except Exception as error:
 
