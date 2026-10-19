@@ -78,6 +78,20 @@ def _is_authorization_grant(value: Any) -> bool:
     return isinstance(value, AuthorizationGrant)
 
 
+def _is_runtime_resolution_record(value: Any) -> bool:
+    """Structural check used by ActionPlan.__init__ (Item 20B, S15).
+
+    Same lazy pattern as the grant check: JSON-shaped values (dict,
+    str, bool) arriving on any deserialization path are refused so the
+    target waiver cannot be populated from model input.
+    """
+    try:
+        from .runtime_resolution import RuntimeResolutionRecord
+    except Exception:
+        return False
+    return isinstance(value, RuntimeResolutionRecord)
+
+
 def attach_authorization(
     plan: "ActionPlan", grant: Any, arguments: Optional[Any] = None
 ) -> "ActionPlan":
@@ -230,6 +244,31 @@ class ActionPlan(BaseModel):
     # the same trusted channel and is meaningless without a valid grant
     # (the executor requires both, and re-derives the hash from it).
     authorization_arguments: Optional[Any] = Field(
+        default=None,
+        exclude=True,
+        repr=False,
+    )
+
+    # =========================================================
+    # RUNTIME RESOLUTION (trusted target waiver) -- Item 20B, S15
+    # =========================================================
+    #
+    # The conditional-target validator used to waive the target
+    # requirement by reading ``parameters["requires_runtime_resolution"]``
+    # / ``source_is_anaphoric`` / ``anaphoric_target`` -- three keys a
+    # model can put in its own JSON, letting model input decide that a
+    # safety invariant (target required for file.delete, etc.) did not
+    # apply to it. The waiver now reads ONLY this field.
+    #
+    # Typed as Any with an isinstance guard in ``__init__`` (same
+    # shape as ``authorization``): RuntimeResolutionRecord refuses
+    # direct construction and is mintable only by trusted code, so
+    # there is no JSON-shaped input that yields a record.
+    #
+    # Excluded from serialization; a plan never leaks a waiver into a
+    # payload, log line, or model-visible output.
+
+    runtime_resolution: Optional[Any] = Field(
         default=None,
         exclude=True,
         repr=False,
@@ -565,16 +604,46 @@ class ActionPlan(BaseModel):
     # truth that ``validate()`` and any downstream code now
     # both consult.
 
+    @field_validator("runtime_resolution")
+    @classmethod
+    def _runtime_resolution_must_be_a_minted_record(
+        cls,
+        value: Any,
+    ) -> Any:
+        # Belt-and-braces beside the __init__ guard: pydantic's
+        # model_validate()/parse paths bypass __init__, and the
+        # waiver must hold on every construction route (Item 20B).
+        if value is not None and not _is_runtime_resolution_record(value):
+            raise ActionPlanValidationError(
+                "ActionPlan.runtime_resolution must be a minted "
+                "RuntimeResolutionRecord; JSON-shaped values are "
+                "refused because this field waives the target "
+                "requirement."
+            )
+
+        return value
+
     @model_validator(mode="after")
     def _conditional_target_requirement(
         self,
     ) -> "ActionPlan":
+        # Item 20B (S15): the waiver used to read
+        # ``self.parameters`` for requires_runtime_resolution /
+        # source_is_anaphoric / anaphoric_target -- three keys that
+        # live in model-controlled JSON, so the model could waive
+        # the target requirement for file.delete and friends by
+        # flagging its own payload. The waiver now reads ONLY the
+        # trusted record, which JSON cannot produce, and it must
+        # belong to THIS operation.
         if (
             self.target is None
             and self.operation not in self.TARGETLESS_OPERATIONS
-            and not self.parameters.get("requires_runtime_resolution")
-            and not self.parameters.get("source_is_anaphoric")
-            and not self.parameters.get("anaphoric_target")
+            and (
+                self.runtime_resolution is None
+                or getattr(
+                    self.runtime_resolution, "operation", None
+                ) != self.operation
+            )
         ):
             raise ActionPlanValidationError(
                 "ActionPlan target is required "
@@ -657,6 +726,21 @@ class ActionPlan(BaseModel):
                 "issue_authorization_grant(). JSON-shaped values "
                 "(dict, str, bool) are refused: this field is the "
                 "trusted adapter->executor channel and cannot be "
+                "populated from model input."
+            )
+
+        # Item 20B (S15): same guard for the target waiver. The old
+        # validator read model-reachable `parameters` for its waiver
+        # keys; the waiver now lives on this field, so the field must
+        # be as unforgeable as the grant it sits beside.
+        record = kwargs.get("runtime_resolution")
+        if record is not None and not _is_runtime_resolution_record(record):
+            raise TypeError(
+                "ActionPlan.runtime_resolution must be a "
+                "RuntimeResolutionRecord issued by "
+                "issue_runtime_resolution_record(). JSON-shaped "
+                "values (dict, str, bool) are refused: this field "
+                "waives the target requirement and cannot be "
                 "populated from model input."
             )
 
@@ -901,6 +985,46 @@ class ActionPlan(BaseModel):
         )
 
         # ---------------------------------------------------------
+        # TARGET WAIVER (Item 20B, S15)
+        #
+        # Only trusted code may waive the target requirement, and
+        # only for DETERMINISTIC-origin anaphoric references: the
+        # regex/lexicon paths (workflow_decision, unseen_task_semantic)
+        # flag `requires_runtime_resolution` / `source_is_anaphoric` /
+        # `anaphoric_target` in the parameters they build themselves.
+        #
+        # `_semantic_resolution` marks a decision that came from the
+        # LLM resolver -- model-controlled JSON. Such a decision
+        # flagging its own way past the target requirement gets NO
+        # record: construction then fails closed on the ordinary
+        # "target is required" contract instead of trusting the flag.
+        #
+        # If no record is minted and no other condition applies, the
+        # model_validator refuses the plan the same way it has always
+        # refused an unflagged targetless plan.
+        # ---------------------------------------------------------
+
+        runtime_record = None
+        anaphoric_flag = bool(
+            parameters.get("requires_runtime_resolution")
+            or parameters.get("source_is_anaphoric")
+            or parameters.get("anaphoric_target")
+        )
+        if (
+            anaphoric_flag
+            and target is None
+            and operation not in cls.TARGETLESS_OPERATIONS
+            and not parameters.get("_semantic_resolution")
+        ):
+            from .runtime_resolution import (
+                issue_runtime_resolution_record,
+            )
+
+            runtime_record = issue_runtime_resolution_record(
+                operation=operation,
+            )
+
+        # ---------------------------------------------------------
         # CREATE PLAN
         # ---------------------------------------------------------
 
@@ -914,6 +1038,7 @@ class ActionPlan(BaseModel):
             reason=reason,
             source=source,
             version=version,
+            runtime_resolution=runtime_record,
         )
 
     def to_dict(
