@@ -622,9 +622,35 @@ class BrowserManager:
         If no state checker exists, fallback is refused rather
         than retried blind (fail-closed).
 
-        The dispatch lock serializes concurrent operations on the
-        same BrowserManager instance, preventing race conditions
-        in provider resolution and fallback chain traversal.
+        THE DISPATCH LOCK GUARDS SHARED STATE ONLY; it does NOT
+        wrap the blocking provider call (Item 17B / C15).
+        It used to wrap this entire function, so one slow
+        operation blocked every independent operation on the
+        instance for its whole duration (reproduced: a fast call
+        waited 0.844s behind an unrelated 1.0s sleep).
+        Locked (fast, no blocking work inside):
+          - provider-chain resolution (reads self._providers and
+            the lazy init in _get_registry)
+          - session lookup/creation (mutates self._sessions)
+          - registry health writes on timeout/failure, each
+            wrapped individually around the write
+        NOT locked, and why that is safe:
+          - the provider call: driver mutual exclusion is the
+            PROVIDER's job and is already done per method behind
+            the provider's own lock -- browser_playwright wraps
+            every method in `with self._lock`, and
+            browser_selenium documents that "every provider
+            method is already serialised behind self._lock"
+          - _amendment3_gate: it runs the caller's state_check
+            callback, which is user code and may itself block
+          - liveness probes (_is_browser_alive): driver reads,
+            protected by the same provider lock
+        Residual, stated honestly: two dispatches that both name
+        a thread-SAFE provider can now run concurrently (before,
+        this lock serialized them). Thread-unsafe providers
+        (playwright/selenium) were never made cross-thread-safe
+        by this lock: their thread affinity rejects a foreign
+        thread whether or not the lock is held.
         """
         with self._dispatch_lock:
             if timeout is None:
@@ -654,90 +680,101 @@ class BrowserManager:
                 session = self._get_session(session_id)
                 providers_to_try = [session.provider]
 
-            last_error = None
-            for provider in providers_to_try:
-                if not getattr(provider, "available", False):
-                    continue
-                if (
-                    getattr(provider, "name", "") == "playwright"
-                    and getattr(provider, "_browser", None) is not None
-                ):
-                    try:
-                        if not provider._is_browser_alive():
-                            continue
-                    except Exception:
-                        continue
+        # ITEM 17B (C15): the critical section ends above.
+        # Everything below can block -- the provider call itself,
+        # the Amendment-3 state check (caller callback) and the
+        # liveness probes -- and running it under this lock made
+        # one slow operation block every independent operation on
+        # the instance (reproduced: 0.844s for an unrelated fast
+        # call behind a 1.0s sleep). Shared-state mutation only:
+        # chain/session resolution above, registry health writes
+        # below, each wrapped in this lock individually.
+        last_error = None
+        for provider in providers_to_try:
+            if not getattr(provider, "available", False):
+                continue
+            if (
+                getattr(provider, "name", "") == "playwright"
+                and getattr(provider, "_browser", None) is not None
+            ):
                 try:
-                    result = self._dispatch_with_timeout(
-                        lambda p=provider: fn(p),
-                        timeout,
-                        provider_name=provider.name,
-                    )
-                    if isinstance(result, dict):
-                        result.setdefault("_provider", provider.name)
-                        if result.get("error") and result.get("success") is True:
-                            result["success"] = False
-                            result["verified"] = False
-                            result["status"] = "execution_failed"
-                        if result.get("success") is False:
-                            last_error = str(
-                                result.get("error")
-                                or result.get("message")
-                                or f"{provider.name} reported failure"
-                            )
-                            refusal = self._amendment3_gate(
-                                operation,
-                                capability_id,
-                                is_idempotent,
-                                provider.name,
-                                last_error,
-                                state_check,
-                            )
-                            if refusal is not None:
-                                return refusal
-                            continue
-                    return result
-                except FuturesTimeoutError:
-                    last_error = f"{provider.name} timed out after {timeout}s"
+                    if not provider._is_browser_alive():
+                        continue
+                except Exception:
+                    continue
+            try:
+                result = self._dispatch_with_timeout(
+                    lambda p=provider: fn(p),
+                    timeout,
+                    provider_name=provider.name,
+                )
+                if isinstance(result, dict):
+                    result.setdefault("_provider", provider.name)
+                    if result.get("error") and result.get("success") is True:
+                        result["success"] = False
+                        result["verified"] = False
+                        result["status"] = "execution_failed"
+                    if result.get("success") is False:
+                        last_error = str(
+                            result.get("error")
+                            or result.get("message")
+                            or f"{provider.name} reported failure"
+                        )
+                        refusal = self._amendment3_gate(
+                            operation,
+                            capability_id,
+                            is_idempotent,
+                            provider.name,
+                            last_error,
+                            state_check,
+                        )
+                        if refusal is not None:
+                            return refusal
+                        continue
+                return result
+            except FuturesTimeoutError:
+                last_error = f"{provider.name} timed out after {timeout}s"
+                with self._dispatch_lock:
                     if registry and capability_id:
                         for entry in registry.get_provider_chain(capability_id):
                             if entry.provider_name == provider.name:
                                 entry.last_health_check_result = False
                                 entry.last_health_check_time = __import__("time").monotonic()
-                    refusal = self._amendment3_gate(
-                        operation, capability_id, is_idempotent,
-                        provider.name, last_error, state_check)
-                    if refusal is not None:
-                        return refusal
-                    continue
-                except Exception as exc:
-                    last_error = f"{provider.name} failed: {exc}"
+                refusal = self._amendment3_gate(
+                    operation, capability_id, is_idempotent,
+                    provider.name, last_error, state_check)
+                if refusal is not None:
+                    return refusal
+                continue
+            except Exception as exc:
+                last_error = f"{provider.name} failed: {exc}"
+                with self._dispatch_lock:
                     if registry and capability_id:
                         for entry in registry.get_provider_chain(capability_id):
                             if entry.provider_name == provider.name:
                                 entry.last_health_check_result = False
                                 entry.last_health_check_time = __import__("time").monotonic()
-                    refusal = self._amendment3_gate(
-                        operation, capability_id, is_idempotent,
-                        provider.name, last_error, state_check)
-                    if refusal is not None:
-                        return refusal
-                    continue
+                refusal = self._amendment3_gate(
+                    operation, capability_id, is_idempotent,
+                    provider.name, last_error, state_check)
+                if refusal is not None:
+                    return refusal
+                continue
 
-            # All providers failed
-            return {
-                "success": False,
-                "operation": operation,
-                "error": f"All providers failed. Last error: {last_error}",
-                "_provider": (
-                    providers_to_try[-1].name
-                    if providers_to_try
-                    else "none"
-                ),
-                "_providers": [
-                    provider.name for provider in providers_to_try
-                ],
-            }
+        # All providers failed
+        return {
+            "success": False,
+            "operation": operation,
+            "error": f"All providers failed. Last error: {last_error}",
+            "_provider": (
+                providers_to_try[-1].name
+                if providers_to_try
+                else "none"
+            ),
+            "_providers": [
+                provider.name for provider in providers_to_try
+            ],
+        }
 
     @staticmethod
     def _amendment3_gate(
