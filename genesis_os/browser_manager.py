@@ -458,6 +458,13 @@ class BrowserManager:
         best-effort only — no hard kill is possible without a
         thread switch, so we call directly and record latency
         instead of enforcing a hard timeout.
+
+        For thread-safe providers, a timed-out call is ABANDONED,
+        not killed: the worker thread running fn() cannot be
+        interrupted, so it keeps running (holding whatever it
+        holds) until fn() returns on its own. What this method
+        guarantees is only that the CALLER stops waiting at the
+        timeout — never that the provider call was stopped.
         """
         # If provider_name not given explicitly, try to recover it
         # from the closure/defaults of the dispatch lambda
@@ -548,9 +555,50 @@ class BrowserManager:
                 result.setdefault("executed", False)
             return result
 
-        with ThreadPoolExecutor(max_workers=1) as executor:
+        # Item 17A (C14): this used to be
+        #
+        #     with ThreadPoolExecutor(max_workers=1) as executor:
+        #         future = executor.submit(fn)
+        #         return future.result(timeout=timeout)
+        #
+        # The `with` form made the timeout unenforceable. future.result
+        # DID raise FuturesTimeoutError at `timeout`, but the block then
+        # ran ThreadPoolExecutor.__exit__ -> shutdown(wait=True), which
+        # waits for the hung fn() to finish. Measured: a 2.0s sleep
+        # against a 0.3s budget returned at 2.000s. The timeout fired
+        # on paper and cost the caller the entire overrun.
+        #
+        # The executor is now built explicitly, and on timeout we
+        # shutdown(wait=False, cancel_futures=True) so the CALL returns
+        # promptly -- mirroring llm_intent_resolver.py and
+        # browser_selenium.py's driver download.
+        #
+        # THE HONEST LIMIT, stated rather than hidden: wait=False does
+        # not kill anything. The worker thread running fn() cannot be
+        # interrupted, so on timeout it is ABANDONED -- still running,
+        # still holding whatever it holds (driver sessions, sockets),
+        # until fn() returns on its own. Nothing here claims the
+        # provider call was stopped; only that the CALLER is no longer
+        # blocked behind it. Thread-unsafe providers still take the
+        # in-process path above and are unaffected by this change.
+        executor = ThreadPoolExecutor(max_workers=1)
+        try:
             future = executor.submit(fn)
-            return future.result(timeout=timeout)
+            result = future.result(timeout=timeout)
+        except FuturesTimeoutError:
+            executor.shutdown(wait=False, cancel_futures=True)
+            raise
+        except BaseException:
+            executor.shutdown(wait=False, cancel_futures=True)
+            raise
+        else:
+            # NOTE: the `return` is deliberately OUTSIDE the try block.
+            # A return inside `try` skips the `else` clause entirely
+            # (verified: try/else with return in try never reaches
+            # else), which would leave the worker thread un-joined on
+            # the success path -- a thread leak on every healthy call.
+            executor.shutdown(wait=True)
+            return result
 
     def _dispatch_with_fallback(
         self,
