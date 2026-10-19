@@ -128,6 +128,26 @@ def _operation_requires_authorization(
     except Exception:
         return True
     return tier is BlastRadius.IRREVERSIBLE_OR_OUTWARD
+
+
+def _values_match(left: Any, right: Any) -> bool:
+    """Whether two argument values are the same dispatched value.
+
+    Item 20A: used to reconcile the approved arguments with the ones
+    ``_dispatch`` reads. Direct equality first; a str/other mix (a Path
+    against its string form) falls back to string comparison so a
+    legitimate plan is not refused for a type difference alone. The
+    comparison is still fail-closed: anything not matching here denies.
+    """
+    if left == right:
+        return True
+    if left is None or right is None:
+        return False
+    if isinstance(left, str) or isinstance(right, str):
+        return str(left) == str(right)
+    return False
+
+
 from typing import Any, Dict
 
 from genesis_os.action_plan import (
@@ -250,6 +270,208 @@ class ActionExecutor:
             )
 
         self.os_manager = os_manager
+
+    # =========================================================
+    # AUTHORIZATION GATE (Item 20A / S14)
+    # =========================================================
+
+    def _authorization_gate(
+        self,
+        plan: ActionPlan,
+        security_context: Optional[Dict[str, Any]] = None,
+    ) -> Optional[ActionResult]:
+        """Refuse a Tier 1 plan whose dispatch is not what was approved.
+
+        Returns the refusal ``ActionResult``, or ``None`` when the plan
+        may proceed (Tier 2, or a grant that covers this exact dispatch).
+
+        WHY THIS EXISTS AS ONE METHOD (Item 20A, S14):
+
+        The gate used to be inline at the bottom of ``execute`` only,
+        with two consequences:
+
+          * every ``plan.target is None`` path returned BEFORE reaching
+            it, so a Tier 1 targetless operation (``file.search``
+            against an outside path) dispatched with no grant at all;
+          * it validated ``plan.authorization_arguments`` -- the dict
+            the human approved -- while ``_dispatch`` reads
+            ``plan.parameters``. A grant for {source: A, destination: B}
+            executed a plan whose parameters said destination: C.
+
+        The check and the dispatch must be about the SAME arguments, so
+        after the grant's own hash validation the approved set is
+        reconciled against what will actually run
+        (``plan.parameters`` + ``plan.target`` + ``plan.application``):
+
+          1. every approved value must be the value dispatched -- a key
+             present in both must be equal; an approved target-bearing
+             key absent from parameters must be the plan's own
+             target/application (the adapter legitimately carries the
+             primary identifier as ``target`` rather than a parameter),
+             and any other target-bearing absence refuses; a dropped
+             non-target-bearing key cannot redirect dispatch and passes;
+          2. every target-bearing argument the plan carries must have
+             been approved -- the human never saw an injected one;
+          3. the plan's target must be among the approved target-bearing
+             values whenever the grant approved substantive arguments
+             (substance measured by the canonical approval hash).
+
+        Any mismatch refuses. There is no path through this method that
+        turns an inconsistency into a pass.
+        """
+        if not _operation_requires_authorization(
+            plan.operation,
+            getattr(plan, "capability_id", None),
+            plan.parameters,
+            context=security_context if security_context else None,
+        ):
+            return None
+
+        from .authorization_grant import (
+            grant_is_valid_for,
+            TARGET_BEARING_ARGUMENT_KEYS,
+        )
+        from .approval_store import _approval_arguments_hash
+
+        grant = getattr(plan, "authorization", None)
+        approved_arguments = getattr(
+            plan, "authorization_arguments", None
+        )
+        try:
+            authorized = grant_is_valid_for(
+                grant,
+                operation=plan.operation,
+                arguments=approved_arguments,
+            )
+        except Exception:
+            authorized = False
+
+        # A grant proves the CALLER's arguments were approved; it
+        # does not prove this plan is built from them. Without the
+        # reconciliation below, a grant for path A could be attached
+        # to a plan dispatching path B -- or to a plan carrying an
+        # argument no human ever saw.
+        denial_reason = "no valid grant"
+        channel_keys = {"approval_token", "_authorization_grant"}
+
+        if authorized and approved_arguments is not None:
+            approved = dict(approved_arguments)
+            dispatched = dict(plan.parameters or {})
+
+            # (1) The approved set and the dispatched set must agree.
+            for key, value in approved.items():
+                if key in dispatched:
+                    if not _values_match(dispatched[key], value):
+                        authorized = False
+                        denial_reason = (
+                            f"approved argument {key!r} differs from the "
+                            "value the plan would dispatch"
+                        )
+                        break
+                elif value not in (None, ""):
+                    if (
+                        _values_match(value, plan.target)
+                        or _values_match(value, plan.application)
+                    ):
+                        continue
+                    if key in TARGET_BEARING_ARGUMENT_KEYS:
+                        authorized = False
+                        denial_reason = (
+                            f"approved argument {key!r} is absent from the "
+                            "plan that would be dispatched"
+                        )
+                        break
+                    # A non-target-bearing approved key the plan dropped
+                    # (``confirmed``, bookkeeping) cannot redirect dispatch:
+                    # its absence only ever under-executes, and the
+                    # canonical approval hash does not count it either.
+
+            # (2) A target-bearing argument the plan carries must be in
+            # the approved set: dispatching a path the approval never
+            # named is the S14 hole in its clearest form.
+            if authorized:
+                approved_keys = set(approved)
+                for key, value in dispatched.items():
+                    if key in approved_keys or key in channel_keys:
+                        continue
+                    if (
+                        key in TARGET_BEARING_ARGUMENT_KEYS
+                        and value not in (None, "")
+                    ):
+                        authorized = False
+                        denial_reason = (
+                            f"dispatched target-bearing argument {key!r} "
+                            "was never approved"
+                        )
+                        break
+
+            # (3) Target correspondence, fail closed: the plan's target
+            # must be among the approved target-bearing values. When the
+            # grant approved arguments but NONE of them can name a
+            # target, a targeted plan is refused too. "Approved
+            # arguments" is measured the way the canonical approval
+            # hash measures it: a set whose hash equals the hash of an
+            # empty set approved nothing substantive (only control keys
+            # such as ``confirmed``, which the canonicalizer strips),
+            # and it passes without target coverage the way a
+            # no-argument grant does -- there is no second target for
+            # such a grant to be re-pointed at.
+            if authorized and plan.target is not None:
+                approved_targets = {
+                    str(value)
+                    for key, value in approved.items()
+                    if key in TARGET_BEARING_ARGUMENT_KEYS
+                    and value not in (None, "")
+                }
+                if approved_targets:
+                    if str(plan.target) not in approved_targets:
+                        authorized = False
+                        denial_reason = (
+                            "the plan's target is not among the approved "
+                            "arguments"
+                        )
+                elif approved and _approval_arguments_hash(
+                    plan.operation, approved
+                ) != _approval_arguments_hash(plan.operation, {}):
+                    authorized = False
+                    denial_reason = (
+                        "the grant covers no target-bearing argument, so it "
+                        "cannot authorize a targeted plan"
+                    )
+
+        if authorized:
+            return None
+
+        return ActionResult.failure_result(
+            operation=plan.operation,
+            target=plan.target,
+            application=plan.application,
+            message=(
+                "This operation is irreversible or outward-facing "
+                "and requires a human-approval grant."
+            ),
+            status="confirmation_required",
+            error=(
+                f"Authorization required for {plan.operation}: no "
+                f"valid grant. Grants travel on the trusted adapter "
+                f"channel and cannot be supplied through plan "
+                f"parameters."
+                + (
+                    f" ({denial_reason})"
+                    if denial_reason != "no valid grant"
+                    else ""
+                )
+            ),
+            executed=False,
+            verified=False,
+            plan=plan.to_dict(),
+            metadata={
+                "executor_version": self.VERSION,
+                "gate": "blast_radius",
+                "blast_radius": "irreversible_or_outward",
+                "denial_reason": denial_reason,
+            },
+        )
 
     # =========================================================
     # PUBLIC API
@@ -421,6 +643,17 @@ class ActionExecutor:
                         "anaphoric_target_pending": True,
                     },
                 )
+            # Item 20A (S14): the blast-radius grant gate used to live
+            # only at the bottom of `execute`, and every target=None
+            # path returned before reaching it -- so a Tier 1 targetless
+            # operation (file.search / document.* / spreadsheet.read
+            # against an outside path) dispatched with NO grant at all.
+            # The gate now runs here too, before anything dispatches.
+            # For the gui.* operations below it is a no-op: they are
+            # Tier 2 when classified from the plan alone.
+            denial = self._authorization_gate(plan)
+            if denial is not None:
+                return denial
             # gui.type_text / gui.paste_text with target=None
             # means "type into focused window" — structurally
             # valid, but the dispatch MUST actually run.
@@ -804,69 +1037,18 @@ class ActionExecutor:
         # is carried on the plan by the adapter, and the resolver takes
         # the most restrictive of (operation, capability_id), so a
         # missing capability_id can only make a plan MORE gated.
-        if _operation_requires_authorization(
-            plan.operation,
-            getattr(plan, "capability_id", None),
-            plan.parameters,
-            context=security_context if security_context else None,
-        ):
-            from .authorization_grant import (
-                grant_is_valid_for,
-                TARGET_BEARING_ARGUMENT_KEYS,
-            )
-
-            grant = getattr(plan, "authorization", None)
-            approved_arguments = getattr(
-                plan, "authorization_arguments", None
-            )
-            try:
-                authorized = grant_is_valid_for(
-                    grant,
-                    operation=plan.operation,
-                    arguments=approved_arguments,
-                )
-            except Exception:
-                authorized = False
-
-            # A grant proves the CALLER's arguments were approved; it
-            # does not prove this plan is built from them. Without this
-            # target correspondence check, a grant for path A could be
-            # attached to a plan targeting path B.
-            if authorized and approved_arguments is not None:
-                approved_targets = {
-                    str(approved_arguments[key])
-                    for key in TARGET_BEARING_ARGUMENT_KEYS
-                    if key in approved_arguments
-                    and approved_arguments[key] not in (None, "")
-                }
-                if approved_targets and plan.target is not None:
-                    authorized = str(plan.target) in approved_targets
-
-            if not authorized:
-                return ActionResult.failure_result(
-                    operation=plan.operation,
-                    target=plan.target,
-                    application=plan.application,
-                    message=(
-                        "This operation is irreversible or outward-facing "
-                        "and requires a human-approval grant."
-                    ),
-                    status="confirmation_required",
-                    error=(
-                        f"Authorization required for {plan.operation}: no "
-                        f"valid grant. Grants travel on the trusted adapter "
-                        f"channel and cannot be supplied through plan "
-                        f"parameters."
-                    ),
-                    executed=False,
-                    verified=False,
-                    plan=plan.to_dict(),
-                    metadata={
-                        "executor_version": self.VERSION,
-                        "gate": "blast_radius",
-                        "blast_radius": "irreversible_or_outward",
-                    },
-                )
+        #
+        # Item 20A (S14): the gate body moved into
+        # `_authorization_gate`, which reconciles the approved arguments
+        # with the ones `_dispatch` will read. It is also called on the
+        # `target is None` dispatch paths, which previously returned
+        # before this point and dispatched ungated.
+        denial = self._authorization_gate(
+            plan,
+            security_context if security_context else None,
+        )
+        if denial is not None:
+            return denial
 
         if not _resolved_capability(
             plan.operation, getattr(plan, "capability_id", None)

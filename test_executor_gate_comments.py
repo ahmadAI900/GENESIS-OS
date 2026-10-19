@@ -203,7 +203,18 @@ def test_action_executor_still_parses():
 def test_the_gate_branch_exists_in_the_executor_source():
     text = SOURCE.read_text(encoding="utf-8-sig")
 
-    assert "if _operation_requires_authorization(" in text, (
+    # Item 20A (S14) moved the gate out of `execute`'s tail into one
+    # method so the targetless paths cannot bypass it. The gate must
+    # still be called in source -- and from BOTH dispatch paths.
+    assert "if not _operation_requires_authorization(" in text, (
         "the executor no longer calls the gate; the corrected comment "
         "describes a branch that is not there"
+    )
+    assert "def _authorization_gate(" in text, (
+        "the reconciling gate method was removed; the targetless "
+        "dispatch paths would bypass authorization again"
+    )
+    assert text.count("self._authorization_gate(") >= 2, (
+        "the gate must be invoked from both the targetful and the "
+        "targetless dispatch paths, not just one"
     )

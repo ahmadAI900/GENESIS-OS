@@ -1426,6 +1426,17 @@ class GenesisOS:
         )
 
         arguments = dict(plan.parameters or {})
+        # Item 20A (S14): the prompt shows the human `target : ...`
+        # (plan_target) but the approval hash was computed over
+        # `arguments` alone, so a plan whose parameters do not carry the
+        # path produced a grant bound to EMPTY arguments while the human
+        # was shown the target -- displayed and approved were two
+        # different things, and such a grant validated for any other
+        # target too. Bind the target into the hashed arguments so what
+        # is displayed, what is approved and what the executor
+        # dispatches are one set.
+        if plan.target is not None and str(plan.target).strip():
+            arguments.setdefault("target", plan.target)
 
         try:
             request = build_request(

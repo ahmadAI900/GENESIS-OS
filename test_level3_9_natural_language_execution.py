@@ -547,7 +547,15 @@ def test_open_my_downloads_folder_end_to_end(workspace_root):
     from genesis_os.approval_store import ApprovalStore
     from genesis_os.authorization_grant import issue_authorization_grant
 
-    args = {"path": str(downloads)}
+    # Item 20A (S14): the approved set must be the one production
+    # builds -- `_authorize_plan_for_execution` hashes plan.parameters
+    # plus the target. This plan still carries the pre-resolution
+    # alias `folder: "downloads"` as a target-bearing parameter next
+    # to the resolved target, so a grant naming only `path` would
+    # leave that parameter uncovered, and the executor's gate now
+    # refuses (correctly: the human never approved `folder`).
+    args = dict(resolved_plan.parameters)
+    args["target"] = str(downloads)
     token = ApprovalStore.issue_token("folder.open", args)
     ApprovalStore.get_default().approve(token.rsplit(":", 1)[1])
     granted = attach_authorization(
