@@ -54,6 +54,34 @@ from typing import Any, Dict, List, Optional
 
 
 # =========================================================
+# ITEM 18B (L17) — KEYWORD WORD-BOUNDARY MATCHING
+#
+# Routing keywords used to be tested with a raw substring
+# check (`keyword in text`), so short keys matched inside
+# larger words: "ui" fires in "build", "circuit", "guide"
+# and "quick", spuriously selecting the design agent for
+# requests that never mention design. Keywords now match
+# only on word boundaries (compiled \b-anchored pattern),
+# so a standalone token ("make a ui mockup") still matches
+# while the inside-of-a-word hits do not. Patterns are
+# compiled once and cached per keyword.
+# =========================================================
+
+_KEYWORD_PATTERN_CACHE: Dict[str, Any] = {}
+
+
+def _keyword_pattern(keyword: str) -> Any:
+    """Compiled \b-anchored pattern for a routing keyword."""
+    pattern = _KEYWORD_PATTERN_CACHE.get(keyword)
+    if pattern is None:
+        pattern = re.compile(
+            r"\b" + re.escape(keyword) + r"\b"
+        )
+        _KEYWORD_PATTERN_CACHE[keyword] = pattern
+    return pattern
+
+
+# =========================================================
 # EXTENDED INTENT PATTERNS
 #
 # Compiled once so that normalized matching and
@@ -4715,7 +4743,10 @@ class WorkflowDecisionEngine:
 
             for keyword in keywords:
 
-                if keyword in text:
+                # ITEM 18B (L17): word-boundary match, never a
+                # raw substring — "ui" must not fire inside
+                # "build"/"circuit"/"guide"/"quick".
+                if _keyword_pattern(keyword).search(text):
 
                     if agent_name not in matches:
                         matches.append(
