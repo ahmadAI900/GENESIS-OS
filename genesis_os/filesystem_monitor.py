@@ -247,23 +247,88 @@ class FilesystemMonitor:
         return watcher_id
 
     def unwatch(self, watcher_id: str) -> bool:
-        """Stop watching a path."""
+        """Stop watching a path.
+
+        Item 17C (C19): self._watchers holds TWO shapes and the old
+        code only ever stopped one of them:
+
+          - a watchdog Observer (stop()/join()),
+          - a (thread, stop_event) tuple written by the polling
+            fallback -- including the fallback taken when
+            _start_watchdog itself raises while _watchdog_available
+            stays True.
+
+        The tuple hit `hasattr(watcher, "stop")` -> False and fell
+        through: the stop_event was never set, the polling thread
+        never saw a reason to exit, and unwatch() still returned
+        True. It popped the id and claimed the watch was stopped
+        while the thread kept polling the filesystem forever
+        (reproduced: stop_event still set=False and the thread still
+        alive 1.5s after unwatch() returned True).
+
+        SHAPE decides, not the global _watchdog_available flag. The
+        entry is popped under the lock; the bounded stop/join runs
+        outside it -- the same pattern stop() already uses -- so a
+        watcher callback that re-enters the monitor cannot stall
+        behind a join we are waiting on.
+
+        Returns True only when the watcher was found AND actually
+        stopped. False means either "unknown id" or "the polling
+        thread outlived the join window": the stop signal was still
+        delivered (the loop exits after its current scan), but this
+        call did not observe the stop and does not report one it
+        did not see.
+        """
         with self._lock:
             watcher = self._watchers.pop(watcher_id, None)
-            if watcher is None:
-                return False
-            if self._watchdog_available and hasattr(watcher, "stop"):
+        if watcher is None:
+            return False
+        if isinstance(watcher, tuple):
+            # Polling watcher: (thread, stop_event).
+            thread, stop_event = watcher
+            stop_event.set()
+            if thread is threading.current_thread():
+                # unwatch() called from inside the polling callback:
+                # joining our own thread would raise RuntimeError. The
+                # loop re-checks the event the moment this callback
+                # returns, so delivering the signal is enough here.
+                return True
+            thread.join(timeout=2.0)
+            return not thread.is_alive()
+        if hasattr(watcher, "stop"):
+            # Watchdog observer; stop()/join() may raise or stall, so
+            # both are bounded rather than allowed to escape (the old
+            # code let them propagate AFTER the pop, losing the id).
+            try:
                 watcher.stop()
+            except Exception:
+                pass
+            try:
                 watcher.join(timeout=2.0)
+            except Exception:
+                pass
             return True
+        # Unknown shape: deregistered, but nothing was stopped, so
+        # it is not reported as stopped.
+        return False
 
     def unwatch_all(self) -> int:
-        """Stop all watchers. Returns count stopped."""
-        count = 0
+        """Stop all watchers. Returns count stopped.
+
+        Item 17C: the ids are snapshotted under the lock and each
+        watcher is then stopped OUTSIDE it (unwatch() takes the lock
+        itself for the pop). Holding the lock across every stop/join
+        -- which the old loop did -- stalled any watcher callback
+        that re-enters the monitor for the whole sweep. The count
+        still reflects unwatch()'s honest verdict: a watcher that
+        could not be confirmed stopped is not counted.
+        """
         with self._lock:
-            for watcher_id in list(self._watchers.keys()):
-                if self.unwatch(watcher_id):
-                    count += 1
+            watcher_ids = list(self._watchers.keys())
+        count = 0
+        for watcher_id in watcher_ids:
+            if self.unwatch(watcher_id):
+                count += 1
         return count
 
     def _start_watchdog(
