@@ -874,7 +874,6 @@ be transparent about it.
         while replan_count <= max_replans:
             try:
                 exec_result = self._workflow_engine.execute(current_plan)
-                break  # Success or non-recoverable failure
             except Exception as exc:
                 _record_phase(TaskPhase.RECOVERING, "workflow_execution_exception", {
                     "error": str(exc),
@@ -918,9 +917,18 @@ be transparent about it.
                 _record_phase(TaskPhase.REPLANNING, "attempting_replan", {
                     "category": classification.category.value,
                 })
+                continue
 
-        # ── PHASE: OBSERVE & VERIFY ────────────────────────
-        if exec_result is not None:
+            # ── PHASE: OBSERVE & VERIFY ────────────────────────
+            # ITEM 18C (L18): verify now runs INSIDE the replan
+            # loop. It used to sit outside it, so a retryable
+            # verification failure incremented replan_count and
+            # fell through to lifecycle_incomplete_fallback --
+            # the plan executed exactly once while recovery
+            # claimed an attempt that never ran.
+            if exec_result is None:
+                break
+
             if hasattr(exec_result, "trustworthy_success"):
                 verified = exec_result.trustworthy_success
             elif isinstance(exec_result, dict):
@@ -960,7 +968,10 @@ be transparent about it.
                         "category": classification.category.value,
                     })
                     replan_count += 1
-                    # Continue loop for replan
+                    _record_phase(TaskPhase.REPLANNING, "attempting_replan", {
+                        "category": classification.category.value,
+                    })
+                    continue
                 else:
                     _record_phase(TaskPhase.FAILED, "verification_failed_final")
                     self._audit.complete_trace(task_id, success=False, result={
