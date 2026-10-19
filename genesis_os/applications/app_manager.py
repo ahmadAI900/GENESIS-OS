@@ -85,6 +85,11 @@ class ApplicationManager:
 
         self.platform = os.name
 
+        # Item 16B (C16): why the last process-table query failed, when
+        # it did. Set by running_state(); read by callers that receive
+        # STATE_UNKNOWN, so "we could not tell" can say why.
+        self._last_process_query_error: Optional[str] = None
+
         # -----------------------------------------------------
 # UNIFIED APPLICATION INTELLIGENCE
 # -----------------------------------------------------
@@ -730,10 +735,16 @@ class ApplicationManager:
         # POST-ACTION VERIFICATION
         # -----------------------------------------------------
 
-        running = self.is_running(
+        # Item 16B (C16): tri-state. `is_running` now returns None for
+        # UNKNOWN, and `success: None` in a result dict is neither True
+        # nor False -- so the boolean is derived explicitly and the
+        # state is carried alongside it rather than being flattened away.
+        state = self.running_state(
             executable,
             attempts=5
         )
+
+        running = state == self.STATE_RUNNING
 
         result = {
             "success": running,
@@ -742,8 +753,13 @@ class ApplicationManager:
             "resolved_executable": executable,
             "already_running": False,
             "running": running,
+            "process_state": state,
             "verified": running,
-            "verification_type": "process_table_inspection",
+            "verification_type": (
+                "process_state_unknown"
+                if state == self.STATE_UNKNOWN
+                else "process_table_inspection"
+            ),
             "verification_method": "tasklist",
             "application_type": "executable",
             "message": (
@@ -943,10 +959,68 @@ class ApplicationManager:
         # -----------------------------------------------------
         # ALREADY CLOSED
         # -----------------------------------------------------
-
-        if not self.is_running(
+        #
+        # Item 16B (C16): three outcomes, not two.
+        #
+        # The old code branched on a bare bool:
+        #
+        #     if not self.is_running(executable):
+        #
+        # and `is_running` reported False both when the process table
+        # confirmed absence AND when the process table could not be
+        # consulted at all -- so a broken tasklist produced:
+        #
+        #     success=True, already_closed=True, running=False,
+        #     verified=True,
+        #     verification_type="process_table_inspection"
+        #
+        # A verified claim about an inspection that never ran.
+        #
+        # `is_running` now returns None for UNKNOWN, so the check is on
+        # the tri-state rather than on truthiness. Reading None as
+        # "not False" is the entire fix.
+        observed = self.is_running(
             executable
-        ):
+        )
+
+        state = (
+            self.STATE_RUNNING
+            if observed is True
+            else self.STATE_UNKNOWN
+            if observed is None
+            else self.STATE_NOT_RUNNING
+        )
+
+        if state == self.STATE_UNKNOWN:
+
+            # Fail closed. We do not know whether the application is
+            # running, so we cannot certify that it is closed.
+            return {
+                "success": False,
+                "operation": "application.close",
+                "application": target,
+                "resolved_executable": executable,
+                # None, not False: the state was not determined. A
+                # consumer reading `already_closed` gets something
+                # falsy, and a consumer reading it strictly gets an
+                # explicit "unknown" rather than a fabricated "no".
+                "already_closed": None,
+                "running": None,
+                "process_state": self.STATE_UNKNOWN,
+                "verified": False,
+                "verification_type": "process_state_unknown",
+                "error": (
+                    self._last_process_query_error
+                    or "The process table could not be queried."
+                ),
+                "message": (
+                    f"Genesis could not determine whether "
+                    f"{target} is running, so closure was not "
+                    f"certified. The application may still be open."
+                ),
+            }
+
+        if state == self.STATE_NOT_RUNNING:
 
             return {
                 "success": True,
@@ -955,6 +1029,7 @@ class ApplicationManager:
                 "resolved_executable": executable,
                 "already_closed": True,
                 "running": False,
+                "process_state": self.STATE_NOT_RUNNING,
                 "verified": True,
                 "verification_type": "process_table_inspection",
                 "verification_method": "tasklist",
@@ -1085,18 +1160,47 @@ class ApplicationManager:
     # RUNNING CHECK
     # =========================================================
 
-    def is_running(
+    # -------------------------------------------------------------
+    # Item 16B (C16): three process states, not two.
+    # -------------------------------------------------------------
+    #
+    # The process table can fail to answer, and "no answer" is not the
+    # same answer as "no". See running_state() for why that matters.
+    STATE_RUNNING = "running"
+    STATE_NOT_RUNNING = "not_running"
+    STATE_UNKNOWN = "unknown"
+
+    def running_state(
         self,
         executable: str,
         attempts: int = 1
-    ) -> bool:
-        """
-        Check whether the specific executable is running.
+    ) -> str:
+        """Is the executable running, not running, or UNKNOWN?
+
+        Item 16B (C16). Previously `is_running` returned a bare bool and
+        turned every exception into `return False`. So a tasklist that
+        could not be executed AT ALL was reported as "not running", and
+        `close` -- which branches on exactly that value -- answered:
+
+            {"success": True, "already_closed": True, "running": False,
+             "verified": True,
+             "verification_type": "process_table_inspection"}
+
+        A certificate of inspection for an inspection that never
+        happened. Reproduced by making tasklist raise: the application
+        could be alive the entire time and Genesis reported it closed,
+        verified.
+
+        Three states instead of two:
+          running     - the process table showed it
+          not_running - the table was consulted and did not show it
+          unknown     - the table could not be consulted at all
+                        (tasklist missing, errored, non-zero exit, or
+                        the host is not Windows)
         """
 
         if not executable:
-
-            return False
+            return self.STATE_UNKNOWN
 
         executable_name = (
             Path(executable)
@@ -1105,12 +1209,16 @@ class ApplicationManager:
         )
 
         if not executable_name:
-
-            return False
+            return self.STATE_UNKNOWN
 
         if os.name != "nt":
+            # Process-table inspection is not implemented here. Saying
+            # "not running" would be a claim about a platform we never
+            # looked at.
+            return self.STATE_UNKNOWN
 
-            return False
+        error: Optional[str] = None
+        answered = False
 
         for _ in range(
             max(1, attempts)
@@ -1137,19 +1245,66 @@ class ApplicationManager:
 
                 if executable_name in output:
 
-                    return True
+                    self._last_process_query_error = None
+                    return self.STATE_RUNNING
 
-            except Exception:
+                if completed.returncode != 0:
+                    # The query ran and FAILED. A failure is not
+                    # evidence of absence.
+                    error = (
+                        (completed.stderr or "").strip()
+                        or f"tasklist exited {completed.returncode}"
+                    )
+                    continue
 
-                return False
+                # Exit 0 and the name is absent: the table answered.
+                answered = True
+
+            except Exception as failure:
+
+                # Recorded, not swallowed. The old code turned every
+                # one of these into `return False`, which is
+                # indistinguishable from "asked, found nothing".
+                error = str(failure)
+                continue
 
             if attempts > 1:
-
                 time.sleep(
                     0.5
                 )
 
-        return False
+        self._last_process_query_error = error
+
+        if answered:
+            return self.STATE_NOT_RUNNING
+
+        return self.STATE_UNKNOWN
+
+    def is_running(
+        self,
+        executable: str,
+        attempts: int = 1
+    ) -> Optional[bool]:
+        """
+        Check whether the specific executable is running.
+
+        Item 16B (C16): returns True, False, or **None** for UNKNOWN.
+        None is falsy, so `if not manager.is_running(x)` behaves exactly
+        as it always did -- but a caller that cares can now tell
+        "confirmed absent" from "never asked". Prefer `running_state`
+        where three states are available.
+        """
+
+        state = self.running_state(
+            executable,
+            attempts,
+        )
+
+        if state == self.STATE_RUNNING:
+            return True
+        if state == self.STATE_NOT_RUNNING:
+            return False
+        return None
 
     def wait_until_stopped(
         self,
