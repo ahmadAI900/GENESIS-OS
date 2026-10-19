@@ -232,6 +232,7 @@ class SpreadsheetIntelligence:
                 rows.sort(key=lambda r: self._natural_sort_key(r[idx] if idx < len(r) else ""), reverse=descending)
                 dest = self._resolve_output(path, output, "sorted")
                 self._write_csv(dest, headers, rows)
+                verified = self._verify_written(dest, ext, headers, rows)
                 return SpreadsheetResult(
                     True,
                     "sort",
@@ -243,6 +244,7 @@ class SpreadsheetIntelligence:
                         "descending": descending,
                     },
                     None,
+                verified=verified,
                 )
 
             if ext == ".xlsx":
@@ -253,7 +255,18 @@ class SpreadsheetIntelligence:
                 rows_data = list(ws.iter_rows(values_only=True))
                 if not rows_data:
                     wb.close()
-                    return SpreadsheetResult(True, "sort", path, "Sheet is empty", None, None)
+                    return SpreadsheetResult(
+                    True,
+                    "sort",
+                    path,
+                    "Sheet is empty",
+                    None,
+                    None,
+                    # Item 16C (C17): nothing was written and
+                    # nothing was read back. False, not None -- a
+                    # success that verifies nothing must say so.
+                    verified=False,
+                )
                 headers_row = list(rows_data[0])
                 if column not in headers_row:
                     wb.close()
@@ -267,6 +280,9 @@ class SpreadsheetIntelligence:
                 dest = self._resolve_output(path, output, "sorted")
                 wb.save(dest)
                 wb.close()
+                verified = self._verify_written(
+                    dest, ext, headers_row, data_rows, sheet_name
+                )
                 return SpreadsheetResult(
                     True,
                     "sort",
@@ -278,6 +294,7 @@ class SpreadsheetIntelligence:
                         "descending": descending,
                     },
                     None,
+                verified=verified,
                 )
 
             return SpreadsheetResult(False, "sort", None, f"Unsupported format: {ext}", None, "UnsupportedFormat")
@@ -334,7 +351,10 @@ class SpreadsheetIntelligence:
                 filtered = [r for r in rows if op_func(r[col_idx] if col_idx < len(r) else "", value)]
                 dest = self._resolve_output(path, output, "filtered")
                 self._write_csv(dest, headers, filtered)
-                return SpreadsheetResult(True, "filter_rows", dest, f"Filtered {len(filtered)} rows", {"filtered_count": len(filtered), "kept_count": len(filtered), "source": path, "output": dest, "column": column, "condition": condition, "value": value}, None)
+                verified = self._verify_written(dest, ext, headers, filtered)
+                return SpreadsheetResult(True, "filter_rows", dest, f"Filtered {len(filtered)} rows", {"filtered_count": len(filtered), "kept_count": len(filtered), "source": path, "output": dest, "column": column, "condition": condition, "value": value}, None,verified=verified
+)
+
 
             if ext == ".xlsx":
                 if not HAS_OPENPYXL:
@@ -344,7 +364,18 @@ class SpreadsheetIntelligence:
                 rows_data = list(ws.iter_rows(values_only=True))
                 if not rows_data:
                     wb.close()
-                    return SpreadsheetResult(True, "filter_rows", path, "Sheet is empty", None, None)
+                    return SpreadsheetResult(
+                    True,
+                    "filter_rows",
+                    path,
+                    "Sheet is empty",
+                    None,
+                    None,
+                    # Item 16C (C17): nothing was written and
+                    # nothing was read back. False, not None -- a
+                    # success that verifies nothing must say so.
+                    verified=False,
+                )
                 headers_row = list(rows_data[0])
                 if column not in headers_row:
                     wb.close()
@@ -358,7 +389,12 @@ class SpreadsheetIntelligence:
                 dest = self._resolve_output(path, output, "filtered")
                 wb.save(dest)
                 wb.close()
-                return SpreadsheetResult(True, "filter_rows", dest, f"Filtered {len(filtered)} rows", {"filtered_count": len(filtered), "kept_count": len(filtered), "source": path, "output": dest, "column": column, "condition": condition, "value": value}, None)
+                verified = self._verify_written(
+                    dest, ext, headers_row, filtered, sheet_name
+                )
+                return SpreadsheetResult(True, "filter_rows", dest, f"Filtered {len(filtered)} rows", {"filtered_count": len(filtered), "kept_count": len(filtered), "source": path, "output": dest, "column": column, "condition": condition, "value": value}, None,verified=verified
+)
+
 
             return SpreadsheetResult(False, "filter_rows", None, f"Unsupported format: {ext}", None, "UnsupportedFormat")
         except Exception as e:
@@ -409,6 +445,9 @@ class SpreadsheetIntelligence:
                     return SpreadsheetResult(False, "calculate", path, "No calculated values were produced", None, "CalculationFailed")
                 dest = self._resolve_output(path, output, "calculated")
                 self._write_csv(dest, new_headers, new_rows)
+                verified = self._verify_written(
+                    dest, ext, new_headers, new_rows
+                )
                 return SpreadsheetResult(
                     True,
                     "calculate",
@@ -420,6 +459,7 @@ class SpreadsheetIntelligence:
                         "calculated_values": [row[-1] for row in new_rows],
                     },
                     None,
+                verified=verified,
                 )
 
             if ext == ".xlsx":
@@ -430,7 +470,18 @@ class SpreadsheetIntelligence:
                 rows_data = list(ws.iter_rows(values_only=True))
                 if not rows_data:
                     wb.close()
-                    return SpreadsheetResult(True, "calculate", path, "Sheet is empty", None, None)
+                    return SpreadsheetResult(
+                    True,
+                    "calculate",
+                    path,
+                    "Sheet is empty",
+                    None,
+                    None,
+                    # Item 16C (C17): nothing was written and
+                    # nothing was read back. False, not None -- a
+                    # success that verifies nothing must say so.
+                    verified=False,
+                )
                 headers_row = [str(h) if h is not None else "" for h in rows_data[0]]
                 new_col = ws.max_column + 1
                 calculated_values = []
@@ -457,6 +508,21 @@ class SpreadsheetIntelligence:
                 dest = self._resolve_output(path, output, "calculated")
                 wb.save(dest)
                 wb.close()
+                # Item 16C: the expectation is the original rows with
+                # the newly computed column appended -- new_headers is a
+                # CSV-branch name and is undefined here.
+                verified = self._verify_written(
+                    dest,
+                    ext,
+                    headers_row + [formula_column],
+                    [
+                        list(row) + [value]
+                        for row, value in zip(
+                            rows_data[1:], calculated_values
+                        )
+                    ],
+                    sheet_name,
+                )
                 return SpreadsheetResult(
                     True,
                     "calculate",
@@ -468,6 +534,7 @@ class SpreadsheetIntelligence:
                         "calculated_values": calculated_values,
                     },
                     None,
+                verified=verified,
                 )
 
             return SpreadsheetResult(False, "calculate", None, f"Unsupported format: {ext}", None, "UnsupportedFormat")
@@ -502,7 +569,10 @@ class SpreadsheetIntelligence:
                 new_rows = [list(row) + [ranked[i]] for i, row in enumerate(rows)]
                 dest = self._resolve_output(path, output, "ranked")
                 self._write_csv(dest, new_headers, new_rows)
-                return SpreadsheetResult(True, "rank", dest, f"Ranked by '{rank_column}'", {"output": dest, "rank_column": rank_column, "descending": descending, "row_count": len(new_rows)}, None)
+                verified = self._verify_written(dest, ext, new_headers, new_rows)
+                return SpreadsheetResult(True, "rank", dest, f"Ranked by '{rank_column}'", {"output": dest, "rank_column": rank_column, "descending": descending, "row_count": len(new_rows)}, None,verified=verified
+)
+
 
             if ext == ".xlsx":
                 if not HAS_OPENPYXL:
@@ -512,7 +582,18 @@ class SpreadsheetIntelligence:
                 rows_data = list(ws.iter_rows(values_only=True))
                 if not rows_data:
                     wb.close()
-                    return SpreadsheetResult(True, "rank", path, "Sheet is empty", None, None)
+                    return SpreadsheetResult(
+                    True,
+                    "rank",
+                    path,
+                    "Sheet is empty",
+                    None,
+                    None,
+                    # Item 16C (C17): nothing was written and
+                    # nothing was read back. False, not None -- a
+                    # success that verifies nothing must say so.
+                    verified=False,
+                )
                 headers_row = [str(h) if h is not None else "" for h in rows_data[0]]
                 if rank_column not in headers_row:
                     wb.close()
@@ -530,7 +611,21 @@ class SpreadsheetIntelligence:
                 dest = self._resolve_output(path, output, "ranked")
                 wb.save(dest)
                 wb.close()
-                return SpreadsheetResult(True, "rank", dest, f"Ranked by '{rank_column}'", {"output": dest, "rank_column": rank_column, "descending": descending, "row_count": len(rows_data) - 1}, None)
+                # Item 16C: the sheet gains a Rank column, so
+                # the expectation is the PRE-write content plus
+                # the ranks this branch just wrote.
+                expected_headers = list(headers_row) + ["Rank"]
+                expected_rows = [
+                    list(row) + [rank_map.get(idx, "")]
+                    for idx, row in enumerate(rows_data[1:])
+                ]
+                verified = self._verify_written(
+                    dest, ext, expected_headers,
+                    expected_rows, sheet_name,
+                )
+                return SpreadsheetResult(True, "rank", dest, f"Ranked by '{rank_column}'", {"output": dest, "rank_column": rank_column, "descending": descending, "row_count": len(rows_data) - 1}, None,verified=verified
+)
+
 
             return SpreadsheetResult(False, "rank", None, f"Unsupported format: {ext}", None, "UnsupportedFormat")
         except Exception as e:
@@ -582,7 +677,12 @@ class SpreadsheetIntelligence:
                 result_headers = [column, f"{operation}({agg_column})"]
                 dest = self._resolve_output(path, output, "grouped")
                 self._write_csv(dest, result_headers, result_rows)
-                return SpreadsheetResult(True, "group_by", dest, f"Grouped by '{column}', aggregated '{agg_column}'", {"output": dest, "groups": result_rows}, None)
+                verified = self._verify_written(
+                    dest, ext, result_headers, result_rows
+                )
+                return SpreadsheetResult(True, "group_by", dest, f"Grouped by '{column}', aggregated '{agg_column}'", {"output": dest, "groups": result_rows}, None,verified=verified
+)
+
 
             if ext == ".xlsx":
                 if not HAS_OPENPYXL:
@@ -592,7 +692,18 @@ class SpreadsheetIntelligence:
                 rows_data = list(ws.iter_rows(values_only=True))
                 if not rows_data:
                     wb.close()
-                    return SpreadsheetResult(True, "group_by", path, "Sheet is empty", None, None)
+                    return SpreadsheetResult(
+                    True,
+                    "group_by",
+                    path,
+                    "Sheet is empty",
+                    None,
+                    None,
+                    # Item 16C (C17): nothing was written and
+                    # nothing was read back. False, not None -- a
+                    # success that verifies nothing must say so.
+                    verified=False,
+                )
                 headers_row = [str(h) if h is not None else "" for h in rows_data[0]]
                 if column not in headers_row:
                     wb.close()
@@ -620,7 +731,21 @@ class SpreadsheetIntelligence:
                 dest = self._resolve_output(path, output, "grouped")
                 wb.save(dest)
                 wb.close()
-                return SpreadsheetResult(True, "group_by", dest, f"Grouped by '{column}', aggregated '{agg_column}'", {"output": dest, "groups": [{"key": key, "value": agg_ops[operation](values)} for key, values in groups_map.items()]}, None)
+                # Item 16C: this branch writes a NEW sheet named
+                # "Grouped", so that is the sheet to read back.
+                # result_headers/result_rows live only in the CSV
+                # branch and are undefined here.
+                grouped_headers = [column, f"{operation}({agg_column})"]
+                grouped_rows = [
+                    [k, agg_ops[operation](v)]
+                    for k, v in groups_map.items()
+                ]
+                verified = self._verify_written(
+                    dest, ext, grouped_headers, grouped_rows, "Grouped"
+                )
+                return SpreadsheetResult(True, "group_by", dest, f"Grouped by '{column}', aggregated '{agg_column}'", {"output": dest, "groups": [{"key": key, "value": agg_ops[operation](values)} for key, values in groups_map.items()]}, None,verified=verified
+)
+
 
             return SpreadsheetResult(False, "group_by", None, f"Unsupported format: {ext}", None, "UnsupportedFormat")
         except Exception as e:
@@ -666,7 +791,10 @@ class SpreadsheetIntelligence:
                             vals.append(0)
                     result[f"{operation}({col})"] = agg_ops[operation](vals)
                 dest = self._resolve_output(path, output, "aggregated")
-                self._write_csv(dest, list(result.keys()), [list(result.values())])
+                agg_headers = list(result.keys())
+                agg_rows = [list(result.values())]
+                self._write_csv(dest, agg_headers, agg_rows)
+                verified = self._verify_written(dest, ext, agg_headers, agg_rows)
                 return SpreadsheetResult(
                     True,
                     "aggregate",
@@ -678,6 +806,7 @@ class SpreadsheetIntelligence:
                         "results": result,
                     },
                     None,
+                verified=verified,
                 )
 
             if ext == ".xlsx":
@@ -688,7 +817,18 @@ class SpreadsheetIntelligence:
                 rows_data = list(ws.iter_rows(values_only=True))
                 if not rows_data:
                     wb.close()
-                    return SpreadsheetResult(True, "aggregate", path, "Sheet is empty", None, None)
+                    return SpreadsheetResult(
+                    True,
+                    "aggregate",
+                    path,
+                    "Sheet is empty",
+                    None,
+                    None,
+                    # Item 16C (C17): nothing was written and
+                    # nothing was read back. False, not None -- a
+                    # success that verifies nothing must say so.
+                    verified=False,
+                )
                 headers_row = [str(h) if h is not None else "" for h in rows_data[0]]
                 missing = [c for c in columns if c not in headers_row]
                 if missing:
@@ -712,6 +852,10 @@ class SpreadsheetIntelligence:
                 new_ws.append(list(result.values()))
                 new_wb.save(dest)
                 new_wb.close()
+                verified = self._verify_written(
+                    dest, ext, list(result.keys()),
+                    [list(result.values())],
+                )
                 return SpreadsheetResult(
                     True,
                     "aggregate",
@@ -723,6 +867,7 @@ class SpreadsheetIntelligence:
                         "results": result,
                     },
                     None,
+                verified=verified,
                 )
 
             return SpreadsheetResult(False, "aggregate", None, f"Unsupported format: {ext}", None, "UnsupportedFormat")
@@ -792,13 +937,25 @@ class SpreadsheetIntelligence:
                     row.append(values[i] if i < len(values) else "")
                 dest = self._resolve_output(path, output, "extended")
                 self._write_csv(dest, new_headers, rows)
-                return SpreadsheetResult(True, "add_column", dest, f"Column '{column_name}' added", {"output": dest, "column": column_name, "values": list(values), "row_count": len(rows)}, None)
+                verified = self._verify_written(dest, ext, new_headers, rows)
+                return SpreadsheetResult(True, "add_column", dest, f"Column '{column_name}' added", {"output": dest, "column": column_name, "values": list(values), "row_count": len(rows)}, None,verified=verified
+)
+
 
             if ext == ".xlsx":
                 if not HAS_OPENPYXL:
                     return SpreadsheetResult(False, "add_column", None, "openpyxl not installed", None, "ImportError")
                 wb = load_workbook(path)
                 ws = wb[sheet_name] if sheet_name else wb.active
+                # Item 16C: capture the source content BEFORE the
+                # write, so the read-back has something to compare
+                # against that is not the file it is reading.
+                source_rows_all = list(ws.iter_rows(values_only=True))
+                source_headers = (
+                    [str(h) if h is not None else "" for h in source_rows_all[0]]
+                    if source_rows_all else []
+                )
+                source_rows = source_rows_all[1:]
                 new_col = ws.max_column + 1
                 ws.cell(row=1, column=new_col, value=column_name)
                 for r_idx in range(2, ws.max_row + 1):
@@ -808,7 +965,23 @@ class SpreadsheetIntelligence:
                 row_count = ws.max_row - 1
                 wb.save(dest)
                 wb.close()
-                return SpreadsheetResult(True, "add_column", dest, f"Column '{column_name}' added", {"output": dest, "column": column_name, "values": list(values), "row_count": row_count}, None)
+                # Item 16C: headers_row/rows_data are CSV-branch
+                # names and are undefined in this branch. Read the
+                # sheet back out of the workbook this branch wrote.
+                expected_headers = list(source_headers) + [column_name]
+                expected_rows = [
+                    list(row) + [
+                        values[i] if i < len(values) else ""
+                    ]
+                    for i, row in enumerate(source_rows)
+                ]
+                verified = self._verify_written(
+                    dest, ext, expected_headers,
+                    expected_rows, sheet_name,
+                )
+                return SpreadsheetResult(True, "add_column", dest, f"Column '{column_name}' added", {"output": dest, "column": column_name, "values": list(values), "row_count": row_count}, None,verified=verified
+)
+
 
             return SpreadsheetResult(False, "add_column", None, f"Unsupported format: {ext}", None, "UnsupportedFormat")
         except Exception as e:
@@ -947,7 +1120,10 @@ class SpreadsheetIntelligence:
 
             if ext == ".csv":
                 self._write_csv(path, headers, rows)
-                return SpreadsheetResult(True, "create_from_dicts", path, f"Created CSV with {len(rows)} rows", {"output": path, "headers": headers, "rows": rows}, None)
+                verified = self._verify_written(path, ext, headers, rows)
+                return SpreadsheetResult(True, "create_from_dicts", path, f"Created CSV with {len(rows)} rows", {"output": path, "headers": headers, "rows": rows}, None,verified=verified
+)
+
 
             if ext == ".xlsx":
                 if not HAS_OPENPYXL:
@@ -960,7 +1136,12 @@ class SpreadsheetIntelligence:
                     ws.append(row)
                 wb.save(path)
                 wb.close()
-                return SpreadsheetResult(True, "create_from_dicts", path, f"Created XLSX with {len(rows)} rows", {"output": path, "headers": headers, "rows": rows}, None)
+                verified = self._verify_written(
+                    path, ext, headers, rows, sheet_name
+                )
+                return SpreadsheetResult(True, "create_from_dicts", path, f"Created XLSX with {len(rows)} rows", {"output": path, "headers": headers, "rows": rows}, None,verified=verified
+)
+
 
             return SpreadsheetResult(False, "create_from_dicts", None, f"Unsupported format: {ext}", None, "UnsupportedFormat")
         except Exception as e:
@@ -999,6 +1180,148 @@ class SpreadsheetIntelligence:
                 raise ValueError("Output must not overwrite the source artifact.")
             return destination
         return self._default_output_path(path, suffix)
+
+    # =================================================================
+    # ITEM 16C (C17): WRITE VERIFICATION -- read the artifact back
+    # =================================================================
+    #
+    # The SpreadsheetResult contract added in Item 13C says:
+    #
+    #   verified=None  the operation claims nothing about verification
+    #   verified=True  the written content was read back and matched
+    #   verified=False it was read back and did NOT match, or could not
+    #                 be read back -- which is NOT verification
+    #
+    # and that a WRITE MAY NEVER LEAVE IT None. Six write ops
+    # (sort, filter_rows, calculate, rank, group_by, add_column,
+    # create_from_dicts) returned success=True with verified=None: they
+    # never looked at what they had written, so they had nothing to
+    # report and quietly opted out of the rule.
+    #
+    # THIS IS NOT A COSMETIC CHANGE. `success` here means "the write
+    # call returned without raising". On a full disk, a locked file, a
+    # truncated pipe or a silently failing workbook save, that is not
+    # evidence the data arrived. The read-back is what turns "I tried"
+    # into "it is there, and it is what I meant".
+    @staticmethod
+    def _cells_match(
+        expected_headers: list[Any],
+        expected_rows: list[list[Any]],
+        actual_headers: list[Any],
+        actual_rows: list[list[Any]],
+    ) -> bool:
+        """Compare intended content against what was read back.
+
+        COMPARISON RULE, and it took three attempts to get right.
+        Spreadsheets do not preserve the Python type of a cell, so the
+        two sides legitimately differ in rendering:
+
+          CSV   everything comes back as text, so an intended 42 reads
+                back as "42" and an intended 10.0 as "10.0"
+          XLSX  a number comes back NUMERIC and without an int/float
+                distinction, so an intended 60.0 reads back as 60
+
+        Two earlier rules each fixed one case and broke the other: a
+        plain str() comparison made group_by's CSV write report
+        verified=False (10.0 vs "10.0"), and normalising integral floats
+        to int did the same for aggregate's XLSX write (60.0 vs 60).
+
+        The rule that holds for both: if a cell on BOTH sides parses as
+        a number, compare the numbers; otherwise compare the trimmed
+        strings. "10.0" == "10" is correct for a spreadsheet, and it
+        still distinguishes "draft" from "draft-final".
+        """
+
+        def _render(value: Any) -> str:
+            if value is None:
+                return ""
+            if isinstance(value, str):
+                return value.strip()
+            return str(value).strip()
+
+        def _numeric(value: Any) -> float | None:
+            text = _render(value)
+            if not text:
+                return None
+            try:
+                return float(text)
+            except (TypeError, ValueError):
+                return None
+
+        def _same(left: Any, right: Any) -> bool:
+            left_number = _numeric(left)
+            right_number = _numeric(right)
+            if left_number is not None and right_number is not None:
+                return left_number == right_number
+            return _render(left) == _render(right)
+
+        def _row_matches(expected_row: list[Any], actual_row: list[Any]) -> bool:
+            width = max(len(expected_row), len(actual_row))
+            padded_expected = list(expected_row) + [None] * (width - len(expected_row))
+            padded_actual = list(actual_row) + [None] * (width - len(actual_row))
+            return all(
+                _same(a, b) for a, b in zip(padded_expected, padded_actual)
+            )
+
+        if len(actual_headers) != len(expected_headers):
+            return False
+        if not _row_matches(expected_headers, actual_headers):
+            return False
+        if len(actual_rows) != len(expected_rows):
+            return False
+        return all(
+            _row_matches(e, a)
+            for e, a in zip(expected_rows, actual_rows)
+        )
+
+    def _verify_written(
+        self,
+        dest: str,
+        ext: str,
+        headers: list[Any],
+        rows: list[list[Any]],
+        sheet_name: Optional[str] = None,
+    ) -> bool:
+        """Re-read a written artifact and confirm it holds what we meant.
+
+        Returns False -- never True-by-default -- if the file cannot be
+        opened or parsed. "Could not check" is not "verified".
+        """
+        try:
+            if ext == ".csv":
+                actual_headers, actual_rows = self._read_csv(dest)
+                return self._cells_match(
+                    headers, rows, actual_headers, actual_rows
+                )
+
+            if ext in (".xlsx", ".xlsm"):
+                if not HAS_OPENPYXL:
+                    return False
+                workbook = load_workbook(
+                    dest, read_only=True, data_only=True
+                )
+                try:
+                    name = sheet_name or workbook.sheetnames[0]
+                    if name not in workbook.sheetnames:
+                        return False
+                    worksheet = workbook[name]
+                    data = [
+                        list(row)
+                        for row in worksheet.iter_rows(values_only=True)
+                    ]
+                finally:
+                    workbook.close()
+                if not data:
+                    return len(rows) == 0 and len(headers) == 0
+                return self._cells_match(
+                    headers, rows, data[0], data[1:]
+                )
+
+        except Exception:
+            # An unreadable artifact is not a verified one.
+            return False
+
+        return False
 
     def _read_csv(self, path: str) -> tuple[list[str], list[list[str]]]:
         """Read a CSV file and return (headers, rows as list of lists)."""
