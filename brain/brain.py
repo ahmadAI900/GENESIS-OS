@@ -182,6 +182,17 @@ class Brain:
 
             return answer
 
+        # ITEM 18A (L16): the if/elif chain ended without a final
+        # return. Any destination the router names that is not one of
+        # memory/Internet/knowledge/ai -- and that is not caught by
+        # the greeting/exit/reasoning/early returns -- fell off the
+        # end of this function, so process_request (and think(), which
+        # forwards to it) returned None while annotated `-> str`.
+        # default_response() existed for exactly this case and was
+        # called by nothing. Unknown destinations now land here, so
+        # every control path returns a str.
+        return self.default_response()
+
     def is_greeting(self, text: str) -> bool:
         greetings = [
             "hi",
