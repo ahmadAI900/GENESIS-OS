@@ -1572,12 +1572,24 @@ class ApplicationManager:
 
                     return launch_target
 
-                located = shutil.which(
-                    launch_target
-                )
+            # Item 22B (C23): this shutil.which used to be NESTED
+            # inside the isabs branch above, so a BARE launch
+            # target -- "chrome.exe", "chrome", any relative name a
+            # record legitimately carries -- never reached PATH
+            # resolution and fell through the whole chain
+            # unresolved (the alias table does not know it, and
+            # section 7 only retries the raw QUERY when it ends in
+            # ".exe"). Sections 2 and 4 already ran which() for
+            # non-absolute names; this is the same shape, moved
+            # out. The absolute behaviour is unchanged: an existing
+            # absolute path still returns immediately above, and a
+            # missing one still falls through to this same call.
+            located = shutil.which(
+                launch_target
+            )
 
-                if located:
-                    return located
+            if located:
+                return located
 
     # =========================================================
     # 6. SAFE BUILT-IN ALIAS FALLBACK
