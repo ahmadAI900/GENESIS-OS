@@ -489,6 +489,12 @@ class ActionExecutor:
             plan: The ActionPlan to execute.
             timeout: Maximum seconds for the execution.
                 A hung subprocess will be interrupted.
+
+        On timeout the dispatch worker thread is ABANDONED, not
+        killed: a thread cannot be interrupted, so it keeps running
+        until the action finishes on its own. What this method
+        guarantees is only that the CALL returns at the timeout --
+        never that the action was stopped.
         """
 
         # =====================================================
@@ -1169,14 +1175,39 @@ class ActionExecutor:
         # 7. DISPATCH
         # =====================================================
 
+        # Item 21A (C32): this used to be
+        #
+        #     with concurrent.futures.ThreadPoolExecutor(max_workers=1) as _executor:
+        #         _future = _executor.submit(self._dispatch, plan)
+        #         raw_result = _future.result(timeout=timeout)
+        #
+        # The `with` form made the per-action timeout unenforceable:
+        # future.result DID raise TimeoutError at `timeout`, but
+        # leaving the block then ran ThreadPoolExecutor.__exit__ ->
+        # shutdown(wait=True), which waits for the hung _dispatch to
+        # finish. Measured on the committed original: a 3.0s sleep
+        # against a 0.5s budget returned at 3.02s -- the timeout
+        # fired on paper and the caller paid the entire overrun.
+        #
+        # The executor is now built explicitly (Item 17A's shape) and
+        # BOTH failure paths shut it down without waiting, so the
+        # CALL returns promptly.
+        #
+        # THE HONEST LIMIT, stated rather than hidden: wait=False does
+        # not kill anything. The worker running _dispatch cannot be
+        # interrupted, so on timeout it is ABANDONED -- still running,
+        # still holding whatever it holds, until _dispatch returns on
+        # its own. Nothing here claims the action was stopped; only
+        # that the caller is no longer blocked behind it. The same
+        # word lives in execute's docstring because the test reads
+        # this function via AST and ast.unparse drops comments.
+        _executor = concurrent.futures.ThreadPoolExecutor(max_workers=1)
         try:
-            with concurrent.futures.ThreadPoolExecutor(
-                max_workers=1
-            ) as _executor:
-                _future = _executor.submit(self._dispatch, plan)
-                raw_result = _future.result(timeout=timeout)
+            _future = _executor.submit(self._dispatch, plan)
+            raw_result = _future.result(timeout=timeout)
 
         except concurrent.futures.TimeoutError:
+            _executor.shutdown(wait=False, cancel_futures=True)
             return ActionResult.failure_result(
                 operation=plan.operation,
                 target=plan.target,
@@ -1198,6 +1229,7 @@ class ActionExecutor:
             )
 
         except Exception as error:
+            _executor.shutdown(wait=False, cancel_futures=True)
             friendly = explain_error(
                 error,
                 context={
@@ -1231,6 +1263,17 @@ class ActionExecutor:
                 },
             )
         )
+
+        else:
+            # Runs only when neither return above did: the healthy
+            # path joins its worker. The returns sit in the except
+            # blocks, never inside `try`, so `else` is reachable
+            # here (a return inside `try` would skip `else` and leak
+            # one worker thread per healthy dispatch -- the trap
+            # Item 17A pinned with a spy executor; this file's
+            # test_a_successful_dispatch_still_joins_its_worker pins
+            # it for the per-action path).
+            _executor.shutdown(wait=True)
 
         # =====================================================
         # 8. NORMALIZATION
