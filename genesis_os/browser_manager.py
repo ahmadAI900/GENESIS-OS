@@ -249,6 +249,15 @@ class BrowserManager:
         self._default_session_id = "default"
         self._dispatch_lock = threading.Lock()
 
+        # Item 21B (C33): True once the probe window has closed.
+        # Probes started in this constructor may still be running
+        # after that point (they are abandoned, not waited for); a
+        # late answer is DISCARDED rather than applied to a manager
+        # that already reported itself degraded. Read/written under
+        # _dispatch_lock because the probe thread and this
+        # constructor race for it.
+        self._probe_window_closed = False
+
         # Why this manager is degraded, if it is. None means healthy.
         # Set below when an advanced provider is missing because its
         # probe did not finish, as opposed to being genuinely absent.
@@ -272,25 +281,69 @@ class BrowserManager:
         # hang into a degraded-but-usable manager: webbrowser is
         # always present and the advanced providers appear on a
         # later construction once their probes warm.
+        #
+        # Item 21B (C33): that bounded `wait(..., timeout=...)` never
+        # made the CONSTRUCTION bounded. The probes ran inside
+        # `with ThreadPoolExecutor(...)`, future.cancel() cannot stop
+        # a STARTED probe, and the `with` exit then ran
+        # shutdown(wait=True) -- so the constructor still waited out
+        # the full probe runtime. MEASURED on that original with
+        # _PROVIDER_PROBE_TIMEOUT=1.0 and a probe sleeping 6s:
+        # construction took 6.00s (and the 60s-stub degraded test
+        # paid 60.40s).
+        #
+        # ThreadPoolExecutor + shutdown(wait=False) is NOT a fix
+        # either: since Python 3.9 its workers are non-daemon
+        # (bpo-39812) and threading._register_atexit(_python_exit)
+        # joins every executor thread at interpreter exit regardless
+        # of wait=. MEASURED: an 8s worker abandoned that way still
+        # delayed interpreter exit by 8.19s. These probes are pure
+        # diagnostics -- their only side effect is a provider-list
+        # insert -- so they run as plain daemon threads with a
+        # deadline join: construction returns at the bound, a
+        # still-running probe is ABANDONED (a daemon thread cannot
+        # block interpreter exit), and its late answer is discarded
+        # via _probe_window_closed. "Did not answer within the
+        # window" is exactly what degraded means; absent != failed
+        # either way -- the reason below says TIMEOUT, never absence.
         try:
-            from concurrent.futures import ThreadPoolExecutor, wait
-            with ThreadPoolExecutor(max_workers=2, thread_name_prefix="browser_probe") as pool:
-                f_sel = pool.submit(self._try_register_selenium)
-                f_pw = pool.submit(self._try_register_playwright)
-                done, pending = wait(
-                    [f_sel, f_pw],
-                    timeout=self._PROVIDER_PROBE_TIMEOUT,
-                )
-                for future in pending:
-                    future.cancel()
-                if pending:
-                    # The probes are still running; they did not answer.
-                    # This is what makes the manager degraded, and it is
-                    # a TIMEOUT rather than a proof of absence -- the
-                    # provider caches retry after its TTL, so a LATER
-                    # BrowserManager() recovers. Previously this state
-                    # was silent, and the only evidence was a provider
-                    # list missing its advanced entries.
+            import time as _time
+
+            deadline = _time.monotonic() + self._PROVIDER_PROBE_TIMEOUT
+            probes = (
+                threading.Thread(
+                    target=self._try_register_selenium,
+                    name="browser_probe_selenium",
+                    daemon=True,
+                ),
+                threading.Thread(
+                    target=self._try_register_playwright,
+                    name="browser_probe_playwright",
+                    daemon=True,
+                ),
+            )
+            for probe in probes:
+                probe.start()
+            for probe in probes:
+                remaining = deadline - _time.monotonic()
+                if remaining > 0.0:
+                    probe.join(timeout=remaining)
+
+            # Close the answer window and decide degraded from the
+            # SAME snapshot, under the dispatch lock: a probe alive
+            # here did not answer within the bound (degraded = a
+            # TIMEOUT, not proof of absence -- the provider caches
+            # retry after their TTL, so a LATER BrowserManager()
+            # recovers), and any answer it produces after this point
+            # is discarded by _register_provider.
+            with self._dispatch_lock:
+                self._probe_window_closed = True
+                if any(p.is_alive() for p in probes):
+                    # The probes are still running; they did not
+                    # answer. This is what makes the manager
+                    # degraded. Previously this state was silent,
+                    # and the only evidence was a provider list
+                    # missing its advanced entries.
                     self._degraded_reason = (
                         "provider probe timeout after "
                         f"{self._PROVIDER_PROBE_TIMEOUT}s")
@@ -298,6 +351,8 @@ class BrowserManager:
             # Fallback: sequential if threading fails for any reason
             self._try_register_selenium()
             self._try_register_playwright()
+            with self._dispatch_lock:
+                self._probe_window_closed = True
         
         # Initialize default session
         self._ensure_session(self._default_session_id)
@@ -338,25 +393,43 @@ class BrowserManager:
                 self._registry = False  # Sentinel: import failed
         return self._registry if self._registry is not False else None
  
+    def _register_provider(self, provider: BrowserProvider) -> None:
+        """Add a probe-answered provider while the window is open.
+
+        A probe that finishes after the constructor's probe window
+        closed has its answer DISCARDED: it did not answer within the
+        bound, and the constructor already reported this manager
+        degraded ("advanced provider missing because its probe timed
+        out"). Applying it late would make that flag a lie -- the
+        provider belongs to a LATER BrowserManager() once the probe
+        cache warms, not to this one. The insert runs under
+        _dispatch_lock so it cannot race a dispatch iterating
+        _providers either.
+        """
+        with self._dispatch_lock:
+            if self._probe_window_closed:
+                return
+            self._providers.insert(0, provider)
+
     def _try_register_selenium(self) -> None:
         """Try to register Selenium provider if available."""
         try:
             from .browser_selenium import SeleniumBrowserProvider
             provider = SeleniumBrowserProvider()
             if provider.available:
-                self._providers.insert(0, provider)  # Prefer advanced providers
+                self._register_provider(provider)
         except ImportError:
             pass
         except Exception:
             pass
- 
+
     def _try_register_playwright(self) -> None:
         """Try to register Playwright provider if available."""
         try:
             from .browser_playwright import PlaywrightBrowserProvider
             provider = PlaywrightBrowserProvider()
             if provider.available:
-                self._providers.insert(0, provider)
+                self._register_provider(provider)
         except ImportError:
             pass
         except Exception:
