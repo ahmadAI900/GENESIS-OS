@@ -3900,6 +3900,118 @@ Return ONLY the final response.
                 response
             )
 
+    # =====================================================
+    # SHUTDOWN (Item 21C / C36)
+    # =====================================================
+
+    def shutdown(self):
+        """Stop the resources this runtime owns; report the rest.
+
+        Item 21C (C36): GenesisOS used to expose no teardown at all.
+        The benchmark harness could not exit -- its own comment said
+        "the runtime exposes no shutdown API, so a plain sys.exit
+        would hang forever" -- and hard-exits with os._exit instead,
+        skipping every cleanup; the conftest fixture abandoned its
+        module-scoped runtime; nothing ever stopped the filesystem
+        watcher or the browser providers' driver sessions.
+
+        Stops, in order:
+
+            1. the run() loop (``self.running = False``);
+            2. the filesystem watcher (``os_manager.stop_watching``);
+            3. open browser providers (``os_manager.browser.close``).
+
+        HONEST LIMITS, reported rather than hidden:
+
+            * a thread cannot be killed, so every remaining
+              NON-DAEMON thread is listed in ``unstoppable_threads``
+              and forces ``success=False`` -- shutdown never claims
+              a clean stop while something is still running;
+            * an in-flight action already dispatched on its own
+              worker is abandoned, not interrupted (see
+              ActionExecutor.execute, Item 21A);
+            * a resource whose stop/close raises lands in
+              ``errors`` and also forces ``success=False``; one
+              failing resource never skips the others.
+
+        Idempotent: a second call re-stops nothing (providers are
+        not closed twice -- a closed driver raises on a second
+        close and would fabricate an error). It refreshes the
+        thread snapshot and repeats the first call's verdict with
+        ``already_shutdown=True``.
+        """
+        import threading
+
+        def _unstoppable():
+            me = threading.current_thread()
+            return [
+                {"name": t.name, "daemon": bool(t.daemon)}
+                for t in threading.enumerate()
+                if t is not me and t.is_alive() and not t.daemon
+            ]
+
+        previous = getattr(self, "_shutdown_report", None)
+        if previous is not None:
+            report = dict(previous)
+            report["already_shutdown"] = True
+            report["unstoppable_threads"] = _unstoppable()
+            report["success"] = (
+                not report["errors"]
+                and not report["unstoppable_threads"]
+            )
+            return report
+
+        self.running = False
+        stopped = ["run_loop"]
+        errors = []
+
+        os_manager = getattr(self, "os_manager", None)
+        if os_manager is not None:
+            stop_watching = getattr(os_manager, "stop_watching", None)
+            if callable(stop_watching):
+                try:
+                    stop_watching()
+                    stopped.append("filesystem_watcher")
+                except Exception as exc:
+                    errors.append(
+                        "filesystem_watcher: "
+                        f"{type(exc).__name__}: {exc}"
+                    )
+
+            browser = getattr(os_manager, "browser", None)
+            browser_close = getattr(browser, "close", None)
+            if callable(browser_close):
+                try:
+                    close_report = browser_close()
+                except Exception as exc:
+                    errors.append(
+                        f"browser: {type(exc).__name__}: {exc}"
+                    )
+                else:
+                    browser_errors = (
+                        close_report.get("errors", [])
+                        if isinstance(close_report, dict)
+                        else []
+                    )
+                    if browser_errors:
+                        errors.extend(
+                            f"browser: {entry}"
+                            for entry in browser_errors
+                        )
+                    else:
+                        stopped.append("browser_providers")
+
+        unstoppable = _unstoppable()
+        report = {
+            "success": not errors and not unstoppable,
+            "already_shutdown": False,
+            "stopped": stopped,
+            "errors": errors,
+            "unstoppable_threads": unstoppable,
+        }
+        self._shutdown_report = report
+        return report
+
 
 # =========================================================
 # APPLICATION ENTRY POINT
@@ -3909,7 +4021,14 @@ def main():
 
     genesis = GenesisOS()
 
-    genesis.run()
+    try:
+        genesis.run()
+    finally:
+        # Item 21C (C36): stop the runtime's owned resources on
+        # every path out of the session -- normal EOF, Ctrl-C, or
+        # an error mid-request -- instead of leaving teardown to
+        # interpreter exit.
+        genesis.shutdown()
 
 
 if __name__ == "__main__":

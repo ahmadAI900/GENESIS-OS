@@ -134,7 +134,18 @@ def genesis_runtime(hermetic_capabilities):
     drifting back to needing a GUI.
     """
     from genesis import GenesisOS
-    return GenesisOS()
+    runtime = GenesisOS()
+    try:
+        yield runtime
+    finally:
+        # Item 21C (C36): stop the runtime's owned resources at
+        # teardown instead of abandoning the module-scoped runtime
+        # to interpreter exit. Idempotent, and a shutdown failure
+        # must not mask the tests' own results.
+        try:
+            runtime.shutdown()
+        except Exception:
+            pass
 
 # The capability tripwire lives in tools/ and is loaded by NAME, so the
 # tools directory has to be importable before pytest resolves it. Loaded

@@ -49,6 +49,8 @@ def _agent(i):
 
 def _make_fake_genesis(*, good):
     class FakeGenesisOS:
+        shutdown_calls = []
+
         def __init__(self):
             if good:
                 self.brain = object()
@@ -62,6 +64,9 @@ def _make_fake_genesis(*, good):
                 self.conversation = None
                 self.registry = _FakeRegistry([])
                 self.os_manager = _FakeOSManager({})
+
+        def shutdown(self):
+            FakeGenesisOS.shutdown_calls.append(self)
 
         def classify(self, text):
             if good:
@@ -114,6 +119,27 @@ def test_genuine_pass_exits_zero_with_derived_pass_result(
     assert "RESULT: PASS" in out
     assert "RESULT: FAIL" not in out
     assert "[FAIL]" not in out, "a clean run must not print any FAIL line"
+
+
+def test_main_shuts_the_runtime_down(monkeypatch):
+    """Item 21C (C36): the harness must stop what it booted.
+
+    Booting the real runtime and hard-exiting without teardown is
+    how driver sessions and watchers leaked; main() now calls
+    shutdown() before returning (the os._exit in __main__ stays as
+    a last resort for abandoned threads).
+    """
+    genesis_cls = _make_fake_genesis(good=True)
+    monkeypatch.setattr(
+        real_e2e.genesis_module, "GenesisOS", genesis_cls
+    )
+
+    real_e2e.main()
+
+    assert genesis_cls.shutdown_calls, (
+        "main() never called the runtime's shutdown(); the harness "
+        "boots a real runtime and must stop it before exiting"
+    )
 
 
 def test_boot_crash_returns_nonzero_result(monkeypatch, capsys):

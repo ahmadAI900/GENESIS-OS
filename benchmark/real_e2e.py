@@ -123,6 +123,22 @@ def main() -> int:
         )
         return _verdict(1, 1)
 
+    try:
+        return _real_checks(g)
+    finally:
+        # Item 21C (C36): the runtime now owns a shutdown(); stop
+        # its resources before the hard-exit below instead of
+        # leaking them into os._exit.
+        try:
+            g.shutdown()
+        except Exception as _shutdown_exc:
+            print(
+                f"  shutdown raised {type(_shutdown_exc).__name__}: "
+                f"{_shutdown_exc}"
+            )
+
+
+def _real_checks(g) -> int:
     checks_total = 0
     checks_failed = 0
 
@@ -224,9 +240,11 @@ if __name__ == "__main__":
         _rc = 1
     sys.stdout.flush()
     sys.stderr.flush()
-    # GenesisOS starts non-daemon watcher/executor threads and the
-    # runtime exposes no shutdown API, so a plain sys.exit would
-    # hang forever and no verdict code could ever be observed. The
-    # verdict has already been printed and flushed; hard-exit so the
-    # process exit status IS the verdict.
+    # main() now calls the runtime's shutdown() (Item 21C), which
+    # stops the watcher, closes the browser providers and reports
+    # anything it could not stop. The hard exit stays anyway:
+    # abandoned daemon/timeout-abandoned worker threads can still
+    # hold a plain exit open, and the verdict must be the exit
+    # status regardless. The verdict has already been printed and
+    # flushed; hard-exit so the process exit status IS the verdict.
     os._exit(_rc)
