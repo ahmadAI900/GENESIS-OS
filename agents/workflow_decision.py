@@ -953,6 +953,24 @@ class WorkflowDecisionEngine:
             ) and bool(
                 parameters.get("_capability_resolution")
             )
+            # ITEM 20C (R9): a MODEL-proposed OS decision must not
+            # outrank the L2 ownership check. The gate below used to
+            # return before the conversational guard and the L2 agent
+            # detectors ran, so the LLM's proposal for phrasings the
+            # deterministic engine classifies as Level 2 work
+            # ("Research the latest AI safety papers.", "Study biology
+            # with me.", "Analyze this spreadsheet for outliers.")
+            # came back Level 3 by construction -- while the very same
+            # engine with the resolver disabled routed all three to
+            # the correct L2 agents. Declining the promotion is
+            # narrow by design: it fires only for semantic-origin
+            # decisions whose text the deterministic L2 detectors
+            # claim, so deterministic promotions (no model marker)
+            # and semantic proposals for unowned text are untouched.
+            l2_owns_text = (
+                semantic_resolved
+                and bool(self._detect_multi_agents(text))
+            )
             if (
                 (
                     confidence >= 0.90
@@ -970,6 +988,7 @@ class WorkflowDecisionEngine:
                     or has_gui_text
                     or semantic_resolved
                 )
+                and not l2_owns_text
             ):
                 return os_decision
 
