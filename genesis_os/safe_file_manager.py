@@ -98,9 +98,37 @@ class SafeFileManager:
                 return self._failure("file.search", validation)
             result = self.manager.search(validation["path"], query)
             if isinstance(result, dict):
-                result["verified"] = bool(result.get("success"))
+                # Item 22A (C22): verified used to be
+                # bool(result.get("success")) -- the walk completed,
+                # so the result was declared verified. That verified
+                # the walk, not the CLAIM: a match that is not on
+                # disk (silent no-op, stale entry) still claimed
+                # verified=True, and so did a zero-match result.
+                # Read the observation back instead, the way every
+                # other verified path in this module does (create
+                # re-reads content, delete checks the target is
+                # gone, copy/move hash-compare): each reported match
+                # is checked on disk, and verified reflects what was
+                # observed -- never the success flag. The semantic
+                # multi-root branch below already treated an empty
+                # result as unverified; the two now agree.
+                matches = result.get("matches")
+                if not isinstance(matches, list):
+                    matches = []
+                matches_verified = sum(
+                    1 for match in matches
+                    if Path(match).is_file()
+                )
+                result["matches_verified"] = matches_verified
+                result["verified"] = bool(
+                    result.get("success")
+                    and matches
+                    and matches_verified == len(matches)
+                )
                 result["post_state_matches"] = result["verified"]
-                result["verification_type"] = "lexical_search_completed"
+                result["verification_type"] = (
+                    "reported_matches_exist_on_disk"
+                )
             return result
 
         # -----------------------------------------------------
