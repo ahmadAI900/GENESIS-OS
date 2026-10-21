@@ -48,6 +48,9 @@ class FilesystemMonitor:
 
     def __init__(self):
         self._watchers: Dict[str, Any] = {}
+        # Item 25B (C35): monotonic watcher-id source -- identity must
+        # never come from len(self._watchers).
+        self._watch_seq: int = 0
         self._callbacks: Dict[str, List[Callable]] = {}
         # Item 3C: this was a plain threading.Lock. unwatch_all() holds
         # this lock and then calls unwatch(), which acquires it again --
@@ -235,8 +238,20 @@ class FilesystemMonitor:
         """Start watching a path for filesystem events.
 
         Returns a watcher ID for later unwatch().
+
+        Item 25B (C35): the id used to be
+        ``f"watch_{len(self._watchers)}_{hash(path)...}"`` computed
+        OUTSIDE any lock. Two concurrent watch() calls for the same
+        path read the same pre-insert length and the same hash, minted
+        the SAME id, and both inserts (each locked) succeeded -- the
+        second overwrote the first entry, orphaning a live
+        observer/thread that unwatch() could never reach. The id now
+        comes from a monotonic counter incremented under self._lock,
+        before either start branch runs; len(dict) is never identity.
         """
-        watcher_id = f"watch_{len(self._watchers)}_{hash(path) & 0xFFFF:04x}"
+        with self._lock:
+            self._watch_seq += 1
+            watcher_id = f"watch_{self._watch_seq}_{hash(path) & 0xFFFF:04x}"
 
         if self._watchdog_available:
             self._start_watchdog(path, callback, recursive, event_types, watcher_id)
