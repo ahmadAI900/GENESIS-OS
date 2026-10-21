@@ -85,11 +85,29 @@ class ClipboardManager:
         verified = readback == text
 
         return {
-            "success": True,
+            # Item 23C (C28): `success` is bound to the readback. A
+            # copy whose text did not come back is NOT a success -- the
+            # clipboard no longer holds what was written (overwritten
+            # by another app, or the write silently did not land), so
+            # reporting success=True here told callers the copy worked
+            # when it provably did not.
+            #
+            #   success             the readback confirmed the text
+            #   executed            pyperclip.copy ran (the write was
+            #                       attempted; a mismatch is a failed
+            #                       confirmation, not a failed call)
+            #   trustworthy_success Item 13D field consumers read
+            #
+            # Deliberately NO `error` on mismatch: pyperclip.copy
+            # succeeded, and an error key would collapse the executor
+            # status to execution_failed, erasing the precise
+            # "attempted but final state unconfirmed" signal.
+            "success": verified,
             "operation": "clipboard.copy",
             "copied_length": len(text),
             "executed": True,
             "verified": verified,
+            "trustworthy_success": verified,
             "post_state_matches": verified,
             "content_match": verified,
             "verification_type": "clipboard_readback",
