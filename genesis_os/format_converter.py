@@ -271,11 +271,18 @@ class FormatConverter:
         try:
             import openpyxl
             wb = openpyxl.load_workbook(s, read_only=True, data_only=True)
-            for row in wb.worksheets[0].iter_rows(values_only=True):
-                rows.append([str(c) if c is not None else "" for c in row])
-            if len(wb.sheetnames) > 1:
-                w.append(self._warn("ec1", "metadata_loss", f"{len(wb.sheetnames)-1} sheets lost", "medium", "sheets"))
-            wb.close()
+            try:
+                for row in wb.worksheets[0].iter_rows(values_only=True):
+                    rows.append([str(c) if c is not None else "" for c in row])
+                if len(wb.sheetnames) > 1:
+                    w.append(self._warn("ec1", "metadata_loss", f"{len(wb.sheetnames)-1} sheets lost", "medium", "sheets"))
+            finally:
+                # Item 25A (C34): close on every path (best-effort); the
+                # old close ran only after a fully successful read.
+                try:
+                    wb.close()
+                except Exception:
+                    pass
         except ImportError:
             try:
                 with open(s, "r", encoding="utf-8", errors="replace") as f:
@@ -296,17 +303,24 @@ class FormatConverter:
         try:
             import openpyxl
             wb = openpyxl.load_workbook(s, read_only=True, data_only=True)
-            for ws in wb.worksheets:
-                hdrs, rows_d = [], []
-                for i, row in enumerate(ws.iter_rows(values_only=True)):
-                    vals = [str(c) if c is not None else "" for c in row]
-                    if i == 0:
-                        hdrs = vals
-                    else:
-                        rows_d.append({h if h else f"col_{j}": vals[j] if j < len(vals) else "" for j, h in enumerate(hdrs)})
-                data[ws.title] = rows_d
-            wb.close()
-            out = list(data.values())[0] if len(data) == 1 else data
+            try:
+                for ws in wb.worksheets:
+                    hdrs, rows_d = [], []
+                    for i, row in enumerate(ws.iter_rows(values_only=True)):
+                        vals = [str(c) if c is not None else "" for c in row]
+                        if i == 0:
+                            hdrs = vals
+                        else:
+                            rows_d.append({h if h else f"col_{j}": vals[j] if j < len(vals) else "" for j, h in enumerate(hdrs)})
+                    data[ws.title] = rows_d
+                out = list(data.values())[0] if len(data) == 1 else data
+            finally:
+                # Item 25A (C34): close on every path (best-effort); the
+                # old close ran only after a fully successful read.
+                try:
+                    wb.close()
+                except Exception:
+                    pass
         except ImportError:
             try:
                 with open(s, "r", encoding="utf-8", errors="replace") as f:

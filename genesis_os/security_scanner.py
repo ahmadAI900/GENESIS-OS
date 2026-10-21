@@ -231,21 +231,28 @@ class SecurityScanner:
             except Exception:
                 pass
         elif ext in (".xlsx", ".pptx") and HAS_OPENPYXL:
-            try:
-                wb = load_workbook(file_path, read_only=True)
-                props = wb.properties
-                for fname, key, val, risk in [
-                    ("author", "author", getattr(props, "creator", ""), "high"),
-                    ("created_date", "created_date", str(getattr(props, "created", "")), "medium"),
-                    ("modified_date", "modified_date", str(getattr(props, "modified", "")), "medium"),
-                    ("last_modified_by", "last_modified_by", getattr(props, "lastModifiedBy", ""), "medium"),
-                ]:
-                    if val:
-                        items.append(MetadataItem(self._generate_id(), file_path, fname, key, str(val), risk,
-                                                  f"Review {fname} metadata before sharing"))
-                wb.close()
-            except Exception:
-                pass
+                try:
+                    wb = load_workbook(file_path, read_only=True)
+                    try:
+                        props = wb.properties
+                        for fname, key, val, risk in [
+                            ("author", "author", getattr(props, "creator", ""), "high"),
+                            ("created_date", "created_date", str(getattr(props, "created", "")), "medium"),
+                            ("modified_date", "modified_date", str(getattr(props, "modified", "")), "medium"),
+                            ("last_modified_by", "last_modified_by", getattr(props, "lastModifiedBy", ""), "medium"),
+                        ]:
+                            if val:
+                                items.append(MetadataItem(self._generate_id(), file_path, fname, key, str(val), risk,
+                                                          f"Review {fname} metadata before sharing"))
+                    finally:
+                        # Item 25A (C34): close on every path (best-effort);
+                        # the old close ran only after a successful read.
+                        try:
+                            wb.close()
+                        except Exception:
+                            pass
+                except Exception:
+                    pass
         return items
 
     def _detect_hidden_content(self, file_path: str) -> Tuple[bool, List[str]]:
@@ -254,16 +261,23 @@ class SecurityScanner:
         try:
             if ext == ".xlsx" and HAS_OPENPYXL:
                 wb = load_workbook(file_path, read_only=True)
-                for ws in wb.worksheets:
-                    if ws.sheet_state != "visible":
-                        issues.append(f"Hidden sheet: {ws.title}")
-                    for col, dim in ws.column_dimensions.items():
-                        if dim.hidden:
-                            issues.append(f"Hidden column: {col}")
-                    for row, dim in ws.row_dimensions.items():
-                        if dim.hidden:
-                            issues.append(f"Hidden row: {row}")
-                wb.close()
+                try:
+                    for ws in wb.worksheets:
+                        if ws.sheet_state != "visible":
+                            issues.append(f"Hidden sheet: {ws.title}")
+                        for col, dim in ws.column_dimensions.items():
+                            if dim.hidden:
+                                issues.append(f"Hidden column: {col}")
+                        for row, dim in ws.row_dimensions.items():
+                            if dim.hidden:
+                                issues.append(f"Hidden row: {row}")
+                finally:
+                    # Item 25A (C34): close on every path (best-effort);
+                    # the old close ran only after a successful read.
+                    try:
+                        wb.close()
+                    except Exception:
+                        pass
             elif ext == ".docx" and HAS_DOCX:
                 for para in DocxDocument(file_path).paragraphs:
                     for run in para.runs:
@@ -302,12 +316,19 @@ class SecurityScanner:
             return "", []
         try:
             wb = load_workbook(fp, read_only=True, data_only=True)
-            parts = []
-            for ws in wb.worksheets:
-                for row in ws.iter_rows(values_only=True):
-                    parts.extend(str(v) for v in row if v is not None)
-            wb.close()
-            return "\n".join(parts), []
+            try:
+                parts = []
+                for ws in wb.worksheets:
+                    for row in ws.iter_rows(values_only=True):
+                        parts.extend(str(v) for v in row if v is not None)
+                return "\n".join(parts), []
+            finally:
+                # Item 25A (C34): close on every path (best-effort);
+                # the old close ran only after a successful read.
+                try:
+                    wb.close()
+                except Exception:
+                    pass
         except Exception:
             return "", []
 

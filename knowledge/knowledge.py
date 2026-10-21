@@ -42,12 +42,19 @@ class Knowledge:
             if suf == ".xlsx":
                 from openpyxl import load_workbook
                 wb = load_workbook(str(p), read_only=True, data_only=True)
-                parts = []
-                for ws in wb.worksheets:
-                    for row in ws.iter_rows(values_only=True):
-                        parts.append(" ".join(str(c) for c in row if c is not None))
-                wb.close()
-                return "\n".join(parts)
+                try:
+                    parts = []
+                    for ws in wb.worksheets:
+                        for row in ws.iter_rows(values_only=True):
+                            parts.append(" ".join(str(c) for c in row if c is not None))
+                    return "\n".join(parts)
+                finally:
+                    # Item 25A (C34): close on every path (best-effort);
+                    # the old close ran only after a successful read.
+                    try:
+                        wb.close()
+                    except Exception:
+                        pass
             if suf == ".pdf":
                 try:
                     from pypdf import PdfReader

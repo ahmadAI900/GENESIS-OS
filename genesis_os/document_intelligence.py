@@ -2349,31 +2349,38 @@ class DocumentIntelligence:
             )
 
         wb = load_workbook(path, read_only=True, data_only=True)
-        all_text_parts: List[str] = []
-        tables: List[List[Dict[str, Any]]] = []
+        try:
+            all_text_parts: List[str] = []
+            tables: List[List[Dict[str, Any]]] = []
 
-        for sheet_name in wb.sheetnames:
-            ws = wb[sheet_name]
-            rows_data: List[Dict[str, Any]] = []
-            headers: List[str] = []
+            for sheet_name in wb.sheetnames:
+                ws = wb[sheet_name]
+                rows_data: List[Dict[str, Any]] = []
+                headers: List[str] = []
 
-            for i, row in enumerate(ws.iter_rows(values_only=True)):
-                row_values = [str(cell) if cell is not None else "" for cell in row]
-                if i == 0:
-                    headers = row_values
-                    all_text_parts.append(f"Sheet: {sheet_name}")
-                    all_text_parts.append("  " + " | ".join(headers))
-                else:
-                    row_dict = {}
-                    for j, h in enumerate(headers):
-                        row_dict[h] = row_values[j] if j < len(row_values) else ""
-                    rows_data.append(row_dict)
-                    all_text_parts.append("  " + " | ".join(row_values))
+                for i, row in enumerate(ws.iter_rows(values_only=True)):
+                    row_values = [str(cell) if cell is not None else "" for cell in row]
+                    if i == 0:
+                        headers = row_values
+                        all_text_parts.append(f"Sheet: {sheet_name}")
+                        all_text_parts.append("  " + " | ".join(headers))
+                    else:
+                        row_dict = {}
+                        for j, h in enumerate(headers):
+                            row_dict[h] = row_values[j] if j < len(row_values) else ""
+                        rows_data.append(row_dict)
+                        all_text_parts.append("  " + " | ".join(row_values))
 
-            if rows_data:
-                tables.append(rows_data)
-
-        wb.close()
+                if rows_data:
+                    tables.append(rows_data)
+        finally:
+            # Item 25A (C34): close on every path (best-effort); the
+            # old close ran only after a fully successful read, so any
+            # exception mid-loop leaked the archive handle.
+            try:
+                wb.close()
+            except Exception:
+                pass
         text = "\n".join(all_text_parts)
         word_count = len(text.split())
 
@@ -2391,8 +2398,14 @@ class DocumentIntelligence:
             return {}
 
         wb = load_workbook(path, read_only=True, data_only=True)
-        sheet_count = len(wb.sheetnames)
-        wb.close()
+        try:
+            sheet_count = len(wb.sheetnames)
+        finally:
+            # Item 25A (C34): close on every path (best-effort).
+            try:
+                wb.close()
+            except Exception:
+                pass
 
         return {"metadata": {"sheets": sheet_count}}
 
@@ -2580,25 +2593,31 @@ class DocumentIntelligence:
             )
 
         wb = load_workbook(path, read_only=True, data_only=True)
-        all_tables: List[List[Dict[str, Any]]] = []
+        try:
+            all_tables: List[List[Dict[str, Any]]] = []
 
-        for sheet_name in wb.sheetnames:
-            ws = wb[sheet_name]
-            headers: List[str] = []
-            rows: List[Dict[str, Any]] = []
+            for sheet_name in wb.sheetnames:
+                ws = wb[sheet_name]
+                headers: List[str] = []
+                rows: List[Dict[str, Any]] = []
 
-            for i, row in enumerate(ws.iter_rows(values_only=True)):
-                row_values = [str(cell) if cell is not None else "" for cell in row]
-                if i == 0:
-                    headers = row_values
-                else:
-                    row_dict = {}
-                    for j, h in enumerate(headers):
-                        row_dict[h] = row_values[j] if j < len(row_values) else ""
-                    rows.append(row_dict)
+                for i, row in enumerate(ws.iter_rows(values_only=True)):
+                    row_values = [str(cell) if cell is not None else "" for cell in row]
+                    if i == 0:
+                        headers = row_values
+                    else:
+                        row_dict = {}
+                        for j, h in enumerate(headers):
+                            row_dict[h] = row_values[j] if j < len(row_values) else ""
+                        rows.append(row_dict)
 
-            if rows:
-                all_tables.append(rows)
-
-        wb.close()
+                if rows:
+                    all_tables.append(rows)
+        finally:
+            # Item 25A (C34): close on every path (best-effort); the
+            # old close ran only after a fully successful read.
+            try:
+                wb.close()
+            except Exception:
+                pass
         return all_tables

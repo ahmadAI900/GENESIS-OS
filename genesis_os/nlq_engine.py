@@ -125,9 +125,16 @@ class NLQEngine:
             elif ext in (".xlsx", ".xls"):
                 import openpyxl
                 wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
-                ws = wb.active
-                rows = list(ws.iter_rows(values_only=True))
-                wb.close()
+                try:
+                    ws = wb.active
+                    rows = list(ws.iter_rows(values_only=True))
+                finally:
+                    # Item 25A (C34): close on every path (best-effort);
+                    # the old close ran only after a successful read.
+                    try:
+                        wb.close()
+                    except Exception:
+                        pass
                 if rows:
                     hdrs = [str(h) if h else f"col_{i}" for i, h in enumerate(rows[0])]
                     return {"columns": hdrs, "row_count": len(rows) - 1}
@@ -148,9 +155,16 @@ class NLQEngine:
             elif ext in (".xlsx", ".xls"):
                 import openpyxl
                 wb = openpyxl.load_workbook(path, read_only=True, data_only=True)
-                ws = wb.active
-                rows = list(ws.iter_rows(values_only=True))
-                wb.close()
+                try:
+                    ws = wb.active
+                    rows = list(ws.iter_rows(values_only=True))
+                finally:
+                    # Item 25A (C34): close on every path (best-effort);
+                    # the old close ran only after a successful read.
+                    try:
+                        wb.close()
+                    except Exception:
+                        pass
                 if len(rows) < 2:
                     return []
                 hdrs = [str(h) if h else f"col_{i}" for i, h in enumerate(rows[0])]

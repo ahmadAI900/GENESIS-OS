@@ -137,6 +137,7 @@ class SemanticDocumentParser:
         except Exception: return self._fallback(file_path, DocumentType.WORD)
 
     def _parse_excel(self, file_path: str) -> DocumentStructure:
+        wb = None
         try:
             if not OPENPYXL_AVAILABLE: return self._fallback(file_path, DocumentType.EXCEL)
             wb = openpyxl.load_workbook(file_path, read_only=True, data_only=True)
@@ -156,6 +157,14 @@ class SemanticDocumentParser:
                 word_count, 0, elements, {"sheet_count": len(wb.sheetnames), "sheets": wb.sheetnames},
                 self._compute_semantic_hash(open(file_path, "rb").read()), [], tables, 0, [])
         except Exception: return self._fallback(file_path, DocumentType.EXCEL)
+        finally:
+            # Item 25A (C34): the read_only archive handle stays open
+            # until close() -- this site never closed on ANY path.
+            # Best-effort: a failing close must not replace a
+            # successful parse or the fallback return.
+            if wb is not None:
+                try: wb.close()
+                except Exception: pass
 
     def _parse_powerpoint(self, file_path: str) -> DocumentStructure:
         try:
