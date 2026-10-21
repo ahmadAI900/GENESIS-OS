@@ -30,9 +30,36 @@ class MemoryManager:
             return {}
 
     def save_memory(self, filename: str, data: dict) -> None:
+        """Atomically persist one JSON file.
+
+        Item 26D (L11): the old code opened the target with "w" --
+        which TRUNCATES the file immediately -- and then streamed
+        json.dump into it, so an interruption mid-dump left a
+        truncated/corrupt file with the original content already
+        gone. Now the data is written to a temp file in the SAME
+        directory, flushed and fsynced, then swapped in with
+        os.replace (atomic on one filesystem). A failure before the
+        replace leaves the original byte-for-byte intact.
+        """
         path = self._get_file_path(filename)
-        with open(path, "w", encoding="utf-8") as file:
-            json.dump(data, file, indent=4)
+        directory = os.path.dirname(path) or "."
+        temp_path = os.path.join(
+            directory, f".{os.path.basename(path)}.{os.getpid()}.tmp"
+        )
+        try:
+            with open(temp_path, "w", encoding="utf-8") as file:
+                json.dump(data, file, indent=4)
+                file.flush()
+                os.fsync(file.fileno())
+            os.replace(temp_path, path)
+        except BaseException:
+            # Best-effort cleanup; the ORIGINAL file was never touched.
+            try:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+            except OSError:
+                pass
+            raise
 
     # -------------------------
     # Profile
