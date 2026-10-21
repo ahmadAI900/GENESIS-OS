@@ -1,6 +1,7 @@
 """Genesis OS — conservative Windows Wi-Fi controls."""
 from __future__ import annotations
 import os
+import re
 import subprocess
 import tempfile
 from pathlib import Path
@@ -12,15 +13,57 @@ class NetworkManager:
 
     def list_wifi(self) -> dict:
         if os.name != "nt":
-            return {"success": False, "operation": "network.list_wifi", "error": "Wi-Fi discovery is currently implemented for Windows."}
+            return {"success": False, "operation": "network.list_wifi",
+                    "error": "Wi-Fi discovery is currently implemented for Windows.",
+                    "executed": False, "verified": False}
         try:
             result = subprocess.run(["netsh", "wlan", "show", "networks", "mode=bssid"],
                                     capture_output=True, text=True, timeout=15, check=False)
-            return {"success": result.returncode == 0, "operation": "network.list_wifi",
-                    "output": result.stdout, "error": result.stderr if result.returncode else None,
-                    "executed": True, "verified": result.returncode == 0}
         except Exception as exc:
-            return {"success": False, "operation": "network.list_wifi", "error": str(exc)}
+            return {"success": False, "operation": "network.list_wifi",
+                    "error": str(exc), "executed": False, "verified": False}
+
+        succeeded = result.returncode == 0
+        networks = self._parse_wifi_networks(result.stdout) if succeeded else []
+
+        # Executed: netsh ran to completion and produced an inventory --
+        # a non-zero exit produced none, so nothing was carried out.
+        # Verified: the networks themselves were read back OUT of the
+        # netsh output. The exit code alone verifies nothing: an exit of
+        # 0 carrying output we cannot parse must not claim verified=True
+        # (an empty radio environment is likewise verified=False -- we
+        # cannot distinguish it from unparseable output without a
+        # positive signal, so verification fails closed).
+        return {"success": succeeded,
+                "operation": "network.list_wifi",
+                "output": result.stdout,
+                "networks": networks,
+                "error": (None if succeeded
+                          else (result.stderr
+                                or f"netsh wlan show networks exited with "
+                                   f"code {result.returncode}.")),
+                "executed": succeeded,
+                "verified": succeeded and bool(networks),
+                "verification_type": "netsh_output_parse"}
+
+    def _parse_wifi_networks(self, output: str) -> list:
+        """Read the network inventory out of ``netsh show networks`` output.
+
+        Matches only ``SSID <n> :`` header lines. The indented
+        ``BSSID <n> :`` sub-entries inside each block begin with a
+        letter, never with ``SSID``, so they are not networks and must
+        not inflate the inventory -- the parse IS the verification.
+
+        Fails closed: localised or otherwise unrecognisable output
+        yields an empty list rather than crediting a listing we could
+        not read.
+        """
+        networks = []
+        for line in str(output or "").splitlines():
+            match = re.match(r"^\s*SSID\s+\d+\s*:\s*(.*)$", line)
+            if match:
+                networks.append(match.group(1).strip())
+        return networks
 
     def connect_wifi(self, ssid: str, password: str) -> dict:
         # `confirmed` is ACCEPTED BUT IGNORED (Item 3B-3b); it is not an
