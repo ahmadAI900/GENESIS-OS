@@ -533,17 +533,33 @@ class MemoryManager:
         if self.memory_exists(text, filename):
             return False
         data = self.load_memory(filename)
-        if not isinstance(data, list):
-            memories = []
-        else:
+        # Item 26E (L12): honour dict-format stores
+        # ({"memories": [...]} -- the format get_relevent_memory and
+        # memory_exists already read). The old `not isinstance(data,
+        # list)` branch STARTED OVER from an empty list, so the next
+        # save silently dropped every existing dict-format memory and
+        # flattened the file.
+        dict_format = isinstance(data, dict)
+        if dict_format:
+            memories = data.get("memories", [])
+            if not isinstance(memories, list):
+                memories = []
+        elif isinstance(data, list):
             memories = data
+        else:
+            memories = []
         category = self.detect_memory_category(text)
         memories.append({
             "message": text,
             "category": category
         })
 
-        self.save_memory(filename, memories)
+        if dict_format:
+            out = dict(data)
+            out["memories"] = memories
+            self.save_memory(filename, out)
+        else:
+            self.save_memory(filename, memories)
         return True
 
     def detect_memory_category(self, text: str) -> str:
