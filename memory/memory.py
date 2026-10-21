@@ -348,26 +348,11 @@ class MemoryManager:
             print("[DEBUG] Preference relevance: FALSE")
         return False
 
-    def detect_preference_type(self, preference: str) -> str:
-        preference_lower = preference.lower()
-
-        programming_languages = [
-            "python",
-            "java",
-            "javascript",
-            "typescript",
-            "c++",
-            "c#",
-            "rust",
-            "go",
-            "php",
-            "ruby"
-        ]
-
-        if preference_lower in programming_languages:
-            return "programming_language"
-
-        return "general"
+    # Item 26C (L10): detect_preference_type was ALSO defined here
+    # (lowercase without stripping; 10 languages). The class's second
+    # definition -- near the end of the file, stripping whitespace and
+    # knowing 12 languages -- silently shadowed it and is the more
+    # complete one, so it is the one kept; this duplicate is gone.
 
     # -------------------------
     # Recall User Information
