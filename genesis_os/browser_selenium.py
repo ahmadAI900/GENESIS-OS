@@ -747,15 +747,49 @@ class SeleniumBrowserProvider(BrowserProvider):
     def screenshot(self, path: Optional[str] = None) -> Dict[str, Any]:
         try:
             self._ensure_driver()
+            import os
             if path is None:
                 import tempfile
-                path = tempfile.mktemp(suffix=".png")
+                # Item 24A (C26): mkstemp creates the file atomically.
+                # mktemp only INVENTED a name -- a check-then-create
+                # race another process could win before the write.
+                fd, path = tempfile.mkstemp(suffix=".png")
+                os.close(fd)
             self._driver.save_screenshot(path)
-            return {"success": True, "operation": "browser.screenshot", "path": path}
+            # Item 24A (C26): the driver returning (selenium returns
+            # False on failure, and that value used to be discarded) is
+            # not success -- the artifact decides. mkstemp pre-creates
+            # a zero-byte file, so an unwritten screenshot fails the
+            # size check below.
+            artifact_ok = os.path.isfile(path) and os.path.getsize(path) > 0
         except Exception as exc:
             if not self._is_driver_alive():
                 raise
-            return {"success": False, "operation": "browser.screenshot", "error": str(exc)}
+            return {
+                "success": False,
+                "operation": "browser.screenshot",
+                "error": str(exc),
+                "executed": False,
+                "verified": False,
+            }
+        if not artifact_ok:
+            return {
+                "success": False,
+                "operation": "browser.screenshot",
+                "path": path,
+                "error": f"Screenshot artifact missing or empty at '{path}'.",
+                "executed": False,
+                "verified": False,
+                "verification_type": "screenshot_artifact_file",
+            }
+        return {
+            "success": True,
+            "operation": "browser.screenshot",
+            "path": path,
+            "executed": True,
+            "verified": True,
+            "verification_type": "screenshot_artifact_file",
+        }
  
     def select(self, selector: str, value: Optional[str] = None, label: Optional[str] = None, index: Optional[int] = None) -> Dict[str, Any]:
         try:
