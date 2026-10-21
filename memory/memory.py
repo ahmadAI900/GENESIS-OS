@@ -643,15 +643,20 @@ class MemoryManager:
         lines = ["User preferences:"]
 
         for item in preferences:
+            # Item 26B (L3): branch on the TYPE first. The old code
+            # only bound preference/liked inside the dict branch but
+            # then tested `if preference:` for every item -- a str
+            # item raised UnboundLocalError (or reused the previous
+            # dict's value and vanished).
             if isinstance(item, dict):
                 preference = item.get("preference", "")
                 liked = item.get("liked", True)
 
-            if preference:
-                if liked:
-                    lines.append(f"- User prefers {preference}.")
-                else:
-                    lines.append(f"- User does not like {preference}.")
+                if preference:
+                    if liked:
+                        lines.append(f"- User prefers {preference}.")
+                    else:
+                        lines.append(f"- User does not like {preference}.")
 
             elif isinstance(item, str):
                 lines.append(f"- User prefers {item}.")
