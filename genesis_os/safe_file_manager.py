@@ -403,12 +403,3 @@ class SafeFileManager:
         return {"success": False, "operation": operation, "path": validation.get("path"),
                 "error": validation.get("reason"), "message": validation.get("reason"),
                 "executed": False, "verified": False}
-
-    @staticmethod
-    def _confirmation(operation, target, action):
-        return {"success": False, "operation": operation, "path": str(target),
-                "status": "confirmation_required", "requires_confirmation": True,
-                "confirmation_required": True,
-                "confirmation_message": f"Confirm that Genesis may {action} at '{target}'.",
-                "message": f"This action requires explicit confirmation before Genesis can {action}.",
-                "executed": False, "verified": False}

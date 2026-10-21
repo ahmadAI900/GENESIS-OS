@@ -418,9 +418,6 @@ class ApplicationManager:
 
             "microsoft_store":
                 "ms-windows-store:",
-
-            "xbox":
-                "xbox:",
             }
 
         # -----------------------------------------------------

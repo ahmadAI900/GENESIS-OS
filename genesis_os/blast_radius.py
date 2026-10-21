@@ -236,20 +236,34 @@ def _static_default_for(capability_id: str) -> BlastRadius:
 # operation Genesis cannot classify cannot be shown to be reversible.
 
 _coverage_gaps: "list[dict[str, Any]]" = []
+# Item 24C (C31): record_coverage_gap is check-then-act. Under the GIL
+# the loop-and-append pair is not atomic -- two threads recording the
+# same operation both observe "not present" and both append,
+# duplicating the log whose whole purpose is showing what the system
+# could not classify. One lock makes the check and the append one
+# action, and takes the snapshot in coverage_gaps() with it.
+_coverage_gaps_lock = threading.Lock()
 
 
 def record_coverage_gap(entry: Dict[str, Any]) -> None:
-    """Append a coverage gap, de-duplicated on operation."""
+    """Append a coverage gap, de-duplicated on operation.
+
+    The de-duplication check and the append run under
+    ``_coverage_gaps_lock`` so concurrent recorders of the same
+    operation cannot both pass the check.
+    """
     key = entry.get("operation")
-    for existing in _coverage_gaps:
-        if existing.get("operation") == key:
-            return
-    _coverage_gaps.append(entry)
+    with _coverage_gaps_lock:
+        for existing in _coverage_gaps:
+            if existing.get("operation") == key:
+                return
+        _coverage_gaps.append(entry)
 
 
 def coverage_gaps() -> "list[dict[str, Any]]":
     """Operations that reached the tier resolver without a descriptor."""
-    return [dict(gap) for gap in _coverage_gaps]
+    with _coverage_gaps_lock:
+        return [dict(gap) for gap in _coverage_gaps]
 
 
 def identify_capability(

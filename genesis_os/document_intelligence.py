@@ -1947,7 +1947,6 @@ class DocumentIntelligence:
                     error=error_code,
                 )
             abs_path = os.path.abspath(path)
-            source_stat = os.stat(abs_path)
             source_digest = hashlib.sha256()
             with open(abs_path, "rb") as source_handle:
                 for chunk in iter(lambda: source_handle.read(1024 * 1024), b""):
