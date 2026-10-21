@@ -138,7 +138,7 @@ class LongTermMemory:
         Returns {"action": "created"|"updated"|"unchanged"}.
         """
 
-        key = str(key).strip().lower().replace(" ", "_")
+        key = self._normalize_fact_key(key)
         value = str(value).strip().rstrip(".").strip()
 
         if not key or not value:
@@ -150,7 +150,7 @@ class LongTermMemory:
         now = datetime.now().isoformat(timespec="seconds")
 
         for fact in facts:
-            if fact.get("key") == key:
+            if self._normalize_fact_key(fact.get("key", "")) == key:
                 old_value = str(fact.get("value", ""))
 
                 if old_value.lower() == value.lower():
@@ -200,10 +200,10 @@ class LongTermMemory:
         return {"action": "created", "fact": fact}
 
     def get_fact(self, key: str) -> Optional[Dict[str, Any]]:
-        key = key.strip().lower().replace(" ", "_")
+        key = self._normalize_fact_key(key)
 
         for fact in self.all_facts():
-            if fact.get("key") == key:
+            if self._normalize_fact_key(fact.get("key", "")) == key:
                 return fact
 
         return None
@@ -726,6 +726,23 @@ JSON:"""
         return None
 
     @staticmethod
+    def _normalize_fact_key(key: str) -> str:
+        """ONE canonical fact-key form: stripped, lowercased, spaces
+        and LEGACY hyphens folded to underscores.
+
+        Item 26F (L13): _derive_key used to join with "-" while
+        upsert_fact/get_fact normalized with "_" -- a fact stored via
+        the derive path ("moved-berlin") was unreachable by
+        get_fact("moved berlin") ("moved_berlin"). One normalization
+        now covers the store path, the read path and the derive path,
+        and folding hyphens on the READ side keeps OLD hyphen-keyed
+        stores readable and updatable in place (no duplicates).
+        """
+        return (
+            str(key).strip().lower().replace("-", "_").replace(" ", "_")
+        )
+
+    @staticmethod
     def _derive_key(fact_text: str) -> str:
         words = re.findall(r"[a-z0-9]+", fact_text.lower())
 
@@ -736,7 +753,9 @@ JSON:"""
 
         meaningful = [w for w in words if w not in stop][:4]
 
-        return "-".join(meaningful) or "note"
+        # Item 26F (L13): canonical underscores, so a derived key is
+        # directly findable by get_fact (via _normalize_fact_key).
+        return "_".join(meaningful) or "note"
 
     # =========================================================
     # SUMMARY
