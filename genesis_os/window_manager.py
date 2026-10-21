@@ -47,11 +47,18 @@ class WindowManager:
             shell = self._shell()
             getattr(shell, method_name)()
         except Exception as error:
+            # An exception means the Shell operation was never carried
+            # out -- executed must say so. The operation was *attempted*
+            # (that distinction lives in the attempt itself), but an
+            # attempted-and-failed operation beside success=False is not
+            # an executed one, and claiming executed=True here left a
+            # consumer unable to tell a refused dispatch from a broken
+            # COM bridge.
             return {
                 "success": False,
                 "operation": operation,
                 "error": str(error),
-                "executed": True,
+                "executed": False,
                 "verified": False,
             }
 
