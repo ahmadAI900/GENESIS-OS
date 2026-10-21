@@ -34,6 +34,65 @@ class DocumentManager:
                     doc.add_paragraph(str(body))
             target.parent.mkdir(parents=True, exist_ok=True)
             doc.save(target)
-            return {"success": True, "operation": "document.create_docx", "path": str(target), "executed": True, "verified": target.is_file()}
+            # Item 23D (C29): existence is not content. `target.is_file()`
+            # was True for a zero-byte file, a truncated file, a corrupt
+            # non-zip blob, and a docx whose paragraphs said something
+            # else entirely -- all claimed verified=True. Verification
+            # now REOPENS the saved package and confirms the paragraphs
+            # actually carry the title and sections we were asked to
+            # write; any exception while reading fails closed.
+            #
+            # `content_match` / `file_exists` are the evidence keys
+            # contracts.has_meaningful_result_evidence accepts for a
+            # document.* write (house pattern: verification_helpers
+            # verify_doc_create, safe_file_manager). Without them a
+            # legitimately content-verified write was demoted to
+            # `verification_unavailable` by the EvidenceContract
+            # ("verified result lacks capability-specific evidence").
+            # `trustworthy_success` is the Item 13D field consumers
+            # read; `success` stays bound to the save itself completing.
+            verified = self._verify_saved_document(target, title, sections)
+            return {"success": True, "operation": "document.create_docx",
+                    "path": str(target), "executed": True,
+                    "verified": verified,
+                    "trustworthy_success": verified,
+                    "verification_type": "docx_content_readback",
+                    "file_exists": target.is_file(),
+                    "content_match": verified,
+                    "post_state_matches": verified}
         except Exception as exc:
             return {"success": False, "operation": "document.create_docx", "error": str(exc), "executed": False, "verified": False}
+
+    def _verify_saved_document(self, target: Path, title: str, sections: list[dict] | None) -> bool:
+        """Reopen the saved docx and confirm the content we wrote.
+
+        Fails closed: the file is missing or zero-length, python-docx
+        cannot open it (empty or corrupt packages raise
+        ``PackageNotFoundError``), or any expected paragraph -- the
+        title plus each truthy section heading/body, mirrored from the
+        exact conditions the write above used -- is absent from the
+        reopened document. Localised/odd input cannot make this return
+        True without the paragraphs actually being there.
+        """
+        try:
+            if not target.is_file() or target.stat().st_size <= 0:
+                return False
+            from docx import Document
+
+            doc = Document(str(target))
+            written = [paragraph.text for paragraph in doc.paragraphs]
+
+            expected = [str(title)]
+            for section in sections or []:
+                # Mirror the write loop line for line: same truthiness
+                # gates, same str() coercion, same insertion order.
+                heading = section.get("heading") if isinstance(section, dict) else None
+                body = section.get("body", "") if isinstance(section, dict) else str(section)
+                if heading:
+                    expected.append(str(heading))
+                if body:
+                    expected.append(str(body))
+
+            return all(text in written for text in expected)
+        except Exception:
+            return False
