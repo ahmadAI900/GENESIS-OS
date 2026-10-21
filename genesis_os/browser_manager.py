@@ -263,6 +263,18 @@ class BrowserManager:
         # probe did not finish, as opposed to being genuinely absent.
         self._degraded_reason: Optional[str] = None
 
+        # Item 25C (C20): every registration attempt is classified and
+        # recorded. failed = the registration code RAN and crashed
+        # (name -> reason); absent = genuinely not installed or
+        # reports itself unavailable (name -> reason). Before this
+        # existed, `except Exception: pass` in the probe methods left
+        # a crashed provider indistinguishable from one that was
+        # never installed.
+        self._provider_failures: Dict[str, str] = {}
+        self._provider_absences: Dict[str, str] = {}
+        # Why the PARALLEL probe path itself failed (None = it ran).
+        self._probe_path_failure: Optional[str] = None
+
         # Always register the basic webbrowser provider
         self._providers.append(WebBrowserProvider())
         
@@ -347,12 +359,21 @@ class BrowserManager:
                     self._degraded_reason = (
                         "provider probe timeout after "
                         f"{self._PROVIDER_PROBE_TIMEOUT}s")
-        except Exception:
-            # Fallback: sequential if threading fails for any reason
+        except Exception as exc:
+            # Fallback: sequential if threading fails for any reason.
+            # Item 25C (C20): record WHY the parallel path was lost --
+            # this catch used to run the fallback and record nothing,
+            # so the failure was invisible. Each provider's own
+            # outcome is still recorded by _try_register_* below.
             self._try_register_selenium()
             self._try_register_playwright()
             with self._dispatch_lock:
                 self._probe_window_closed = True
+                self._probe_path_failure = (
+                    "parallel probe path failed: "
+                    f"{type(exc).__name__}: {exc} "
+                    "(sequential fallback used)"
+                )
         
         # Initialize default session
         self._ensure_session(self._default_session_id)
@@ -375,6 +396,41 @@ class BrowserManager:
     @property
     def degraded_reason(self) -> Optional[str]:
         return self._degraded_reason
+
+    @property
+    def provider_failures(self) -> Dict[str, str]:
+        """name -> reason for providers whose registration CRASHED.
+
+        Item 25C (C20): a crash is not absence. An entry here means
+        the registration code RAN and failed -- exposed so a dead
+        provider never masquerades as one that was never installed.
+        """
+        with self._dispatch_lock:
+            return dict(self._provider_failures)
+
+    @property
+    def provider_absences(self) -> Dict[str, str]:
+        """name -> reason for providers that are genuinely not
+        installed or report themselves unavailable."""
+        with self._dispatch_lock:
+            return dict(self._provider_absences)
+
+    @property
+    def probe_path_failure(self) -> Optional[str]:
+        """Why the parallel probe path itself failed (None = it ran)."""
+        with self._dispatch_lock:
+            return self._probe_path_failure
+
+    def _record_provider_failure(self, name: str, reason: str) -> None:
+        """Item 25C (C20): note that a provider's registration crashed."""
+        with self._dispatch_lock:
+            self._provider_failures[name] = reason
+
+    def _record_provider_absence(self, name: str, reason: str) -> None:
+        """Item 25C (C20): note that a provider is genuinely not
+        installed/available -- distinct from a crash."""
+        with self._dispatch_lock:
+            self._provider_absences[name] = reason
 
     @property
     def provider_names(self) -> List[str]:
@@ -412,28 +468,60 @@ class BrowserManager:
             self._providers.insert(0, provider)
 
     def _try_register_selenium(self) -> None:
-        """Try to register Selenium provider if available."""
+        """Try to register Selenium provider if available.
+
+        Item 25C (C20): every outcome is RECORDED. The old
+        ``except ImportError: pass`` / ``except Exception: pass``
+        swallowed a crash without a trace -- a provider that CRASHED
+        looked identical to one that was never installed. Now:
+        ImportError -> absent (reason recorded), available False ->
+        absent (reason recorded), any other exception -> failed
+        (reason recorded).
+        """
+        name = "selenium"
         try:
             from .browser_selenium import SeleniumBrowserProvider
+        except ImportError as exc:
+            self._record_provider_absence(name, f"ImportError: {exc}")
+            return
+        try:
             provider = SeleniumBrowserProvider()
-            if provider.available:
-                self._register_provider(provider)
-        except ImportError:
-            pass
-        except Exception:
-            pass
+            if not provider.available:
+                self._record_provider_absence(
+                    name, "installed but provider.available is False"
+                )
+                return
+            self._register_provider(provider)
+        except Exception as exc:
+            self._record_provider_failure(
+                name, f"{type(exc).__name__}: {exc}"
+            )
 
     def _try_register_playwright(self) -> None:
-        """Try to register Playwright provider if available."""
+        """Try to register Playwright provider if available.
+
+        Item 25C (C20): same contract as _try_register_selenium --
+        ImportError/available-False -> absent with reason, any other
+        exception -> failed with reason; nothing is silently dropped.
+        """
+        name = "playwright"
         try:
             from .browser_playwright import PlaywrightBrowserProvider
+        except ImportError as exc:
+            self._record_provider_absence(name, f"ImportError: {exc}")
+            return
+        try:
             provider = PlaywrightBrowserProvider()
-            if provider.available:
-                self._register_provider(provider)
-        except ImportError:
-            pass
-        except Exception:
-            pass
+            if not provider.available:
+                self._record_provider_absence(
+                    name, "installed but provider.available is False"
+                )
+                return
+            self._register_provider(provider)
+        except Exception as exc:
+            self._record_provider_failure(
+                name, f"{type(exc).__name__}: {exc}"
+            )
  
     def _get_provider(self) -> BrowserProvider:
         """Get the best available provider (session-level fallback)."""
