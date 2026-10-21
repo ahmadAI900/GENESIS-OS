@@ -585,28 +585,35 @@ class MemoryManager:
                 existing_key = key
                 break
 
-        # Update existing preference
+        # Update existing preference (replace in place) or append
+        # when absent. Item 26A (L2): the old code fell out of a
+        # "remove duplicates" for/else -- whose ELSE always ran,
+        # because the loop had no break -- and appended
+        # preferences[preference] = liked under the caller's
+        # spelling, so updating an EXISTING preference whose stored
+        # key differed in case/spacing grew a duplicate entry
+        # instead of replacing it.
         if existing_key is not None:
             preferences[existing_key] = liked
-
-        # Remove duplicate versions
-        for key in list(preferences.keys()):
-            if key != existing_key:
-                if str(key).strip().lower() == normalized:
-                    del preferences[key]
-
+            kept_key = existing_key
         else:
             preferences[preference] = liked
+            kept_key = preference
 
-            self.save_preferences(preferences)
+        # Remove any OTHER case/space variants that duplicate it.
+        for key in list(preferences.keys()):
+            if key != kept_key and str(key).strip().lower() == normalized:
+                del preferences[key]
 
-            if _genesis_debug():
-                print(
-                    f"[DEBUG] Preference updated: "
-                    f"{preference} = {liked}"
-                )
+        self.save_preferences(preferences)
 
-            return True
+        if _genesis_debug():
+            print(
+                f"[DEBUG] Preference updated: "
+                f"{preference} = {liked}"
+            )
+
+        return True
 
     def get_relevant_preferences(self, text: str):
         preferences = self.get_preferences()
