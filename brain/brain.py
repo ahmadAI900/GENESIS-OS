@@ -1,5 +1,11 @@
 from personality.personality import PersonalityEngine
 from router.router import Router
+from router.destinations import (
+    DEST_AI,
+    DEST_INTERNET,
+    DEST_KNOWLEDGE,
+    DEST_MEMORY,
+)
 from ai.ai_engine import AIEngine
 from memory.memory import MemoryManager
 from internet.search import InternetSearch
@@ -79,7 +85,7 @@ class Brain:
 
             return answer
 
-        if destination == "memory":
+        if destination == DEST_MEMORY:
 
     # Learn profile information
             response = self.memory.learn_profile(text)
@@ -98,19 +104,41 @@ class Brain:
 
             return "I couldn't find any memory-related information."
 
-        elif destination == "Internet":
+        elif destination == DEST_INTERNET:
             result = self.internet.search(text)
             parsed = self.parser.extract(result)
             answer = self.formatter.format(parsed)
             return answer
 
-        elif destination == "knowledge":
-            answer = self.knowledge.search(text)
-            if answer:
-                return answer
-            return "I could not find that in my knowledge base."
+        elif destination == DEST_KNOWLEDGE:
+            # Item 27A (L6): this branch could never run (the router
+            # never named a "knowledge" destination). It is reachable
+            # now -- and Knowledge.search returns a LIST of result
+            # dicts, which must be rendered into a str: returning the
+            # raw list broke process_request's `-> str` contract.
+            results = self.knowledge.search(text)
 
-        elif destination == "ai":
+            if not results:
+                return "I could not find that in my knowledge base."
+
+            if not isinstance(results, list):
+                results = [results]
+
+            lines = ["From my knowledge base:"]
+
+            for item in results[:3]:
+                if not isinstance(item, dict):
+                    continue
+                snippet = str(item.get("snippet", "")).strip()
+                path = str(item.get("path", "")).strip()
+                if snippet:
+                    lines.append(f"- {snippet}")
+                if path:
+                    lines.append(f"  ({path})")
+
+            return "\n".join(lines)
+
+        elif destination == DEST_AI:
 
             # Save the actual user message
             self.conversation.add_user_message(text)

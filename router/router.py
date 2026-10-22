@@ -1,6 +1,13 @@
 """DEPRECATED: superseded by genesis_os/capability_resolver.py + agents/workflow_decision.py control plane. Kept for backward-compat tests only. Do NOT use for new code."""
 import warnings
 
+from router.destinations import (
+    DEST_AI,
+    DEST_INTERNET,
+    DEST_KNOWLEDGE,
+    DEST_MEMORY,
+)
+
 
 class Router:
     def __init__(self):
@@ -22,8 +29,39 @@ class Router:
             "who create you"
 
         ]
+        # Item 27A (L6): the internet destination was reachable only
+        # through the placeholder keyword "none", so an ordinary
+        # "search the web ..." request never routed to the internet
+        # branch. These are the phrases that actually ask for a live
+        # web search.
         self.internet_keywords = [
             "none",
+            "search the internet",
+            "search the web",
+            "internet search",
+            "web search",
+            "search online",
+            "look up online",
+            "google it",
+            "browse the web",
+            "fetch from the internet",
+        ]
+        # Item 27A (L6): the router never named a "knowledge"
+        # destination, so brain's knowledge branch could never fire and
+        # Knowledge.search was called from nowhere.
+        self.knowledge_keywords = [
+            "knowledge base",
+            "in your knowledge",
+            "your knowledge",
+            "my knowledge",
+            "my documents",
+            "my notes",
+            "my files",
+            "search my",
+            "look in my",
+            "from my documents",
+            "from my notes",
+            "from my files",
         ]
         self.ai_keywords = [
             "what is",
@@ -158,9 +196,14 @@ class Router:
         text = text.lower().strip()
         for keyword in self.memory_keywords:
             if keyword in text:
-                return "memory"
+                return DEST_MEMORY
 
         for keyword in self.internet_keywords:
             if keyword in text:
-                return "internet"
-        return "ai"
+                return DEST_INTERNET
+
+        for keyword in self.knowledge_keywords:
+            if keyword in text:
+                return DEST_KNOWLEDGE
+
+        return DEST_AI

@@ -111,7 +111,10 @@ def test_think_forwards_an_unknown_destination_as_a_str():
 
 @pytest.mark.parametrize("destination", [
     "memory",
-    "Internet",
+    # Item 27A (L6): the router names "internet" (lower case); the
+    # old "Internet" literal here encoded the case mismatch that made
+    # the brain's internet branch dead.
+    "internet",
     "knowledge",
     "ai",
     "unknown",
