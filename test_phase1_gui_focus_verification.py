@@ -967,7 +967,7 @@ def test_content_readback_is_required_when_focus_is_retained():
         )
     )
 
-    assert result.success is True
+    assert result.success is False
     assert result.executed is True
     assert result.verified is False
     assert result.status in {"verification_failed", "verification_unavailable"}

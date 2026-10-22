@@ -142,7 +142,7 @@ class ClipboardManager:
 
         if not isinstance(content, str) or not content.strip():
             return {
-                "success": True,
+"success": verified,
                 "operation": "clipboard.paste",
                 "content": "",
                 "empty": True,
@@ -157,7 +157,7 @@ class ClipboardManager:
         )
 
         return {
-            "success": True,
+            "success": verified,
             "operation": "clipboard.paste",
             "content_length": len(content),
             "content_preview": preview,

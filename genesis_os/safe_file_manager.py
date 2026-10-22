@@ -206,7 +206,7 @@ class SafeFileManager:
         ][:max_results]
 
         return {
-            "success": True,
+"success": bool(ranked_paths),
             "operation": "file.search",
             "root": str(roots[0]),
             "roots": [str(root) for root in roots],
@@ -258,7 +258,7 @@ class SafeFileManager:
             expected = str(content)
             target.write_text(expected, encoding="utf-8")
             content_matches = target.is_file() and target.read_text(encoding="utf-8") == expected
-            return {"success": True, "operation": "file.create", "path": str(target),
+            return {"success": content_matches, "operation": "file.create", "path": str(target),
                     "message": f"Created {target.name}.", "executed": True,
                     "verified": content_matches, "file_exists": target.is_file(),
                     "content_match": content_matches,

@@ -315,7 +315,10 @@ class PlaywrightBrowserProvider(BrowserProvider):
                     )
                 )
                 return {
-                    "success": True,
+                    # Item 29A (C12): `success` is DERIVED from the
+                    # verification, not asserted beside it. The URL
+                    # readback IS the evidence for this navigation.
+                    "success": verified,
                     "operation": "browser.open_url",
                     "url": actual_url or url,
                     "requested_url": url,
@@ -416,7 +419,7 @@ class PlaywrightBrowserProvider(BrowserProvider):
             try:
                 page = self._get_page()
                 page.fill(selector, text, timeout=10000)
-                result = {"success": True, "operation": "browser.type", "selector": selector, "text": text}
+                result = {"success": verified, "operation": "browser.type", "selector": selector, "text": text}
                 try:
                     loc = page.locator(selector)
                     actual_value = loc.input_value()
@@ -448,20 +451,14 @@ class PlaywrightBrowserProvider(BrowserProvider):
                         page.keyboard.press("PageDown")
                     else:
                         page.keyboard.press("PageUp")
-                result: Dict[str, Any] = {"success": True, "operation": "browser.scroll", "direction": direction, "amount": amount}
                 # Post-state verification via scroll-offset readback.
                 try:
                     scroll_after = page.evaluate("window.scrollY")
                 except Exception:
                     scroll_after = None
-                result["scroll_before"] = scroll_before
-                result["scroll_after"] = scroll_after
-                result["element_found"] = scroll_before is not None and scroll_after is not None
-                if scroll_before is not None and scroll_after is not None:
-                    result["scrolled"] = (scroll_after != scroll_before)
-                    result["scroll_delta"] = scroll_after - scroll_before
-                    result["scroll_position_changed"] = result["scrolled"]
-                result["verified"] = bool(result.get("scrolled", False))
+                scrolled = scroll_before is not None and scroll_after is not None and (scroll_after != scroll_before)
+                verified = bool(scrolled)
+                result: Dict[str, Any] = {"success": verified, "operation": "browser.scroll", "direction": direction, "amount": amount, "scroll_before": scroll_before, "scroll_after": scroll_after, "element_found": scroll_before is not None and scroll_after is not None, "scrolled": scrolled, "scroll_delta": (scroll_after - scroll_before) if scroll_before is not None and scroll_after is not None else None, "scroll_position_changed": verified, "verified": verified}
                 return result
             except Exception as exc:
                 if self._is_connection_death(exc):
@@ -473,7 +470,7 @@ class PlaywrightBrowserProvider(BrowserProvider):
             try:
                 page = self._get_page()
                 elements = page.locator(f"text={text}").all()
-                return {"success": True, "operation": "browser.find", "text": text, "count": len(elements)}
+                return {"success": verified, "operation": "browser.find", "text": text, "count": len(elements), "verified": verified}
             except Exception as exc:
                 if self._is_connection_death(exc):
                     raise
@@ -534,7 +531,10 @@ class PlaywrightBrowserProvider(BrowserProvider):
                     ]
                     verified = bool(tabs[index].get("active") and actual_url)
                     return {
-                        "success": True,
+                        # Item 29A (C12): success is bound to the
+                        # tab-state readback (the evidence), not
+                        # asserted as a literal beside it.
+                        "success": verified,
                         "operation": "browser.switch_tab",
                         "index": index,
                         "url": actual_url,
@@ -572,7 +572,10 @@ class PlaywrightBrowserProvider(BrowserProvider):
                     and url_matches
                 )
                 return {
-                    "success": True,
+                    # Item 29A (C12): success is bound to the tab-state
+                    # readback (the evidence), not asserted as a literal
+                    # beside it.
+                    "success": verified,
                     "operation": "browser.open_tab",
                     "url": actual_url or url,
                     "requested_url": url,
@@ -733,7 +736,10 @@ class PlaywrightBrowserProvider(BrowserProvider):
                     else actual_index == int(index)
                 )
                 return {
-                    "success": True,
+                    # Item 29A (C12): the selected value was READ BACK,
+                    # so success is that readback -- a selection whose
+                    # value did not take effect is not a success.
+                    "success": verified,
                     "operation": "browser.select",
                     "selector": selector,
                     "method": method,

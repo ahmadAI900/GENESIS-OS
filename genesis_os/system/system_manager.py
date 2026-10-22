@@ -36,7 +36,7 @@ class SystemManager:
                 os.startfile(uri)
             else:
                 webbrowser.open(uri)
-            return {"success": True, "operation": "system.open_settings", "target": key,
+            return {"success": "dispatched", "operation": "system.open_settings", "target": key,
                     "executed": True, "verified": False,
                     "verification_type": "dispatch_only",
                     "verification_reason": "Settings dispatch was not independently observed.",

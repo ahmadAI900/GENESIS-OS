@@ -629,13 +629,13 @@ def palette_svg(theme: str = "ocean", title: str = "Genesis Design") -> Dict[str
 
     svg = "\n".join(parts)
 
+    verified = svg.rstrip().endswith("</svg>") and svg.count("<rect") == len(colors) + 1
     return {
-        "success": True,
+        "success": verified,
         "operation": "design.palette_svg",
         "theme": theme_key,
         "colors": colors,
         "svg": svg,
-        "verified": svg.rstrip().endswith("</svg>")
-        and svg.count("<rect") == len(colors) + 1,
+        "verified": verified,
         "verification_type": "structure_check",
     }

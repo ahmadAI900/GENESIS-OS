@@ -156,7 +156,7 @@ def test_a_successful_dispatch_still_reports_executed_true(monkeypatch):
 
     result = manager.minimize_all()
 
-    assert result["success"] is True, result
+    assert result["success"] == "dispatched", result
     assert result["executed"] is True, (
         "the Shell method returned normally; executed=False would "
         "deny a dispatch that really happened"

@@ -1023,7 +1023,7 @@ def test_safe_file_create_rejects_content_mismatch(tmp_path, monkeypatch):
         content="expected",
     )
 
-    assert result["success"] is True
+    assert result["success"] is False
     assert result["verified"] is False
     assert result["content_match"] is False
 

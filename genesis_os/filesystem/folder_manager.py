@@ -62,7 +62,7 @@ class FolderManager:
         try:
             p.mkdir(parents=True)
             verified = p.is_dir()
-            return {"success": True, "operation": "folder.create", "path": str(p), "executed": True,
+            return {"success": verified, "operation": "folder.create", "path": str(p), "executed": True,
                     "verified": verified, "folder_exists": verified, "post_state_matches": verified}
         except OSError as exc:
             return {"success": False, "operation": "folder.create", "path": str(p), "error": str(exc)}
@@ -83,7 +83,7 @@ class FolderManager:
         try:
             Path(v["path"]).rename(target)
             verified = target.is_dir() and not Path(v["path"]).exists()
-            return {"success": True, "operation": "folder.rename", "path": str(target), "executed": True,
+            return {"success": verified, "operation": "folder.rename", "path": str(target), "executed": True,
                     "verified": verified, "folder_exists": verified, "post_state_matches": verified}
         except OSError as exc:
             return {"success": False, "operation": "folder.rename", "error": str(exc)}
@@ -177,7 +177,7 @@ class FolderManager:
 
         if not planned_moves:
             return {
-                "success": True,
+                "success": verified,
                 "operation": "folder.organize",
                 "path": str(p),
                 "organized_count": 0,

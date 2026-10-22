@@ -63,7 +63,7 @@ class WindowManager:
             }
 
         return {
-            "success": True,
+            "success": "dispatched",
             "operation": operation,
             "executed": True,
             "verified": False,

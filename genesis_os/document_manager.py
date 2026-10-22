@@ -52,7 +52,7 @@ class DocumentManager:
             # `trustworthy_success` is the Item 13D field consumers
             # read; `success` stays bound to the save itself completing.
             verified = self._verify_saved_document(target, title, sections)
-            return {"success": True, "operation": "document.create_docx",
+            return {"success": verified, "operation": "document.create_docx",
                     "path": str(target), "executed": True,
                     "verified": verified,
                     "trustworthy_success": verified,

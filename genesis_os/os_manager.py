@@ -291,7 +291,7 @@ class OSManager:
             return {"success": False, "operation": "application.list", "error": "Invalid application inventory result.", "executed": False, "verified": False}
         result = dict(result)
         result.update({
-            "success": True,
+            "success": bool(result.get("verified", False)),
             "operation": "application.list",
             "executed": False,
             "verified": bool(result.get("verified", False)),

@@ -1713,7 +1713,7 @@ class ActionExecutor:
             and content_verification.get("content_match")
         )
         raw_payload: Dict[str, Any] = {
-            "success": True,
+            "success": content_verified,
             "operation": plan.operation,
             "executed": True,
             "verified": content_verified,

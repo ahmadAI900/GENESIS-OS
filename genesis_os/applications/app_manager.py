@@ -508,7 +508,7 @@ class ApplicationManager:
         # actually observe.
         if os.name != "nt":
             return {
-                "success": True,
+                "success": "dispatched",
                 "operation": "application.inspect",
                 "application": target,
                 "resolved_executable": executable,
@@ -536,7 +536,7 @@ class ApplicationManager:
 
         return {
             "success": True,
-            "operation": "application.inspect",
+                "operation": "application.inspect",
             "application": target,
             "resolved_executable": executable,
             "resolved_uri": None,

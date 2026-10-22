@@ -406,7 +406,7 @@ class MediaController:
             # was dispatched; `verified` says the endpoint confirmed the
             # level; `trustworthy_success` is the one a consumer must
             # read to decide whether to tell the user it worked.
-            "success": True,
+            "success": applied,
             "operation": "volume.set",
             "before": before.get("volume_percent") if isinstance(before, dict) else None,
             "target": level,

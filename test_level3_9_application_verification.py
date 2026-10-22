@@ -311,7 +311,7 @@ def test_inspect_on_non_windows_reports_unsupported_not_verified(
     try:
         result = manager.inspect("chrome")
 
-        assert result["success"] is True
+        assert result["success"] == "dispatched"
         assert result.get("platform_unsupported") is True, (
             f"Non-Windows inspect must mark "
             f"platform_unsupported=True; got {result}"

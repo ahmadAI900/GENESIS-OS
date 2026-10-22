@@ -237,8 +237,9 @@ def test_a_corrupt_written_file_is_not_verified(tmp_path, monkeypatch):
 
     result = manager.create_docx(str(target), "Title", SECTIONS)
 
-    assert result["success"] is True, (
-        "save() itself returned without exception"
+    assert result["success"] is False, (
+        "save() returned without exception but verification failed, "
+        "so success must reflect verified=False"
     )
     assert result["executed"] is True, result
     assert result["verified"] is False, (

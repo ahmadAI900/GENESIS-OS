@@ -1,5 +1,5 @@
 """
-Genesis OS — File Intelligence Manager
+Genesis OS â€” File Intelligence Manager
 
 LEVEL 3.3
 ---------
@@ -887,7 +887,7 @@ class FileManager:
                 }
 
             return {
-                "success": True,
+                "success": verified,
                 "operation": "file.copy",
                 "source": str(source_path),
                 "destination": str(result),
@@ -957,14 +957,15 @@ class FileManager:
                     ),
                 }
 
+            verified = dest_exists and source_removed and size_ok and content_ok
             return {
-                "success": True,
+                "success": verified,
                 "operation": "file.move",
                 "source": str(source_path),
-                "destination": str(result),
-                "verified": True,
+                "destination": str(destination_path),
+                "verified": verified,
                 "file_matches": content_ok,
-                "post_state_matches": True,
+                "post_state_matches": verified,
             }
 
         except Exception as error:

@@ -141,7 +141,7 @@ def test_minimize_all_dispatch(monkeypatch):
 
     result = manager.minimize_all()
 
-    assert result["success"] is True
+    assert result["success"] == "dispatched"
     assert result["verified"] is False
     assert dispatched == ["MinimizeAll"]
 

@@ -161,10 +161,10 @@ def test_success_is_still_about_dispatch_not_verification():
             if "trustworthy_success" not in keys:
                 continue
             success = ast.unparse(_value_of(path, lineno, "success"))
-            assert success.strip() == "True", (
-                f"{operation} line {lineno}: success is now {success!r}; "
-                f"it must stay the dispatch result, with verification "
-                f"carried by verified/trustworthy_success"
+            # C12: success now derives from verification for write ops
+            assert success.strip() == "verified" or success.strip() == "applied", (
+                f"{operation} line {lineno}: success is {success!r}; "
+                f"C12 requires success = verified for write ops"
             )
             assert "executed" in keys, (
                 f"{operation} line {lineno} lost `executed`"
@@ -244,8 +244,8 @@ def test_an_unconfirmed_volume_change_is_not_trustworthy():
     mc._endpoint = lambda: (Iface(), object)
     result = mc.set_volume(50)
 
-    assert result["success"] is True, (
-        f"the dispatch result changed: {result}"
+    assert result["success"] is False, (
+        f"unconfirmed volume change must not report success: {result}"
     )
     assert result["verified"] is False, (
         f"a readback that confirmed nothing must not report verified: {result}"
@@ -281,7 +281,7 @@ def test_an_unconfirmed_brightness_change_is_not_trustworthy():
 
     result = dc.set_brightness(50)
 
-    assert result["success"] is True, result
+    assert result["success"] is False, result
     assert result["verified"] is False, result
     assert result["trustworthy_success"] is False, (
         f"an unconfirmed brightness change must not be trustworthy: {result}"

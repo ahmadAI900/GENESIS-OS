@@ -190,7 +190,7 @@ class DisplayController:
             # for a brightness change the hardware never confirmed. The
             # message already said so, but messages are optional and
             # booleans are not.
-            "success": True,
+            "success": verified,
             "operation": "display.brightness_set",
             "before": current,
             "target": level,

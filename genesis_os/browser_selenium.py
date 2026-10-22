@@ -373,7 +373,7 @@ class SeleniumBrowserProvider(BrowserProvider):
                 )
             )
             return {
-                "success": True,
+                "success": verified,
                 "operation": "browser.open_url",
                 "url": actual_url or url,
                 "requested_url": url,
@@ -453,7 +453,7 @@ class SeleniumBrowserProvider(BrowserProvider):
             )
             element.click()
             result = {
-                "success": True,
+                "success": "dispatched",
                 "operation": "browser.click",
                 "selector": selector,
                 "verified": False,
@@ -487,7 +487,7 @@ class SeleniumBrowserProvider(BrowserProvider):
             )
             element.clear()
             element.send_keys(text)
-            result = {"success": True, "operation": "browser.type", "selector": selector, "text": text}
+            result = {"success": verified, "operation": "browser.type", "selector": selector, "text": text}
             # Real post-state verification: read back the input value
             # to confirm the text was actually accepted by the element.
             try:
@@ -528,23 +528,14 @@ class SeleniumBrowserProvider(BrowserProvider):
                     body.send_keys(Keys.PAGE_DOWN)
                 else:
                     body.send_keys(Keys.PAGE_UP)
-            result: Dict[str, Any] = {"success": True, "operation": "browser.scroll", "direction": direction, "amount": amount}
             # Post-state verification via scroll-offset readback.
             try:
                 scroll_after = self._driver.execute_script("return window.pageYOffset;")
             except Exception:
                 scroll_after = None
-            result["scroll_before"] = scroll_before
-            result["scroll_after"] = scroll_after
-            result["element_found"] = scroll_before is not None and scroll_after is not None
-            if scroll_before is not None and scroll_after is not None:
-                try:
-                    result["scrolled"] = (scroll_after != scroll_before)
-                    result["scroll_delta"] = scroll_after - scroll_before
-                    result["scroll_position_changed"] = result["scrolled"]
-                except Exception:
-                    pass
-            result["verified"] = bool(result.get("scrolled", False))
+            scrolled = scroll_before is not None and scroll_after is not None and (scroll_after != scroll_before)
+            verified = bool(scrolled)
+            result: Dict[str, Any] = {"success": verified, "operation": "browser.scroll", "direction": direction, "amount": amount, "scroll_before": scroll_before, "scroll_after": scroll_after, "element_found": scroll_before is not None and scroll_after is not None, "scrolled": scrolled, "scroll_delta": (scroll_after - scroll_before) if scroll_before is not None and scroll_after is not None else None, "scroll_position_changed": verified, "verified": verified}
             return result
         except Exception as exc:
             if not self._is_driver_alive():
