@@ -44,7 +44,7 @@ class SpreadsheetManager:
         with dst.open("w", newline="", encoding="utf-8") as fh:
             writer = csv.DictWriter(fh, fieldnames=fieldnames)
             writer.writeheader(); writer.writerows(rows)
-        return {"success": True, "operation": "spreadsheet.sort", "source": str(src), "destination": str(dst),
+        return {"success": dst.is_file(), "operation": "spreadsheet.sort", "source": str(src), "destination": str(dst),
                 "column": column, "descending": descending, "rows": len(rows), "executed": True, "verified": dst.is_file()}
 
     # Macro-enabled workbook formats. openpyxl DROPS xl/vbaProject.bin

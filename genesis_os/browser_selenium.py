@@ -607,7 +607,7 @@ class SeleniumBrowserProvider(BrowserProvider):
                 self._driver.switch_to.window(handles[index])
                 verified = bool(tabs[index].get("active") and tabs[index].get("url"))
                 return {
-                    "success": True,
+                    "success": verified,
                     "operation": "browser.switch_tab",
                     "index": index,
                     "url": self._driver.current_url,
@@ -637,7 +637,7 @@ class SeleniumBrowserProvider(BrowserProvider):
             url_matches = not url or actual_url.rstrip("/") == str(url).rstrip("/") or actual_url.startswith(str(url))
             verified = bool(actual_url and url_matches)
             return {
-                "success": True,
+                "success": verified,
                 "operation": "browser.open_tab",
                 "url": actual_url or url,
                 "requested_url": url,
@@ -815,9 +815,9 @@ class SeleniumBrowserProvider(BrowserProvider):
                 else actual_label == str(label)
                 if method == "label"
                 else actual_index == int(index)
-            )
+)
             return {
-                "success": True,
+                "success": verified,
                 "operation": "browser.select",
                 "selector": selector,
                 "method": method,

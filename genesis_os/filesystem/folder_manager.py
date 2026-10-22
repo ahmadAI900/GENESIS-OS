@@ -99,7 +99,7 @@ class FolderManager:
             target.parent.mkdir(parents=True, exist_ok=True)
             Path(v["path"]).rename(target)
             verified = target.is_dir() and not Path(v["path"]).exists()
-            return {"success": True, "operation": "folder.move", "path": str(target), "executed": True,
+            return {"success": verified, "operation": "folder.move", "path": str(target), "executed": True,
                     "verified": verified, "folder_exists": verified, "post_state_matches": verified}
         except OSError as exc:
             return {"success": False, "operation": "folder.move", "error": str(exc)}
@@ -117,7 +117,7 @@ class FolderManager:
         try:
             p.rmdir()
             verified = not p.exists()
-            return {"success": True, "operation": "folder.delete", "path": str(p), "executed": True,
+            return {"success": verified, "operation": "folder.delete", "path": str(p), "executed": True,
                     "verified": verified, "folder_exists": verified, "post_state_matches": verified}
         except OSError as exc:
             return {"success": False, "operation": "folder.delete", "error": str(exc)}
