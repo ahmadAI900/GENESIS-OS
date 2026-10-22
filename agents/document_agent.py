@@ -1,6 +1,7 @@
 from agents.base_agent import BaseAgent
 from ai.ai_engine import AIEngine
 from pathlib import Path
+from typing import Optional
 import re
 
 
@@ -99,7 +100,7 @@ class DocumentAgent(BaseAgent):
         # wrapper exposing ``.group(1)`` so downstream code
         # (``candidate = Path(read_match.group(1).strip())``)
         # keeps working unchanged.
-        read_match_obj: Optional[_re.Match] = None
+        read_match_obj: Optional[re.Match] = None
         for raw in _re.split(r"\s+", task):
             token = raw.strip().strip("\"'()[]{}<>.,!?;:")
             if not token:
@@ -335,12 +336,11 @@ Rules:
                     document.add_paragraph(cleaned)
                     paragraph_count += 1
 
-            saved = self.workspace.save_text_artifact(
-                kind="Documents",
-                base_name=title,
-                content="placeholder-not-used",
-                extension=".docx.placeholder",
-            ) if False else None
+            # Item 27D (L9): the artifact save that used to live here
+            # was `self.workspace.save_text_artifact(...) if False
+            # else None` -- a dead branch whose result was never read.
+            # The document is written below (document.save(target))
+            # and verified by reopening it, so the dead call is gone.
 
             directory = self.workspace.base_root / "Documents"
             directory.mkdir(parents=True, exist_ok=True)
