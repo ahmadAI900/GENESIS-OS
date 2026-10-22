@@ -96,12 +96,18 @@ class WorkflowError(GenesisError):
     code = "WORKFLOW_ERROR"
 
 
-class OSError(GenesisError):
+class GenesisOSError(GenesisError):
     """
     Genesis OS operation failure.
 
-    This is intentionally named GenesisOSError rather than
-    replacing Python's built-in OSError.
+    Item 28C (L15): this class was NAMED ``OSError``, which shadowed
+    Python's builtin inside this module -- an ``except OSError`` or a
+    ``raise OSError`` here resolved to THIS class, not to the builtin.
+    The name in the original docstring ("intentionally named
+    GenesisOSError rather than replacing Python's built-in OSError") was
+    the intent; the name was the bug. It is now ``GenesisOSError``:
+    the same base class, the same ``code``, and the builtin is
+    reachable again.
     """
 
     code = "OS_ERROR"
