@@ -150,6 +150,8 @@ class LLMProvider(ABC):
         prompt: str,
         *,
         tools: Optional[List[Dict[str, Any]]] = None,
+        temperature: Optional[float] = None,
+        max_tokens: Optional[int] = None,
     ) -> str:
         """
         Send a prompt to the LLM and return the text response.
@@ -164,6 +166,16 @@ class LLMProvider(ABC):
             forward these to the model; providers that don't
             ignore them silently (the caller checks
             ``supports_tool_calling`` before passing tools).
+        temperature:
+            Optional sampling temperature.  Item 28B (L5): a
+            generation control that a provider ACCEPTS must HONOUR --
+            accepting it and ignoring it is a silent drop.  A provider
+            that cannot honour it must not accept it at all; the
+            engine detects that from the signature and reports it
+            instead of dropping the control.
+        max_tokens:
+            Optional cap on the response length, for the same reason
+            as ``temperature``.
 
         Returns
         -------

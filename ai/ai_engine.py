@@ -306,8 +306,14 @@ class AIEngine:
         # -----------------------------------------------------
 
         if requested_mode == "local":
+            provider = self._get_provider("Ollama")
+            # Item 28B (L5): a generation kwarg the provider cannot
+            # accept is reported, never dropped.
+            self._reject_unsupported_generation_kwargs(
+                provider, generation_kwargs
+            )
             return self._generate_from_provider(
-                self._get_provider("Ollama"), "local", prompt,
+                provider, "local", prompt,
                 generation_kwargs=generation_kwargs,
             )
 
@@ -316,8 +322,12 @@ class AIEngine:
         # -----------------------------------------------------
 
         if requested_mode == "cloud":
+            provider = self._get_cloud_provider()
+            self._reject_unsupported_generation_kwargs(
+                provider, generation_kwargs
+            )
             return self._generate_from_provider(
-                self._get_cloud_provider(), "cloud", prompt,
+                provider, "cloud", prompt,
                 generation_kwargs=generation_kwargs,
             )
 
@@ -336,15 +346,33 @@ class AIEngine:
             local = self._get_provider("Ollama")
             cloud = self._get_cloud_provider()
 
+            # Item 28B (L5): the AUTO branch used to call
+            # _generate_from_provider WITHOUT the generation kwargs, so
+            # temperature/max_tokens vanished and the provider silently
+            # used its own defaults. They are forwarded now, and a kwarg
+            # the provider cannot accept is reported instead of dropped.
+            self._reject_unsupported_generation_kwargs(
+                local, generation_kwargs
+            )
+
             try:
-                return self._generate_from_provider(local, "local", prompt)
+                return self._generate_from_provider(
+                    local, "local", prompt,
+                    generation_kwargs=generation_kwargs,
+                )
             except Exception as local_error:
                 logger.debug("Local model failed: %s", local_error)
 
                 if cloud and cloud.is_available:
                     logger.debug("Falling back to cloud.")
+                    self._reject_unsupported_generation_kwargs(
+                        cloud, generation_kwargs
+                    )
                     try:
-                        return self._generate_from_provider(cloud, "cloud", prompt)
+                        return self._generate_from_provider(
+                            cloud, "cloud", prompt,
+                            generation_kwargs=generation_kwargs,
+                        )
                     except Exception as cloud_error:
                         return (
                             "Genesis AI could not generate "
@@ -365,15 +393,26 @@ class AIEngine:
         cloud = self._get_cloud_provider()
         local = self._get_provider("Ollama")
 
+        self._reject_unsupported_generation_kwargs(cloud, generation_kwargs)
+
         try:
-            return self._generate_from_provider(cloud, "cloud", prompt)
+            return self._generate_from_provider(
+                cloud, "cloud", prompt,
+                generation_kwargs=generation_kwargs,
+            )
         except Exception as cloud_error:
             logger.debug("Cloud model failed: %s", cloud_error)
 
             if local and local.is_available:
                 logger.debug("Falling back to Ollama.")
+                self._reject_unsupported_generation_kwargs(
+                    local, generation_kwargs
+                )
                 try:
-                    return self._generate_from_provider(local, "local", prompt)
+                    return self._generate_from_provider(
+                        local, "local", prompt,
+                        generation_kwargs=generation_kwargs,
+                    )
                 except Exception as local_error:
                     return (
                         "Genesis AI could not generate "
@@ -409,6 +448,65 @@ class AIEngine:
     # =========================================================
     # PROVIDER DISPATCH
     # =========================================================
+
+    @staticmethod
+    def _unsupported_generation_kwargs(
+        provider: Optional[LLMProvider],
+        generation_kwargs: Optional[dict],
+    ) -> List[str]:
+        """Names of the given kwargs that *provider* cannot accept.
+
+        A provider whose ``generate`` takes ``**kwargs`` can take
+        anything; otherwise the keyword has to appear in the signature.
+        """
+        if not generation_kwargs or provider is None:
+            return []
+
+        try:
+            parameters = inspect.signature(provider.generate).parameters
+        except (TypeError, ValueError):
+            return []
+
+        if any(
+            parameter.kind is inspect.Parameter.VAR_KEYWORD
+            for parameter in parameters.values()
+        ):
+            return []
+
+        return sorted(
+            str(key)
+            for key in generation_kwargs
+            if str(key) not in parameters
+        )
+
+    def _reject_unsupported_generation_kwargs(
+        self,
+        provider: Optional[LLMProvider],
+        generation_kwargs: Optional[dict],
+    ) -> None:
+        """Fail loudly when a generation kwarg cannot be honoured.
+
+        Item 28B (L5): a kwarg the provider cannot accept used to be
+        dropped (AUTO mode dropped ALL of them) or masked by the
+        fallback. Now it raises ``ProviderError`` naming the offending
+        kwarg, so a caller never gets a silently-defaulted answer.
+        """
+        unsupported = self._unsupported_generation_kwargs(
+            provider, generation_kwargs
+        )
+
+        if not unsupported:
+            return
+
+        name = getattr(provider, "name", "provider")
+        raise ProviderError(
+            provider=name,
+            message=(
+                f"Unsupported generation kwargs for {name}: "
+                f"{', '.join(unsupported)}"
+            ),
+            retryable=False,
+        )
 
     @property
     def supports_tool_calling(self) -> bool:

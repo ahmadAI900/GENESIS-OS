@@ -1086,9 +1086,20 @@ class AnthropicProvider(LLMProvider):
 
         kwargs: Dict[str, Any] = {
             "model": self._model,
-            "max_tokens": 4096,
+            "max_tokens": (
+                int(max_tokens) if max_tokens is not None else 4096
+            ),
             "messages": [{"role": "user", "content": prompt}],
         }
+
+        # Item 28B (L5): the sampling controls used to be ACCEPTED and
+        # then IGNORED -- max_tokens was hardcoded to 4096 and the
+        # temperature was never sent -- a silent drop that broke the
+        # deterministic, bounded selection in
+        # genesis_os/llm_intent_resolver.py (temperature=0.0,
+        # max_tokens=256).
+        if temperature is not None:
+            kwargs["temperature"] = temperature
 
         # Anthropic's tool format differs from OpenAI's.
         # Convert OpenAI-format tools to Anthropic format if provided.
