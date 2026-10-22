@@ -19,9 +19,27 @@ from emotion.emotion import EmotionEngine
 
 import logging
 import os as _os
+import re
+from typing import Any, Dict
 
 
 logger = logging.getLogger("genesis_os.brain")
+
+# Item 27C (L8): reasoning keywords must match on word boundaries.
+# The old raw substring test made "if" fire inside "verify", "modify"
+# and "beautiful". The pattern convention (compiled, escaped,
+# \b-anchored, cached) is the same one agents/workflow_decision.py
+# already uses for its routing keywords.
+_REASONING_KEYWORD_PATTERNS: Dict[str, Any] = {}
+
+
+def _reasoning_keyword_pattern(keyword: str) -> Any:
+    """Compiled \\b-anchored pattern for a reasoning keyword."""
+    pattern = _REASONING_KEYWORD_PATTERNS.get(keyword)
+    if pattern is None:
+        pattern = re.compile(r"\b" + re.escape(keyword) + r"\b")
+        _REASONING_KEYWORD_PATTERNS[keyword] = pattern
+    return pattern
 
 
 def _genesis_debug() -> bool:
@@ -252,7 +270,11 @@ class Brain:
             "problem"
         ]
 
+        # Item 27C (L8): word-boundary match, not a raw substring test
+        # -- "if" must not fire inside "verify" / "modify" /
+        # "beautiful", while a standalone "if" still selects the
+        # reasoning engine.
         return any(
-            keyword in text
+            _reasoning_keyword_pattern(keyword).search(text)
             for keyword in reasoning_keywords
         )
