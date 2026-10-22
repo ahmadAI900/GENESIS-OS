@@ -33,17 +33,54 @@ unchanged.
 """
 
 import concurrent.futures
+import inspect
 import logging
 import os
 import time
 from typing import Any, Dict, Iterator, List, Optional
 
-from dotenv import load_dotenv
+from dotenv import dotenv_values
 
 from .provider import LLMProvider, ProviderError, ProviderHealth
 from .providers import AnthropicProvider, GroqProvider, OllamaProvider, OpenRouterProvider
 
 logger = logging.getLogger("genesis_os.ai_engine")
+
+
+def _env_snapshot() -> Dict[str, str]:
+    """Configuration visible to the engine, WITHOUT mutating os.environ.
+
+    Item 28A (L4): the constructor used to call ``load_dotenv()``,
+    which writes every .env key into the PROCESS-GLOBAL ``os.environ``
+    -- a constructor side effect that changed the environment for every
+    other component and every other test in the process.
+    ``dotenv_values()`` parses the file into a mapping instead; the
+    real process environment still wins over the file (the same
+    precedence ``load_dotenv()`` had, since it never overwrote an
+    already-set variable).
+
+    Loading into the global environment deliberately stays available --
+    and EXPLICIT -- at the process entry point, through
+    ``genesis_os.genesis_config.load_genesis_config()`` (see
+    ``genesis.py`` -> ``announce_boundary_state``).
+    """
+    values: Dict[str, str] = {}
+
+    try:
+        declared = dotenv_values() or {}
+    except Exception:
+        declared = {}
+
+    for key, value in declared.items():
+        if key is None or value is None:
+            continue
+        values[str(key)] = str(value)
+
+    # The real environment wins over the .env file.
+    for key, value in os.environ.items():
+        values[str(key)] = str(value)
+
+    return values
 
 
 def estimate_tokens(text: str) -> int:
@@ -70,13 +107,17 @@ class AIEngine:
         self,
         providers: Optional[List[LLMProvider]] = None,
     ):
-        load_dotenv()
+        # Item 28A (L4): read the configuration into a LOCAL mapping.
+        # The constructor must not mutate the process-global
+        # environment; the deliberate global load lives at the process
+        # entry point (genesis_os.genesis_config.load_genesis_config).
+        self._env: Dict[str, str] = _env_snapshot()
 
         # =====================================================
         # CONFIGURATION
         # =====================================================
 
-        self.mode = os.getenv(
+        self.mode = self._getenv(
             "GENESIS_AI_MODE",
             "auto"
         ).lower().strip()
@@ -105,7 +146,7 @@ class AIEngine:
         # Each record: {provider, model, prompt_tokens_est,
         #   completion_tokens_est, latency_ms, timestamp}.
         self._usage_records: List[Dict[str, Any]] = []
-        self.request_timeout = float(os.getenv("GENESIS_LLM_TIMEOUT_SECONDS", "60"))
+        self.request_timeout = float(self._getenv("GENESIS_LLM_TIMEOUT_SECONDS", "60"))
 
         # -----------------------------------------------------
         # STARTUP REPORT
@@ -117,8 +158,20 @@ class AIEngine:
     # DEFAULT PROVIDER CONSTRUCTION (backward-compatible)
     # =========================================================
 
-    @staticmethod
-    def _build_default_providers() -> List[LLMProvider]:
+    def _getenv(self, name: str, default: str = "") -> str:
+        """Read configuration from the engine's LOCAL env snapshot.
+
+        Item 28A (L4): the engine no longer reads (or writes) the
+        process-global ``os.environ``; it reads the snapshot taken in
+        __init__, which merges the .env file with the real environment
+        (the real environment wins).
+        """
+        value = self._env.get(name)
+        if value is None:
+            return default
+        return value
+
+    def _build_default_providers(self) -> List[LLMProvider]:
         """
         Construct the default Ollama + OpenRouter providers from
         environment variables, mirroring the original AIEngine
@@ -128,22 +181,22 @@ class AIEngine:
 
         # LOCAL / OLLAMA
         ollama = OllamaProvider(
-            base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
-            api_key=os.getenv("OLLAMA_API_KEY", "ollama"),
-            model=os.getenv("OLLAMA_MODEL", "qwen2.5:0.5b"),
+            base_url=self._getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1"),
+            api_key=self._getenv("OLLAMA_API_KEY", "ollama"),
+            model=self._getenv("OLLAMA_MODEL", "qwen2.5:0.5b"),
         )
         providers.append(ollama)
 
         # CLOUD / OPENROUTER
-        openrouter_key = os.getenv("OPENROUTER_API_KEY")
+        openrouter_key = self._getenv("OPENROUTER_API_KEY")
         if openrouter_key:
             openrouter = OpenRouterProvider(
                 api_key=openrouter_key,
-                base_url=os.getenv(
+                base_url=self._getenv(
                     "OPENROUTER_BASE_URL",
                     "https://openrouter.ai/api/v1",
                 ),
-                model=os.getenv(
+                model=self._getenv(
                     "OPENROUTER_MODEL",
                     "nvidia/nemotron-3-super-120b-a12b:free",
                 ),
@@ -151,27 +204,27 @@ class AIEngine:
             providers.append(openrouter)
 
         # CLOUD / GROQ
-        groq_key = os.getenv("GROQ_API_KEY")
+        groq_key = self._getenv("GROQ_API_KEY")
         if groq_key:
             groq = GroqProvider(
                 api_key=groq_key,
-                base_url=os.getenv(
+                base_url=self._getenv(
                     "GROQ_BASE_URL",
                     "https://api.groq.com/openai/v1",
                 ),
-                model=os.getenv(
+                model=self._getenv(
                     "GROQ_MODEL",
                     "openai/gpt-oss-120b",
                 ),
             )
             providers.append(groq)
 
-        anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+        anthropic_key = self._getenv("ANTHROPIC_API_KEY")
         if anthropic_key:
             providers.append(
                 AnthropicProvider(
                     api_key=anthropic_key,
-                    model=os.getenv(
+                    model=self._getenv(
                         "ANTHROPIC_MODEL",
                         "claude-sonnet-4-20250514",
                     ),
@@ -199,10 +252,10 @@ class AIEngine:
         self.local_model = local.model_id if local else ""
         self.cloud_model = cloud.model_id if cloud else ""
 
-        self.ollama_base_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
-        self.ollama_api_key = os.getenv("OLLAMA_API_KEY", "ollama")
-        self.api_key = os.getenv("OPENROUTER_API_KEY", "")
-        self.api_base_url = os.getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
+        self.ollama_base_url = self._getenv("OLLAMA_BASE_URL", "http://localhost:11434/v1")
+        self.ollama_api_key = self._getenv("OLLAMA_API_KEY", "ollama")
+        self.api_key = self._getenv("OPENROUTER_API_KEY", "")
+        self.api_base_url = self._getenv("OPENROUTER_BASE_URL", "https://openrouter.ai/api/v1")
 
         # Clients kept for backward compat (agents may check truthiness)
         self.local_client = local._client if local and hasattr(local, "_client") else None

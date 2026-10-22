@@ -181,14 +181,17 @@ pytest_plugins = ["tripwire_plugin", "tree_write_plugin"]
 #            later test. `test_zz_sentinel_mutation.py` proved this
 #            tier fires, by name, with before/after values.
 #
-#   RECORD -- the GENESIS_* environment keys. `ai/ai_engine.py:78` calls
-#            `load_dotenv()` inside `AIEngine.__init__`, so ANY test
-#            that constructs the full runtime injects .env into
-#            os.environ for the life of the process. That is production
-#            behaviour, not a test bug, and blaming whichever test
-#            happened to construct a runtime first is arbitrary: it
-#            made the default ordering green and the alternate ordering
-#            red, with six different files "at fault" across runs.
+#   RECORD -- the GENESIS_* environment keys. Since Item 28A (L4) the
+#            AIEngine constructor no longer calls `load_dotenv()`; the
+#            remaining global load is the DELIBERATE, explicit entry-point
+#            one (`genesis_os.genesis_config.load_genesis_config`, called by
+#            `genesis.py` -> `announce_boundary_state`). So ANY test that
+#            constructs the full runtime injects .env into os.environ for
+#            the life of the process. That is production behaviour, not a
+#            test bug, and blaming whichever test happened to construct a
+#            runtime first is arbitrary: it made the default ordering
+#            green and the alternate ordering red, with six different
+#            files "at fault" across runs.
 #
 #            So the suite is made HERMETIC by default (`genesis_env_guard`
 #            below restores the keys around every test), which stops the
@@ -352,17 +355,20 @@ def pytest_terminal_summary(terminalreporter, exitstatus=None, config=None):
     terminalreporter.write_sep("=", "recorded environment loads")
     terminalreporter.write_line(
         f"{len(names)} test(s) constructed the full runtime and caused "
-        f"load_dotenv() to inject {keys} into os.environ."
+        f"the explicit entry-point config load to inject {keys} into "
+        f"os.environ."
     )
     terminalreporter.write_line(
         "Restored after every test by genesis_env_guard, so this does "
-        "not make results order-dependent. Cause: ai/ai_engine.py:78 "
-        "calls load_dotenv() in AIEngine.__init__."
+        "not make results order-dependent. Since Item 28A (L4) the "
+        "AIEngine constructor no longer calls load_dotenv(): the load "
+        "comes from the deliberate, explicit entry-point load "
+        "(genesis_os.genesis_config.load_genesis_config, called by "
+        "genesis.py -> announce_boundary_state)."
     )
     terminalreporter.write_line(
-        "Cleaning this up properly means moving config loading out of "
-        "the constructor. Recorded, not failed -- these tests are not "
-        "defective."
+        "That global load is intentional and explicit. Recorded, not "
+        "failed -- these tests are not defective."
     )
 
 
