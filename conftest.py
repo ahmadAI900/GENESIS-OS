@@ -178,8 +178,8 @@ pytest_plugins = ["tripwire_plugin", "tree_write_plugin"]
 #   FAIL  -- os.name, sys.platform, os.sep, pathlib.Path, and the
 #            LLMIntentResolver budget/timeout attributes. Mutating any
 #            of these is a TEST DEFECT: it changes behaviour for every
-#            later test. `test_zz_sentinel_mutation.py` proved this
-#            tier fires, by name, with before/after values.
+#            later test. The tier fires on any mutation of those
+#            globals, reported by name with before/after values.
 #
 #   RECORD -- the GENESIS_* environment keys. Since Item 28A (L4) the
 #            AIEngine constructor no longer calls `load_dotenv()`; the
