@@ -183,12 +183,18 @@ def test_the_checked_in_file_matches_what_the_renderer_would_write():
 # The numbers were preserved, not invented
 # =====================================================================
 
-def test_the_numbers_are_unchanged(results):
-    """11C relocates and labels; it must not quietly alter results."""
+def test_the_totals_are_unchanged_but_the_forced_metrics_are_honest(results):
+    """T26: the artifact must agree with the runner, not with 11C's era.
+
+    The runner forces observation and verification to False because the
+    OS layer is mocked, so every scenario fails the all-metrics gate.
+    Keeping 500/500 here would report a pass the current runner cannot
+    produce.
+    """
     assert results["total"] == 500, results["total"]
-    assert results["passed"] == 500, results["passed"]
-    assert results["failed"] == 0, results["failed"]
-    assert results["pass_rate"] == 1.0, results["pass_rate"]
+    assert results["passed"] == 0, results["passed"]
+    assert results["failed"] == 500, results["failed"]
+    assert results["pass_rate"] == 0.0, results["pass_rate"]
     assert isinstance(results["simulated_only"], int)
 
 
@@ -203,6 +209,39 @@ def test_by_metric_still_reports_every_metric(results):
         "observation", "verification", "recovery",
     ):
         assert name in metrics, sorted(metrics)
+
+
+def test_committed_metrics_match_the_runner_forced_false_metrics(results):
+    """T26: detect the kind of drift the artifact carried before.
+
+    A hand-edited artifact cannot be trusted; the guard reads the
+    runner's actual assignments and requires the committed metrics to
+    show the same forced result.
+    """
+    source = (BACKEND / "benchmark" / "runner.py").read_text(
+        encoding="utf-8-sig"
+    )
+    tree = ast.parse(source)
+    forced = set()
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Assign):
+            continue
+        if not isinstance(node.value, ast.Constant) or node.value.value is not False:
+            continue
+        for target in node.targets:
+            if isinstance(target, ast.Name) and target.id in (
+                "obs_passed", "ver_passed",
+            ):
+                forced.add(target.id)
+
+    assert forced == {"obs_passed", "ver_passed"}, (
+        "runner.py no longer forces observation and verification to False; "
+        "regenerate BENCHMARK_RESULTS.json and update this guard"
+    )
+    for metric in ("observation", "verification"):
+        entry = results["by_metric"][metric]
+        assert entry["passed"] == 0, (metric, entry)
+        assert entry["failed"] == entry["total"], (metric, entry)
 
 
 def test_the_runner_really_is_mocked_so_the_label_is_true():

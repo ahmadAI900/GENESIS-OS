@@ -35,8 +35,9 @@ import pytest
 from agents.workflow_decision import WorkflowDecisionEngine
 from genesis_os.llm_intent_resolver import LLMIntentResolver
 
-# LIVE: the live-validation half of this file builds a real AIEngine.
-pytestmark_live = pytest.mark.live
+# Every test here is offline: the resolver is driven with ai_engine=None
+# or a local probe, so the tier snapshot classifies them as runtime.
+pytestmark = pytest.mark.live
 
 
 # ==================================================================
