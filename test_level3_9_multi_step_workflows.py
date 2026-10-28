@@ -33,7 +33,10 @@ from genesis_os.folder_target_provider import FolderTargetProvider
 # browser, or provider. Excluded from the fast default run.
 # Reason: constructs a real BrowserManager.
 # --------------------------------------------------------------
-pytestmark = pytest.mark.live
+pytestmark = [
+    pytest.mark.live,
+    pytest.mark.usefixtures("hermetic_capabilities"),
+]
 
 
 # =========================================================

@@ -279,6 +279,16 @@ No test body was edited; marks come from `docs/tests_tiering.json` via a
 `pytest_collection_modifyitems` hook in `conftest.py`, and a test absent
 from the file keeps its current marks.
 
+**T24 correction (2026-10-28):** the moves above were not all real. The
+old hook removed `live` from `item.own_markers`, but a module-level
+`pytestmark = pytest.mark.live` lives on the parent Module node, so
+`item.get_closest_marker("live")` still found it and `-m live` still
+collected the "demoted" test. The hook now runs `tryfirst`, writes the
+`live` marker down onto every non-demoted descendant, and removes it from
+the ancestor. Current collection after that correction and the eight
+browser/search tests moved back to `live`: **4542 collected, 4435 fast,
+107 live**. Both fast-gate orderings are green.
+
 ### The honest headline
 
 **94% of the old `live` bucket needed no real external application,

@@ -36,13 +36,10 @@ production in the assertions below.
 
 Every test in this file is offline with respect to the OS: the agent is
 deterministic and the OS manager is a test double, exactly as the
-contract requires. It is still marked ``live`` because it constructs a
-real ``GenesisOS``, whose browser probe reaches the network and whose
-AI engine arms real cloud providers.
-
-LIVE: requires a real external application, GUI session,
-browser, or provider. Excluded from the fast default run.
-Reason: real GenesisOS.
+contract requires. The module-level ``live`` mark is the coarse bucket
+T24 exists to override: the tier snapshot classifies this test as
+``runtime``, and ``hermetic_capabilities`` stubs pyautogui and the
+browser probes so the real ``GenesisOS`` can be built in the fast gate.
 """
 
 from __future__ import annotations
@@ -60,7 +57,10 @@ from genesis import GenesisOS
 from genesis_os import contracts
 from runtime.genesis_runtime import GenesisRuntime
 
-pytestmark = pytest.mark.live
+pytestmark = [
+    pytest.mark.live,
+    pytest.mark.usefixtures("hermetic_capabilities"),
+]
 
 OBJECTIVE = "open notepad and write python code for a calculator"
 AGENT_CODE = "def calculator():\n    return 42\n"
@@ -141,15 +141,17 @@ def _contract_spies(monkeypatch, events):
 
 
 def test_production_mixed_objective_bridges_coding_output_to_os_action(
-    monkeypatch, tmp_path
+    monkeypatch, workspace_root, request
 ):
     """Contract items (1)-(5): the bridge exists and bypasses nothing."""
-    # Run inside tmp_path, not the package directory. The bridge
-    # derives a relative `file.create` target, and pointing it at the
-    # source tree left `generated.txt` in the repository on every live
-    # run. The assertion below never depends on the working directory.
-    monkeypatch.chdir(tmp_path)
+    # Run inside the armed workspace, not the package directory. The
+    # bridge derives a relative `file.create` target; S16 makes the gate
+    # resolve that target to an absolute path, so a tmp_path outside the
+    # workspace would be a Tier 1 write and correctly demand a grant.
+    # The bridge contract needs the ordinary in-workspace path.
+    monkeypatch.chdir(workspace_root)
     genesis = GenesisOS()
+    request.addfinalizer(genesis.shutdown)
 
     # Deterministic agent replaces the real Coding Agent, so the probe
     # never reaches a model and its output is fixed.
@@ -195,7 +197,9 @@ def test_production_mixed_objective_bridges_coding_output_to_os_action(
     assert "file.create" in operations, (
         f"coding output was not bridged to an OS action: {operations}"
     )
-    double.create_file.assert_called()
+    assert double.create_file.called, (
+        f"file.create reached os_results but not the OS manager: {os_results}"
+    )
     # `ActionExecutor` passes the plan's `content` parameter to
     # `OSManager.create_file` positionally.
     args, kwargs = double.create_file.call_args

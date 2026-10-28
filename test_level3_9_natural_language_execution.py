@@ -48,7 +48,10 @@ from genesis_os.target_discovery import TargetDiscovery
 # browser, or provider. Excluded from the fast default run.
 # Reason: constructs a real OSManager.
 # --------------------------------------------------------------
-pytestmark = pytest.mark.live
+pytestmark = [
+    pytest.mark.live,
+    pytest.mark.usefixtures("hermetic_capabilities"),
+]
 
 
 # =========================================================
@@ -172,7 +175,9 @@ def test_destructive_file_operations_are_confirmation_gated(tmp_path):
     os_manager.move_file.assert_not_called()
 
 
-def test_file_move_to_a_free_destination_is_not_gated(workspace_root):
+def test_file_move_to_a_free_destination_is_not_gated(
+    workspace_root, monkeypatch,
+):
     """The counterpart: moving somewhere free is Tier 2 and runs.
 
     This is the F5 blast-radius decision made explicit. The old
@@ -182,8 +187,10 @@ def test_file_move_to_a_free_destination_is_not_gated(workspace_root):
 
     Retargeted under the workspace boundary: the free destination now
     has to live INSIDE the configured root, which is what "free" has to
-    mean for a move to remain reversible.
+    mean for a move to remain reversible. The relative source resolves
+    against the CWD, so it must be the workspace root too.
     """
+    monkeypatch.chdir(workspace_root)
     os_manager = Mock()
     os_manager.move_file.return_value = {
         "success": True, "operation": "file.move", "executed": True,
@@ -367,13 +374,16 @@ def test_create_folder_outside_the_workspace_is_gated(workspace_root, monkeypatc
     os_manager.create_folder.assert_not_called()
 
 
-def test_creating_an_existing_folder_does_not_fake_success(tmp_path, monkeypatch):
-    monkeypatch.chdir(tmp_path)
-    (tmp_path / "Genesis Test").mkdir()
+@pytest.mark.usefixtures("hermetic_capabilities")
+def test_creating_an_existing_folder_does_not_fake_success(
+    workspace_root, monkeypatch,
+):
+    monkeypatch.chdir(workspace_root)
+    (workspace_root / "Genesis Test").mkdir()
 
     plan = ActionPlan(
         operation="folder.create",
-        target=str(tmp_path / "Genesis Test"),
+        target=str(workspace_root / "Genesis Test"),
         confidence=0.99,
         parameters={"confirmed": True},
     )

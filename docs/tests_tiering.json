@@ -6234,20 +6234,28 @@
   "tier": "runtime"
  },
  "test_level3_9_multi_step_workflows.py::test_search_engines_build_safe_urls[bing-https://www.bing.com/search?q=]": {
-  "reasons": [],
-  "tier": "runtime"
+  "reasons": [
+   "launches a browser or os.startfile to exercise search navigation"
+  ],
+  "tier": "live"
  },
  "test_level3_9_multi_step_workflows.py::test_search_engines_build_safe_urls[duckduckgo-https://duckduckgo.com/?q=]": {
-  "reasons": [],
-  "tier": "runtime"
+  "reasons": [
+   "launches a browser or os.startfile to exercise search navigation"
+  ],
+  "tier": "live"
  },
  "test_level3_9_multi_step_workflows.py::test_search_engines_build_safe_urls[google-https://www.google.com/search?q=]": {
-  "reasons": [],
-  "tier": "runtime"
+  "reasons": [
+   "launches a browser or os.startfile to exercise search navigation"
+  ],
+  "tier": "live"
  },
  "test_level3_9_multi_step_workflows.py::test_search_engines_build_safe_urls[youtube-https://www.youtube.com/results?search_query=]": {
-  "reasons": [],
-  "tier": "runtime"
+  "reasons": [
+   "launches a browser or os.startfile to exercise search navigation"
+  ],
+  "tier": "live"
  },
  "test_level3_9_multi_step_workflows.py::test_search_rejects_empty_query": {
   "reasons": [],
@@ -10076,24 +10084,32 @@
   "tier": "live"
  },
  "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_false_on_bad_path": {
-  "reasons": [],
-  "tier": "runtime"
+  "reasons": [
+   "probes the real chromedriver subprocess; patching the removed ChromeDriverManager.install seam cannot isolate it"
+  ],
+  "tier": "live"
  },
  "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_false_on_exception": {
-  "reasons": [],
-  "tier": "runtime"
+  "reasons": [
+   "probes the real chromedriver subprocess; patching the removed ChromeDriverManager.install seam cannot isolate it"
+  ],
+  "tier": "live"
  },
  "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_false_on_no_selenium": {
-  "reasons": [],
-  "tier": "runtime"
+  "reasons": [
+   "probes the real chromedriver subprocess; patching the removed ChromeDriverManager.install seam cannot isolate it"
+  ],
+  "tier": "live"
  },
  "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_returns_bool": {
   "reasons": [],
   "tier": "runtime"
  },
  "test_phase5_provider_registry.py::TestPart1AuditExistingInfrastructure::test_selenium_check_availability_live_true_on_real_machine": {
-  "reasons": [],
-  "tier": "runtime"
+  "reasons": [
+   "asserts the real machine has a working chromedriver binary"
+  ],
+  "tier": "live"
  },
  "test_phase5_provider_registry.py::TestPart2PlaywrightAvailabilityFix::test_playwright_checks_real_binary": {
   "reasons": [],

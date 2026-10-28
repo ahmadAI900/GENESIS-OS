@@ -346,6 +346,8 @@ class TestScenarioInventory:
 
 
 class TestRunnerWithMockOSM:
+    pytestmark = pytest.mark.usefixtures("hermetic_capabilities")
+
     def test_runner_initializes(self, tmp_path):
         from benchmark_real_os.runner import RealOSBenchmark
         runner = RealOSBenchmark(workspace_root=str(tmp_path))

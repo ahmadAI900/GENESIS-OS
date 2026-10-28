@@ -93,11 +93,25 @@ def hermetic_capabilities():
     installed_stub = saved_pyautogui is None
     if installed_stub:
         _sys.modules["pyautogui"] = _make_pyautogui_stub()
+    # Import first: a test may import BrowserManager at module scope but
+    # the provider modules are imported lazily by its constructor. If the
+    # fixture only patched modules already in sys.modules, the constructor
+    # would then run the real probe with no cache to stop it.
+    import importlib
     for name in _PROVIDER_PROBE_MODULES:
-        module = _sys.modules.get(name)
-        if module is not None and hasattr(module, "_probe_cache"):
-            saved_caches[name] = module._probe_cache
+        try:
+            module = importlib.import_module(name)
+        except Exception:
+            continue
+        if hasattr(module, "_probe_cache"):
+            saved_caches[name] = (
+                module._probe_cache,
+                getattr(module, "_probe_cache_kind", ""),
+                getattr(module, "_probe_cache_at", 0.0),
+            )
             module._probe_cache = 0
+            if hasattr(module, "_probe_cache_kind"):
+                module._probe_cache_kind = "definitive"
 
     try:
         from ai.ai_engine import AIEngine
@@ -118,7 +132,12 @@ def hermetic_capabilities():
         yield
     finally:
         for name, value in saved_caches.items():
-            _sys.modules[name]._probe_cache = value
+            module = _sys.modules[name]
+            module._probe_cache = value[0]
+            if hasattr(module, "_probe_cache_kind"):
+                module._probe_cache_kind = value[1]
+            if hasattr(module, "_probe_cache_at"):
+                module._probe_cache_at = value[2]
         if installed_stub:
             _sys.modules.pop("pyautogui", None)
 
@@ -385,6 +404,13 @@ def pytest_terminal_summary(terminalreporter, exitstatus=None, config=None):
 #   - a test listed `runtime` is only demoted if it currently carries
 #     `live`, so the file can never promote a test into the gate.
 #
+# A module-level `pytestmark = pytest.mark.live` is owned by the Module
+# node, not by the item, so stripping `item.own_markers` does not change
+# `item.iter_markers()` and `-m live` still selects the test. The marker
+# is therefore moved from the shared ancestor down onto every descendant
+# that is NOT being demoted. That keeps the unlisted siblings live while
+# making the runtime entry's demotion real at collection time.
+#
 # If the file is missing or unreadable, nothing changes. A classification
 # artefact must not be able to break collection.
 # ----------------------------------------------------------------------
@@ -510,7 +536,13 @@ def deterministic_provider_probes(request, monkeypatch):
     yield pinned
 
 
+@pytest.hookimpl(tryfirst=True)
 def pytest_collection_modifyitems(config, items):
+    # tryfirst: `-m` filtering is implemented by another
+    # `pytest_collection_modifyitems` hook. Demotion has to happen before
+    # that hook evaluates the marker expression, otherwise `-m live`
+    # has already selected the item we are trying to remove.
+    #
     # ONE definition of this hook. B1 briefly had two: one attaching the
     # probe-determinism fixture, one applying the tiering. Python binds
     # only the last, so the fixture was never attached for any test and
@@ -565,10 +597,48 @@ def _has_own_live_marker(item):
     return any(getattr(m, "name", None) == "live" for m in own)
 
 
+def _has_own_marker(item, name):
+    return any(m.name == name for m in item.own_markers)
+
+
+def _is_descendant_of(item, ancestor):
+    return any(parent is ancestor for parent in item.iter_parents())
+
+
+def _demote_inherited_live(items, demoted_items):
+    """Make a runtime tier entry lose an inherited `live` mark.
+
+    The mark lives on the Module (or Class) node, so it cannot be
+    removed from the item. Move it down: every descendant that is not
+    being demoted gets an item-level `live` marker, then the ancestor's
+    marker is removed. Unlisted siblings keep their original tier.
+    """
+    demoted_ids = {id(item) for item in demoted_items}
+    owners = []
+    seen = set()
+    for item in demoted_items:
+        for ancestor in item.iter_parents():
+            if ancestor is item or id(ancestor) in seen:
+                continue
+            if _has_own_marker(ancestor, "live"):
+                seen.add(id(ancestor))
+                owners.append(ancestor)
+
+    for owner in owners:
+        for item in items:
+            if item is owner or not _is_descendant_of(item, owner):
+                continue
+            if id(item) in demoted_ids or _has_own_marker(item, "live"):
+                continue
+            item.add_marker(pytest.mark.live)
+        owner.own_markers = [
+            m for m in owner.own_markers if m.name != "live"]
+
+
 def _apply_tiering(config, items, tiers):
     promoted = 0
-    demoted = 0
     respected = 0
+    demoted_items = []
     for item in items:
         entry = tiers.get(item.nodeid)
         if entry is None:
@@ -581,13 +651,14 @@ def _apply_tiering(config, items, tiers):
                 # evidence did not, and the evidence can be wrong.
                 respected += 1
                 continue
-            item.own_markers = [
-                m for m in item.own_markers if m.name != "live"]
-            demoted += 1
+            demoted_items.append(item)
         elif entry.get("tier") == "live":
             if item.get_closest_marker("live") is None:
                 item.add_marker(pytest.mark.live)
                 promoted += 1
+
+    _demote_inherited_live(items, demoted_items)
+    demoted = len(demoted_items)
 
     if demoted or promoted or respected:
         config._genesis_tier_counts = (demoted, promoted, respected)
