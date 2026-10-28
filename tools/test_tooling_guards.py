@@ -187,9 +187,19 @@ def _nested_pytest_offenders():
                for part in path.parts):
             continue
         try:
-            tree = ast.parse(path.read_text(encoding="utf-8"),
-                             filename=str(path))
-        except (OSError, SyntaxError):
+            source = path.read_text(encoding="utf-8")
+        except UnicodeDecodeError as error:
+            pytest.fail(
+                f"{path.relative_to(BACKEND)} is not valid UTF-8: {error}. "
+                f"The nested-pytest guard cannot inspect it; fix the file "
+                f"encoding instead of skipping it.",
+                pytrace=False,
+            )
+        except OSError:
+            continue
+        try:
+            tree = ast.parse(source, filename=str(path))
+        except SyntaxError:
             continue
         for node, _dotted in _nested_pytest_calls(tree):
             literals, non_literal = _pos_arg_strings(node)
@@ -234,6 +244,20 @@ def test_nested_pytest_guard_fires_on_a_scratch_offender(tmp_path):
     literals, non_literal = _pos_arg_strings(node)
     assert not _has_explicit_target(literals, non_literal), (
         "scratch offender should have no explicit target")
+
+
+def test_nested_pytest_guard_names_a_non_utf8_test_file(monkeypatch, tmp_path):
+    """A cp1252 test file must be named, not silently skipped or crashed on."""
+    monkeypatch.setattr(sys.modules[__name__], "BACKEND", tmp_path)
+    bad = tmp_path / "test_bad.py"
+    bad.write_bytes(b"# caf\xe9\n")
+
+    with pytest.raises(pytest.fail.Exception) as caught:
+        _nested_pytest_offenders()
+
+    message = str(caught.value)
+    assert "test_bad.py" in message, message
+    assert "UTF-8" in message, message
 
 
 # ----------------------------------------------------------------------
