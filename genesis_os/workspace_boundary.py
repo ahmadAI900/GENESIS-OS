@@ -19,11 +19,12 @@ was introduced.
 
 CONFIGURATION
 -------------
-Single source of truth: the ``GENESIS_WORKSPACE_ROOT`` environment
-variable. When unset, boundary enforcement is INACTIVE rather than
-deny-all, because a default-deny boundary with no configured root
-would refuse every operation on the machine. The deployment must set
-the variable; this is stated rather than papered over.
+The active root comes from the ``GENESIS_WORKSPACE_ROOT`` environment
+variable. When it is unset the boundary is ARMED with the default
+workspace root (``<parent-of-backend>/.genesis_workspace``), not
+inactive: an unset variable must not silently disable a security
+control. Enforcement is OFF only when a human explicitly sets
+``GENESIS_WORKSPACE_BOUNDARY=disabled`` (matched exactly).
 """
 
 from __future__ import annotations

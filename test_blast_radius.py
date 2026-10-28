@@ -580,6 +580,19 @@ class TestOverwriteDestinationEvaluator:
             static_default=REVERSIBLE,
         ) is IRREVERSIBLE
 
+    def test_unresolvable_rename_destination_escalates(self):
+        """T31G/S3: the sentinel is not a free path that happens to be absent."""
+        from genesis_os.blast_radius import _overwrite_escalation_for
+
+        verdict = _overwrite_escalation_for("file.rename")(
+            {"new_name": "x"}, None
+        )
+
+        assert verdict is IRREVERSIBLE, (
+            "an unresolvable rename destination returned None (Tier 2), "
+            "which fails open"
+        )
+
     def test_no_destination_declined(self):
         assert overwrite_destination_escalation({"source": "/tmp/a"}, None) is None
 

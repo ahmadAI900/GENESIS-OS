@@ -461,6 +461,42 @@ def test_file_rename_onto_existing_via_target_source_is_refused(
     assert not osm.dispatched("rename_file"), osm.calls
 
 
+def test_rename_with_an_unapproved_new_name_is_refused(workspace_root):
+    """S18: the approval covered the source, not the rename destination.
+
+    The plan overwrites an existing file through ``new_name``. Before
+    ``new_name`` was target-bearing, the reconciliation ignored it: the
+    approved source matched the dispatched source and the grant was
+    accepted, so the unapproved overwrite ran.
+    """
+    source = workspace_root / "source.txt"
+    existing = workspace_root / "already-there.txt"
+    source.write_text("source", encoding="utf-8")
+    existing.write_text("ORIGINAL", encoding="utf-8")
+
+    approved = {"path": str(source)}
+    plan = ActionPlan(
+        operation="file.rename",
+        target=str(source),
+        parameters={"new_name": existing.name},
+        confidence=0.99,
+    )
+    granted = attach_authorization(
+        plan, _grant("file.rename", approved), arguments=approved
+    )
+
+    osm = _CountingOSM()
+    result = ActionExecutor(osm).execute(granted)
+
+    assert result.status == "confirmation_required", (
+        "a rename dispatched an unapproved `new_name`: "
+        f"{result.status}"
+    )
+    assert result.executed is False
+    assert not osm.dispatched("rename_file"), osm.calls
+    assert existing.read_text(encoding="utf-8") == "ORIGINAL"
+
+
 def test_document_create_docx_onto_existing_target_is_refused(workspace_root):
     """A document target is acted on by dispatch even without a path param."""
     existing = workspace_root / "keep-me.docx"

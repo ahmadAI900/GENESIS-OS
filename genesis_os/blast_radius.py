@@ -522,7 +522,9 @@ def overwrite_destination_escalation(
     key is tried so it stays correct standalone.
 
     Returns ``None`` when there is no destination, or the destination
-    does not exist (a free target stays Tier 2).
+    does not exist (a free target stays Tier 2). An UNRESOLVABLE
+    destination escalates: the sentinel is not a path, so checking its
+    existence would silently read as a free target.
     """
     if not isinstance(arguments, Mapping):
         return None
@@ -530,6 +532,12 @@ def overwrite_destination_escalation(
     destination = _resolve_overwrite_destination(operation, arguments)
     if destination is None:
         return None
+
+    # The sentinel means "could not resolve", not "a path that does not
+    # exist". os.path.exists() on it is False, which used to return None
+    # (Tier 2) and fail open. It is unresolvable by definition.
+    if destination == _UNRESOLVABLE_DESTINATION:
+        return BlastRadius.IRREVERSIBLE_OR_OUTWARD
 
     try:
         return (
@@ -572,6 +580,11 @@ _OVERWRITE_DESTINATION_KEYS: Dict[str, Tuple[str, ...]] = {
 # Operations whose destination arrives as a BARE ``new_name``, which must
 # be resolved against the source's parent rather than the process CWD.
 _RENAME_OPERATIONS = frozenset({"file.rename", "folder.rename"})
+
+# A destination the resolver cannot anchor. It is a SENTINEL, not a path,
+# so checking whether it exists on disk is always false and would silently
+# downgrade an unresolvable rename to Tier 2.
+_UNRESOLVABLE_DESTINATION = os.path.join(".", "__unresolvable__")
 
 
 def _resolve_overwrite_destination(
@@ -629,13 +642,13 @@ def _resolve_overwrite_destination(
             try:
                 parent = os.path.dirname(os.path.abspath(os.fspath(source)))
                 if not parent:
-                    return os.path.join(".", "__unresolvable__")
+                    return _UNRESOLVABLE_DESTINATION
                 return os.path.join(parent, value)
             except (OSError, ValueError, TypeError):
                 # Cannot resolve the destination. Fail closed.
-                return os.path.join(".", "__unresolvable__")
+                return _UNRESOLVABLE_DESTINATION
         # No source to anchor against; fail closed.
-        return os.path.join(".", "__unresolvable__")
+        return _UNRESOLVABLE_DESTINATION
 
     return value
 

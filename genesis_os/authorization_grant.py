@@ -47,7 +47,7 @@ __all__ = [
 TARGET_BEARING_ARGUMENT_KEYS = (
     "path", "file_path", "folder", "directory", "target", "source",
     "destination", "output", "output_path", "save_path", "package",
-    "ssid", "application", "selector",
+    "ssid", "application", "selector", "new_name",
 )
 
 
