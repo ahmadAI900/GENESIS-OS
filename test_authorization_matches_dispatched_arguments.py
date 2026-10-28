@@ -371,3 +371,149 @@ def test_a_seam_grant_for_one_target_does_not_authorise_another(
     )
     assert result.executed is False
     assert other.exists(), "a grant for path A must not delete path B"
+
+
+# ======================================================================
+# (4) S16: the gate must classify the target _dispatch will act on
+# ======================================================================
+def test_file_create_overwriting_existing_target_is_refused(workspace_root):
+    """The target carries the path; parameters carry only content/overwrite.
+
+    Before S16 the gate hashed only ``plan.parameters``, so it saw no
+    ``path`` and did not run the overwrite evaluator. The dispatcher,
+    however, used ``plan.target`` and overwrote the existing file with
+    no grant.
+    """
+    existing = workspace_root / "keep-me.txt"
+    existing.write_text("ORIGINAL", encoding="utf-8")
+
+    plan = ActionPlan(
+        operation="file.create",
+        target=str(existing),
+        parameters={"content": "PWNED", "overwrite": True},
+        confidence=0.99,
+    )
+
+    osm = _CountingOSM()
+    result = ActionExecutor(osm).execute(plan)
+
+    assert result.status == "confirmation_required", (
+        "file.create overwrote an existing target without approval: "
+        f"{result.status}"
+    )
+    assert result.executed is False
+    assert not osm.dispatched("create_file"), osm.calls
+    assert existing.read_text(encoding="utf-8") == "ORIGINAL"
+
+
+def test_file_create_target_with_matching_grant_executes(workspace_root):
+    """Control: approval over the acted-on path is still accepted."""
+    existing = workspace_root / "replace-me.txt"
+    existing.write_text("ORIGINAL", encoding="utf-8")
+
+    args = {
+        "path": str(existing),
+        "content": "APPROVED",
+        "overwrite": True,
+    }
+    plan = ActionPlan(
+        operation="file.create",
+        target=str(existing),
+        parameters={"content": "APPROVED", "overwrite": True},
+        confidence=0.99,
+    )
+    granted = attach_authorization(
+        plan, _grant("file.create", args), arguments=args
+    )
+
+    osm = _CountingOSM()
+    result = ActionExecutor(osm).execute(granted)
+
+    assert result.status != "confirmation_required", result.to_dict()
+    assert len(osm.dispatched("create_file")) == 1, osm.calls
+
+
+def test_file_rename_onto_existing_via_target_source_is_refused(
+    workspace_root, monkeypatch
+):
+    """The bare ``new_name`` resolves beside the target source, not CWD."""
+    monkeypatch.chdir(workspace_root)
+    source = workspace_root / "source.txt"
+    existing = workspace_root / "already-there.txt"
+    source.write_text("source", encoding="utf-8")
+    existing.write_text("ORIGINAL", encoding="utf-8")
+
+    plan = ActionPlan(
+        operation="file.rename",
+        target=str(source),
+        parameters={"new_name": existing.name},
+        confidence=0.99,
+    )
+
+    osm = _CountingOSM()
+    result = ActionExecutor(osm).execute(plan)
+
+    assert result.status == "confirmation_required", (
+        "file.rename overwrote an existing target without approval: "
+        f"{result.status}"
+    )
+    assert result.executed is False
+    assert not osm.dispatched("rename_file"), osm.calls
+
+
+def test_document_create_docx_onto_existing_target_is_refused(workspace_root):
+    """A document target is acted on by dispatch even without a path param."""
+    existing = workspace_root / "keep-me.docx"
+    existing.write_text("ORIGINAL", encoding="utf-8")
+
+    plan = ActionPlan(
+        operation="document.create_docx",
+        target=str(existing),
+        parameters={"title": "Overwrite", "sections": []},
+        confidence=0.99,
+    )
+
+    osm = _CountingOSM()
+    result = ActionExecutor(osm).execute(plan)
+
+    assert result.status == "confirmation_required", (
+        "document.create_docx overwrote an existing target without "
+        f"approval: {result.status}"
+    )
+    assert result.executed is False
+    assert not osm.dispatched("doc_create"), osm.calls
+
+
+def test_gate_and_dispatch_share_the_acted_on_arguments():
+    """Meta-test: both halves call the one canonical argument helper."""
+    import inspect
+
+    from genesis_os.action_executor import _dispatch_arguments
+
+    target = "C:/workspace/target.txt"
+    path_plan = ActionPlan(
+        operation="file.create",
+        target=target,
+        parameters={"content": "x", "overwrite": True},
+        confidence=0.99,
+    )
+    assert _dispatch_arguments(path_plan)["path"] == target
+
+    search_plan = ActionPlan(
+        operation="file.search",
+        target="*.txt",
+        parameters={"path": "C:/workspace", "query": "*.txt"},
+        confidence=0.99,
+    )
+    searched = _dispatch_arguments(search_plan)
+    assert searched["path"] == "C:/workspace"
+    assert searched.get("path") != search_plan.target
+
+    gate_source = inspect.getsource(ActionExecutor._authorization_gate)
+    dispatch_source = inspect.getsource(ActionExecutor._dispatch)
+    assert "_dispatch_arguments(plan)" in gate_source, (
+        "the gate stopped using the dispatcher's canonical arguments"
+    )
+    assert "_dispatch_arguments(plan)" in dispatch_source, (
+        "the dispatcher stopped using the same canonical arguments"
+    )

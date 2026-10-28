@@ -453,7 +453,10 @@ def test_mixed_workflow_creates_file_from_agent_output(workspace_root, monkeypat
     )
 
 
-def test_exact_compound_html_request_bridges_agent_output_to_file_action():
+def test_exact_compound_html_request_bridges_agent_output_to_file_action(
+    workspace_root, monkeypatch
+):
+    monkeypatch.chdir(workspace_root)
     registry = AgentRegistry()
     registry.register(MockHTMLAgent())
     os_manager = Mock(spec=OSManager)

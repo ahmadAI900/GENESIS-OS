@@ -148,6 +148,53 @@ def _values_match(left: Any, right: Any) -> bool:
     return False
 
 
+# Operations whose dispatcher treats ``plan.target`` as the primary
+# filesystem path even when ``plan.parameters`` does not carry a
+# ``path`` key. S16: the gate used to classify ``plan.parameters``
+# alone, so ``file.create`` with only ``content``/``overwrite`` looked
+# like a free create; dispatch then used the target and overwrote it.
+_TARGET_PATH_OPERATION_PREFIXES = (
+    "file.", "filesystem.", "folder.", "document.", "spreadsheet.", "data.",
+)
+
+# These carry a non-path value in ``target`` (a query) and a real path
+# in ``parameters["path"]``. Mapping their target to ``path`` would
+# make the boundary and overwrite evaluators read the query as a file.
+_TARGET_IS_NOT_A_PATH_OPERATIONS = frozenset({
+    "file.search", "filesystem.search",
+})
+
+
+def _dispatch_arguments(plan: ActionPlan) -> Dict[str, Any]:
+    """The arguments the dispatcher will act on for this plan.
+
+    This is the ONE place that reconciles the two representations of a
+    filesystem target: some plans carry it as ``plan.target`` (the
+    adapter builders do this), while the overwrite and workspace
+    evaluators read a ``path`` argument. The gate and ``_dispatch``
+    both call this helper so they cannot classify different calls.
+
+    Only operations whose dispatcher actually treats ``target`` as a
+    filesystem path are rewritten. A search query, application name,
+    browser selector or GUI element name must stay a ``target``.
+    """
+    arguments = dict(plan.parameters or {})
+    target = plan.target
+    if target is None:
+        return arguments
+    if isinstance(target, str) and not target.strip():
+        return arguments
+    if plan.operation in _TARGET_IS_NOT_A_PATH_OPERATIONS:
+        return arguments
+    if plan.operation.startswith(_TARGET_PATH_OPERATION_PREFIXES):
+        # The dispatcher reads ``target``, not a caller-supplied
+        # parameter, for these operations. Override rather than
+        # setdefault so a divergent parameter cannot hide the path the
+        # call will actually touch.
+        arguments["path"] = target
+    return arguments
+
+
 from typing import Any, Dict
 
 from genesis_os.action_plan import (
@@ -319,10 +366,11 @@ class ActionExecutor:
         Any mismatch refuses. There is no path through this method that
         turns an inconsistency into a pass.
         """
+        effective_arguments = _dispatch_arguments(plan)
         if not _operation_requires_authorization(
             plan.operation,
             getattr(plan, "capability_id", None),
-            plan.parameters,
+            effective_arguments,
             context=security_context if security_context else None,
         ):
             return None
@@ -356,7 +404,13 @@ class ActionExecutor:
 
         if authorized and approved_arguments is not None:
             approved = dict(approved_arguments)
-            dispatched = dict(plan.parameters or {})
+            dispatched = dict(effective_arguments)
+            approved_targets = {
+                str(value)
+                for key, value in approved.items()
+                if key in TARGET_BEARING_ARGUMENT_KEYS
+                and value not in (None, "")
+            }
 
             # (1) The approved set and the dispatched set must agree.
             for key, value in approved.items():
@@ -394,6 +448,17 @@ class ActionExecutor:
                 for key, value in dispatched.items():
                     if key in approved_keys or key in channel_keys:
                         continue
+                    # S16: ``path`` may be the canonical form of the
+                    # plan's target when the approval names that same
+                    # target under another key (``target``/``source``,
+                    # as the seam and some callers do). It is the same
+                    # value, so the human approved the acted-on path.
+                    if (
+                        key == "path"
+                        and _values_match(value, plan.target)
+                        and str(plan.target) in approved_targets
+                    ):
+                        continue
                     if (
                         key in TARGET_BEARING_ARGUMENT_KEYS
                         and value not in (None, "")
@@ -417,12 +482,6 @@ class ActionExecutor:
             # no-argument grant does -- there is no second target for
             # such a grant to be re-pointed at.
             if authorized and plan.target is not None:
-                approved_targets = {
-                    str(value)
-                    for key, value in approved.items()
-                    if key in TARGET_BEARING_ARGUMENT_KEYS
-                    and value not in (None, "")
-                }
                 if approved_targets:
                     if str(plan.target) not in approved_targets:
                         authorized = False
@@ -2005,7 +2064,7 @@ class ActionExecutor:
             "spreadsheet.inspect_intel": "spreadsheet.inspect",
             "spreadsheet.read_intel": "spreadsheet.read",
         }.get(op, op)
-        p = plan.parameters
+        p = _dispatch_arguments(plan)
         t = plan.target
 
         if op == "application.open":

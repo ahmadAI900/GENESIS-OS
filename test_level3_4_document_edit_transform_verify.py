@@ -216,7 +216,7 @@ class TestDocumentVerify:
 
 
 class TestActionExecutorDocumentEdit:
-    def test_document_edit_dispatched(self):
+    def test_document_edit_dispatched(self, workspace_root):
         from genesis_os.action_executor import ActionExecutor
         from genesis_os.action_plan import ActionPlan
 
@@ -226,7 +226,7 @@ class TestActionExecutorDocumentEdit:
 
         plan = ActionPlan(
             operation="document.edit",
-            target="/tmp/doc.txt",
+            target=str(workspace_root / "doc.txt"),
             parameters={"find_text": "old", "replace_text": "new", "confirmed": True},
             confidence=0.95,
         )
@@ -306,7 +306,7 @@ class TestActionExecutorDocumentTransform:
 
 
 class TestActionExecutorDocumentVerify:
-    def test_document_verify_dispatched(self):
+    def test_document_verify_dispatched(self, workspace_root):
         from genesis_os.action_executor import ActionExecutor
         from genesis_os.action_plan import ActionPlan
 
@@ -316,7 +316,7 @@ class TestActionExecutorDocumentVerify:
 
         plan = ActionPlan(
             operation="document.verify",
-            target="/tmp/doc.txt",
+            target=str(workspace_root / "doc.txt"),
             parameters={},
             confidence=0.95,
         )
