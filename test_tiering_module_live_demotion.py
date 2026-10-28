@@ -23,6 +23,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.live
+
 BACKEND = Path(__file__).resolve().parent
 
 MODULE_LIVE_NODEID = (
