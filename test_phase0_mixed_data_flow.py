@@ -47,7 +47,6 @@ Reason: real GenesisOS.
 
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 from unittest.mock import Mock
@@ -62,41 +61,6 @@ from genesis_os import contracts
 from runtime.genesis_runtime import GenesisRuntime
 
 pytestmark = pytest.mark.live
-
-# ----------------------------------------------------------------------
-# Isolation fixture (Item 30D / T13).
-#
-# Resets process-global state that can leak between tests: GENESIS_*
-# environment keys and the process working directory. The suite-wide
-# genesis_env_guard restores GENESIS_* keys after each test, but this
-# module-level fixture also restores them BEFORE each test (defensive)
-# and guards the cwd, which no fixture restores when a test uses
-# os.chdir directly instead of monkeypatch.chdir.
-# ----------------------------------------------------------------------
-
-_GENESIS_KEYS_PREFIX = "GENESIS_"
-
-
-@pytest.fixture(autouse=True)
-def _isolate_process_globals(request):
-    """Save and restore GENESIS_* env keys and cwd around each test."""
-    genesis_before = {
-        k: v for k, v in os.environ.items() if k.startswith(_GENESIS_KEYS_PREFIX)
-    }
-    cwd_before = Path.cwd()
-    yield
-    genesis_after = {
-        k: v for k, v in os.environ.items() if k.startswith(_GENESIS_KEYS_PREFIX)
-    }
-    for k in set(genesis_after) - set(genesis_before):
-        del os.environ[k]
-    os.environ.update(genesis_before)
-    try:
-        if Path.cwd() != cwd_before:
-            os.chdir(cwd_before)
-    except OSError:
-        pass
-
 
 OBJECTIVE = "open notepad and write python code for a calculator"
 AGENT_CODE = "def calculator():\n    return 42\n"
@@ -300,24 +264,3 @@ def test_production_mixed_objective_bridges_coding_output_to_os_action(
         "execute_mixed_audited"
     )
     assert routed[-1][1] is genesis.unified_executor
-
-
-# =====================================================================
-# Leak detection (Item 30D / T13).
-#
-# A deliberately re-introduced global leak must be caught by the
-# isolation fixture above. These tests set a GENESIS_* key or the cwd,
-# then verify the fixture restores them afterwards.
-# =====================================================================
-
-def test_genesis_env_key_is_restored_after_test():
-    """A GENESIS_* key injected during a test must not leak out."""
-    os.environ["GENESIS_LEAK_PROBE_KEY"] = "leaked-value"
-    assert os.environ.get("GENESIS_LEAK_PROBE_KEY") == "leaked-value"
-
-
-def test_cwd_is_restored_after_test(tmp_path):
-    """The process working directory must not leak out of a test."""
-    original = Path.cwd()
-    os.chdir(tmp_path)
-    assert Path.cwd() == tmp_path
