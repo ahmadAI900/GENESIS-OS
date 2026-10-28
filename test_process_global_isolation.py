@@ -73,6 +73,39 @@ def test_b_the_previous_test_leaked_nothing():
     )
 
 
+def test_this_proof_module_is_not_live():
+    """AST guard: a live marker would deselect the proof from the gate."""
+    tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
+
+    for node in tree.body:
+        if not isinstance(node, ast.Assign):
+            continue
+        if not any(
+            isinstance(target, ast.Name) and target.id == "pytestmark"
+            for target in node.targets
+        ):
+            continue
+        names = {
+            value.attr
+            for value in ast.walk(node.value)
+            if isinstance(value, ast.Attribute)
+        }
+        assert "live" not in names, (
+            "the isolation proof module is marked live, so the fast gate "
+            "would deselect the very proof it needs"
+        )
+
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        for decorator in node.decorator_list:
+            text = ast.unparse(decorator)
+            assert "pytest.mark.live" not in text, (
+                f"{node.name} is marked live; the isolation proof must run "
+                "in the fast gate"
+            )
+
+
 def test_the_process_global_isolation_fixture_is_still_autouse():
     """AST guard: deleting or de-autousing the fixture fails the gate."""
     tree = ast.parse(Path(__file__).read_text(encoding="utf-8"))
