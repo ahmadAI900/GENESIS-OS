@@ -487,7 +487,7 @@ class SeleniumBrowserProvider(BrowserProvider):
             )
             element.clear()
             element.send_keys(text)
-            result = {"success": verified, "operation": "browser.type", "selector": selector, "text": text}
+            result = {"success": False, "operation": "browser.type", "selector": selector, "text": text, "verified": False}
             # Real post-state verification: read back the input value
             # to confirm the text was actually accepted by the element.
             try:
@@ -505,6 +505,7 @@ class SeleniumBrowserProvider(BrowserProvider):
             except Exception:
                 result["element_found"] = False
                 result["verified"] = False
+            result["success"] = result["verified"]
             return result
         except Exception as exc:
             if not self._is_driver_alive():

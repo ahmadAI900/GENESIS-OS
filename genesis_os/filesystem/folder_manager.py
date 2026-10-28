@@ -177,7 +177,7 @@ class FolderManager:
 
         if not planned_moves:
             return {
-                "success": verified,
+                "success": True,
                 "operation": "folder.organize",
                 "path": str(p),
                 "organized_count": 0,

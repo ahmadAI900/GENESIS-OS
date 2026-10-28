@@ -85,6 +85,96 @@ def _find_violations(path: pathlib.Path) -> list[int]:
     return violations
 
 
+def _parameter_names(node: ast.AST) -> list[str]:
+    if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+        return []
+    args = node.args
+    names = [a.arg for a in args.posonlyargs + args.args + args.kwonlyargs]
+    if args.vararg:
+        names.append(args.vararg.arg)
+    if args.kwarg:
+        names.append(args.kwarg.arg)
+    return names
+
+
+def _verified_binding_uses(node: ast.AST) -> tuple[list[int], list[int]]:
+    loads: list[int] = []
+    bindings: list[int] = [node.lineno] if "verified" in _parameter_names(node) else []
+
+    def walk(child: ast.AST) -> None:
+        if child is not node and isinstance(
+            child, (ast.FunctionDef, ast.AsyncFunctionDef, ast.Lambda)
+        ):
+            return
+        if isinstance(child, ast.Name) and child.id == "verified":
+            if isinstance(child.ctx, ast.Store):
+                bindings.append(child.lineno)
+            elif isinstance(child.ctx, ast.Load):
+                loads.append(child.lineno)
+        for grandchild in ast.iter_child_nodes(child):
+            walk(grandchild)
+
+    walk(node)
+    return loads, bindings
+
+
+def _find_verified_binding_violations(path: pathlib.Path) -> list[str]:
+    tree = ast.parse(path.read_text(encoding="utf-8-sig"))
+    violations: list[str] = []
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        loads, bindings = _verified_binding_uses(node)
+        if not loads:
+            continue
+        first_binding = min(bindings) if bindings else None
+        early_loads = [
+            line for line in sorted(loads)
+            if first_binding is None or line < first_binding
+        ]
+        if early_loads:
+            violations.append(f"{node.name} loads at {early_loads}")
+    return violations
+
+
+@pytest.mark.parametrize("relpath", MODULES)
+def test_no_verified_load_before_its_binding(relpath):
+    path = BACKEND / relpath
+    violations = _find_verified_binding_violations(path)
+    assert not violations, (
+        f"{relpath} reads `verified` before binding it in the same function: "
+        f"{violations}. This raises NameError/UnboundLocalError on exactly "
+        f"the path where no verification happened."
+    )
+
+
+def test_verified_binding_guard_fires_on_scratch_functions(tmp_path):
+    scratch = tmp_path / "scratch_verified_binding.py"
+    scratch.write_text(
+        "def early_load():\n"
+        "    return {'verified': verified}\n"
+        "    verified = True\n"
+        "\n"
+        "def missing_binding():\n"
+        "    return {'verified': verified}\n"
+        "\n"
+        "def parameter(verified):\n"
+        "    return {'verified': verified}\n"
+        "\n"
+        "def bound_first():\n"
+        "    verified = True\n"
+        "    return {'verified': verified}\n",
+        encoding="utf-8",
+    )
+
+    violations = _find_verified_binding_violations(scratch)
+
+    assert any("early_load" in violation for violation in violations), violations
+    assert any("missing_binding" in violation for violation in violations), violations
+    assert not any("parameter" in violation for violation in violations), violations
+    assert not any("bound_first" in violation for violation in violations), violations
+
+
 @pytest.mark.parametrize("relpath", MODULES)
 def test_no_new_success_true_beside_computed_verified(relpath):
     path = BACKEND / relpath

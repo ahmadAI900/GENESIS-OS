@@ -419,7 +419,7 @@ class PlaywrightBrowserProvider(BrowserProvider):
             try:
                 page = self._get_page()
                 page.fill(selector, text, timeout=10000)
-                result = {"success": verified, "operation": "browser.type", "selector": selector, "text": text}
+                result = {"success": False, "operation": "browser.type", "selector": selector, "text": text, "verified": False}
                 try:
                     loc = page.locator(selector)
                     actual_value = loc.input_value()
@@ -431,6 +431,7 @@ class PlaywrightBrowserProvider(BrowserProvider):
                 except Exception:
                     result["element_found"] = False
                     result["verified"] = False
+                result["success"] = result["verified"]
                 return result
             except Exception as exc:
                 if self._is_connection_death(exc):
@@ -470,7 +471,7 @@ class PlaywrightBrowserProvider(BrowserProvider):
             try:
                 page = self._get_page()
                 elements = page.locator(f"text={text}").all()
-                return {"success": verified, "operation": "browser.find", "text": text, "count": len(elements), "verified": verified}
+                return {"success": True, "operation": "browser.find", "text": text, "count": len(elements)}
             except Exception as exc:
                 if self._is_connection_death(exc):
                     raise
