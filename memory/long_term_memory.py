@@ -63,6 +63,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import tempfile
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
@@ -115,8 +116,25 @@ class LongTermMemory:
     def _save(self, data: Dict[str, Any]) -> None:
         data["updated_at"] = datetime.now().isoformat()
 
-        with open(self.store_path, "w", encoding="utf-8") as file:
-            json.dump(data, file, indent=2, ensure_ascii=False)
+        directory = os.path.dirname(os.path.abspath(self.store_path))
+        descriptor, temp_path = tempfile.mkstemp(
+            prefix=f".{os.path.basename(self.store_path)}.",
+            suffix=".tmp",
+            dir=directory,
+        )
+        try:
+            with os.fdopen(descriptor, "w", encoding="utf-8") as file:
+                json.dump(data, file, indent=2, ensure_ascii=False)
+                file.flush()
+                os.fsync(file.fileno())
+            os.replace(temp_path, self.store_path)
+        except BaseException:
+            try:
+                if os.path.exists(temp_path):
+                    os.remove(temp_path)
+            except OSError:
+                pass
+            raise
 
     # =========================================================
     # FACT OPERATIONS

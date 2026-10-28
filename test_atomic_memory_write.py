@@ -19,6 +19,7 @@ import json
 
 import pytest
 
+from memory.long_term_memory import LongTermMemory
 from memory.memory import MemoryManager
 
 
@@ -64,3 +65,49 @@ def test_successful_write_replaces_content(tmp_path):
     assert json.loads(path.read_text(encoding="utf-8")) == {"new": True}
     leftovers = sorted(p.name for p in tmp_path.iterdir())
     assert leftovers == ["memory.json"], leftovers
+
+
+LTM_ORIGINAL = json.dumps(
+    {
+        "version": LongTermMemory.VERSION,
+        "facts": [{"key": "location", "value": "paris"}],
+    }
+)
+
+
+def test_interrupted_long_term_memory_write_leaves_original_intact(
+    tmp_path, monkeypatch
+):
+    path = tmp_path / "long_term_memory.json"
+    path.write_text(LTM_ORIGINAL, encoding="utf-8")
+
+    def _interrupted_dump(obj, fp, **kwargs):
+        fp.write('{"truncated": ')
+        raise RuntimeError("simulated interruption mid-write")
+
+    monkeypatch.setattr(json, "dump", _interrupted_dump)
+
+    with pytest.raises(RuntimeError):
+        LongTermMemory(storage_path=str(path)).upsert_fact(
+            "location", "berlin"
+        )
+
+    assert path.read_text(encoding="utf-8") == LTM_ORIGINAL, (
+        "an interrupted long-term memory write corrupted the original file"
+    )
+    leftovers = sorted(p.name for p in tmp_path.iterdir())
+    assert leftovers == ["long_term_memory.json"], (
+        f"temp files left behind: {leftovers}"
+    )
+
+
+def test_successful_long_term_memory_write_replaces_content(tmp_path):
+    path = tmp_path / "long_term_memory.json"
+    path.write_text(LTM_ORIGINAL, encoding="utf-8")
+
+    LongTermMemory(storage_path=str(path)).upsert_fact("location", "berlin")
+
+    data = json.loads(path.read_text(encoding="utf-8"))
+    assert data["facts"][0]["value"] == "berlin", data
+    leftovers = sorted(p.name for p in tmp_path.iterdir())
+    assert leftovers == ["long_term_memory.json"], leftovers
